@@ -1,0 +1,106 @@
+.cart
+	counter-reset: cart
+	overflow-y: auto
+	flex-grow: 1
+		
+.cart .item
+	counter-increment: cart
+	display: flex
+	
+	padding: 0px 15px 0 0
+	height: 80px
+	align-items: center
+	
+	border-bottom: 1px solid rgba(0,0,0,0.1)
+		
+	&.selected
+		background: rgba(0,0,0,0.05)
+	
+	> *
+		flex-grow: 1
+		
+	.name
+		noselect()
+		flex-basis: 30%
+		height: 100%
+		padding-left: 3%
+		display: flex
+		align-items: center
+		cursor: pointer
+		
+		&:empty:before
+			content: "Název"
+			text-transform: lowercase
+			opacity: 0.2
+			font-style: italic
+
+	.price
+		text-align: right
+		flex-basis: 20%
+		padding-right: 3%
+		
+	.qty
+		flex-basis: 20%
+		text-align: right
+		display: flex
+		
+		align-items: center
+		
+		.inline-btn
+			&:active
+				color: #ffffff
+				
+			&:first-child:active
+				background: color-red
+			&:last-child:active
+				background: color-green
+
+		.value
+			flex-grow: 1
+			flex-basis: 80px
+			min-width: 80px
+			text-align: center
+			
+	.inline-btn
+		noselect()
+		cursor: pointer
+		
+		min-width: 80px
+		flex-basis: 80px
+		height: 80px
+		display: flex
+		justify-content: center
+		align-items: center
+		font-size: 1.3em
+	
+		border-left: 1px solid rgba(0,0,0,0.1)
+		border-right: 1px solid rgba(0,0,0,0.1)
+		
+		
+	.total
+		flex-basis: 20%
+		padding-right: 2%
+		text-align: right
+		font-weight: 500
+	
+	
+	.digit
+		flex-basis: 80px
+		max-width: 80px
+		height: 80px
+		
+		text-align: center
+		
+		font-size: 0.8em
+		
+		&:before
+			content: counter(cart)	
+
+		&:active
+			background: color-red
+			
+		&:active:before
+			transform: translateY(-3px)
+			color: #ffffff
+			font-size: 2em
+			content: "\00d7"

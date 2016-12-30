@@ -1,0 +1,6 @@
+module.exports.ADD_DIGIT = "SCREEN_ADD_DIGIT"
+module.exports.ENABLE_DECIMAL = "SCREEN_ENABLE_DECIMAL"
+module.exports.REMOVE_DIGIT = "SCREEN_REMOVE_DIGIT"
+module.exports.TOGGLE_NEGATIVE = "SCREEN_TOGGLE_NEGATIVE"
+module.exports.CLEAR = "SCREEN_CLEAR"
+module.exports.SET = "SCREEN_SET"

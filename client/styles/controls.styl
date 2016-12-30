@@ -1,0 +1,86 @@
+.screen
+	flex-grow: 1
+	font-size: 4em
+	text-align: right
+	
+	min-height: button-size
+	overflow-x: hidden
+	
+	font-weight: 400
+	
+	position: relative
+	
+	display: flex
+	align-items: stretch
+	flex-direction: column
+	
+	justify-content: flex-end
+
+	&.STAGE_ADDED
+		color: color-green
+		
+	&.COMMIT_BEGIN
+		color: color-blue
+		
+	.value
+		display: flex
+		justify-content: flex-end
+		align-items: flex-end
+		
+		padding: 20px
+		
+	.remove 
+		noselect()
+		
+		position: absolute
+		top: 0
+		left: 0
+		
+		width: button-size
+		height: button-size
+		display: flex
+
+		color: #333
+		opacity: 0.1
+		font-size: 0.7em
+		
+		align-items: center
+		justify-content: center
+		
+		a svg
+			width: 1em
+			height: 1em
+
+.keypad
+	display: flex
+	flex-wrap: wrap
+	min-height: button-size * 4
+	
+	
+	.btn.add
+		background: color-gray
+		color: #ffffff
+		
+		a
+			font-size: 4.2em
+			
+		svg
+			width: 0.8em
+			height: 0.8em
+			
+		svg path
+			fill: #fff
+		
+	.btn:nth-child(3n+1)
+		box-shadow: inset -1px 0px 0px rgba(0,0,0,.1), inset 0px 1px 0px rgba(0,0,0,.1)
+		
+	.btn:nth-child(3n)
+		box-shadow: inset 2px 0px 0px rgba(0,0,0,.1), inset 0px 1px 0px rgba(0,0,0,.1)
+		
+	.btn:nth-child(3n+2)
+		box-shadow: inset 0px 1px 0px rgba(0,0,0,.1)
+		
+
+	.btn:last-child
+		min-width: "calc(%s * 2)" % (button-size)
+		border-right: none

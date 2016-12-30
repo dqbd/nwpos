@@ -1,0 +1,140 @@
+#dashboard
+	display: flex
+	justify-content: flex-stretch
+	align-items: flex-stretch
+	
+	height: 100vh
+	
+#dashboard .day
+	flex-grow: 1
+	
+	overflow: auto
+	overflow-x: hidden
+	
+	display: flex
+	flex-direction: column
+	
+	.dayinfo
+		min-height: button-size * 0.8
+		flex-basis: button-size * 0.8
+		box-shadow: inset 0px -1px 0px rgba(0,0,0,0.1) 
+		display: flex
+
+		align-items: center
+		font-size: 2em
+		padding: button-size * 0.2
+		
+		background: color-blue
+		color: white
+
+		.label
+			flex-grow: 1
+			
+	.customers
+		flex-grow: 1
+			
+		overflow: auto
+		overflow-x: hidden
+		
+	.customer
+		min-height: button-size * 0.8
+		align-items: center
+		font-size: 1.3em
+		
+		flex-wrap: wrap
+		
+		
+		box-shadow: inset 0px -1px 0px rgba(0,0,0,0.1) 
+
+	.customer .metadata
+		noselect()
+
+		display: flex
+		height: button-size * 0.8
+		align-items: center
+		margin-left: button-size * 0.2
+		margin-right: button-size * 0.2
+		
+		cursor: pointer
+		
+		.time
+			width: 10%
+			text-align: left
+			font-weight: 500
+			
+		.sumqty
+			width: 15%
+		
+		span
+			width: 25%
+			text-align: right
+		
+	.customer .items
+		noselect()
+		
+		border-top: 1px solid rgba(0,0,0,0.05) 
+		background: rgba(0,0,0,0.02) 
+		margin: 0
+		list-style: none
+		min-width: 100%
+		padding: button-size * 0.2 button-size * 0.2 0
+		
+
+		li
+			width: 100%
+			padding-bottom: button-size * 0.2
+		
+		li > span
+			display: inline-block
+			flex-grow: 1
+			
+		li .name
+			width: 40%
+			font-weight: 500
+			
+		li .qty
+			width: 20%
+			text-align: right
+			
+		li .price
+			width: 20%
+			text-align: right
+		li .total
+			width: 20%
+			text-align: right
+			
+
+	
+#dashboard .days
+	width: 300px
+	max-height: 100vh
+	overflow-x: hidden
+	overflow: auto
+	
+	background: white
+	box-shadow: -1px 0px 0px rgba(0,0,0,0.1) 
+	
+	.day
+		
+		noselect()
+		cursor: pointer
+		height: button-size * 0.8
+		display: flex
+		flex-direction: column
+		justify-content: center
+		
+		box-shadow: inset 0px -1px 0px rgba(0,0,0,0.1) 
+		padding-left: button-size * 0.2
+		
+	.day .label
+		opacity: 0.20
+		font-size: 1.5em
+		
+	.day .total
+		opacity: 0.2
+		
+	.day.active .label
+		opacity: 1
+		
+	.day.active .total
+		opacity: 0.5
