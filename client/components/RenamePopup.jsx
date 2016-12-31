@@ -17,7 +17,7 @@ class RenamePopup extends React.Component {
 		window.setTimeout(() => {
 			dom.focus()
 			dom.setSelectionRange(0, dom.value.length)
-		}, 10)
+		}, 100)
 	}
 
 	onInputChange(event) {
