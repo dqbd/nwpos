@@ -26,7 +26,7 @@ module.exports.print = (lines) => (dispatch) => {
 	
 }
 
-module.exports.printCart = (items, total, paid, tax = 21) => {
+module.exports.printCart = (items, total, paid, tax = 21) => (dispatch) => {
 	return fetch(getUrl(`/print`), {
 		method: "POST",
 		headers: { 'Content-Type': 'application/json' },

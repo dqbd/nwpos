@@ -65,7 +65,7 @@ module.exports.printCart = (items, total, paid, tax = 21) => {
 		divider()
 	]
 
-	returned = -1 * (total - paid)
+	let returned = -1 * (total - paid)
 
 	body = [...body, ...table(items.map(item => [
 		(item.name.length == 0) ? "Zboží" : item.name,
