@@ -15,7 +15,7 @@ body.dark, body.dark #root
 	.names .suggestion, .popup .content .groups .item
 		background: #444444
 			
-	.btn, .screen, .screen .remove, .cart, .names .suggestion
+	.btn, .screen[class="screen"], .screen .remove, .cart, .names .suggestion
 		color: rgba(255,255,255,0.8)
 		
 	.sidebar .remove svg path
@@ -23,3 +23,10 @@ body.dark, body.dark #root
 	
 	.cart .item.selected, #dashboard .day .customer .items
 		background: rgba(0,0,0,0.1)
+		
+	.cart .item .inline-btn
+		border-left-color: rgba(0,0,0,0.2)
+		border-right-color: rgba(0,0,0,0.2)
+	.cart .item
+		border-bottom-color: rgba(0,0,0,0.2)
+

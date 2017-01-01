@@ -23,22 +23,26 @@ try {
 
 const app = express()
 app.use(bodyParser.json())
+let advert = "nodecashier-services"
 
 if (process.argv[2] === "--dev") {
 	const webpack = require("webpack")
 	let compiler = webpack(require("../webpack.dev.config.js"))
 	app.use("/", require("webpack-dev-middleware")(compiler, { noInfo: true, stats: { colors: true } }))
 	app.use("/", require("webpack-hot-middleware")(compiler))
+	advert += "-dev"
+
 } else {
 	const path = require("path")
 	app.use("/", express.static(path.resolve(__dirname, "dist")))
 }
 
+
 const mdns = require("mdns")
-mdns.createAdvertisement(mdns.tcp("http"), 80, { name: "nodecashier-services" }, 
+mdns.createAdvertisement(mdns.tcp("http"), 80, { name: advert }, 
 (error, service) => {
 	if (!error) {
-		console.log("MDNS started")
+		console.log("MDNS started: " + advert)
 	}
 }).start()
 

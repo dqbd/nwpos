@@ -37,13 +37,29 @@ window.showClient = () => {
 	store.dispatch(suggestions.listSuggestions())
 }
 
-window.toggleNight = () => {
+window.toggleNight = (ignore = false) => {
 	let body = document.querySelector("body")
-	if (body) {
-		body.classList.toggle("dark")
+	let value = JSON.parse(window.localStorage.getItem("dark"))
+	if (value === null) {
+		value = false
 	}
+
+	if (ignore === false) {
+		value = !value
+	}
+
+	if (body) {
+		if (value) {
+			body.classList.add("dark")
+		} else {
+			body.classList.remove("dark")
+		}
+	}
+
+	window.localStorage.setItem("dark", value)
 }
 
+window.toggleNight(true)
 
 render(<Provider store={store}>
 	<Router history={hashHistory}>

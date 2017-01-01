@@ -1,5 +1,6 @@
 import React from "react"
 import { findDOMNode } from "react-dom"
+import { capitalize } from "../utils"
 
 import StatefulSuggestionGroup from "../containers/StatefulSuggestionGroup.jsx"
 
@@ -21,7 +22,7 @@ class RenamePopup extends React.Component {
 	}
 
 	onInputChange(event) {
-		this.setState({input: event.target.value})
+		this.setState({input: capitalize(event.target.value)})
 	}
 
 	onSuggestionEdit(event) {
