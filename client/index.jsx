@@ -59,7 +59,6 @@ window.toggleNight = (ignore = false) => {
 	window.localStorage.setItem("dark", value)
 }
 
-window.toggleNight(true)
 
 render(<Provider store={store}>
 	<Router history={hashHistory}>
@@ -69,6 +68,8 @@ render(<Provider store={store}>
 </Provider>, document.getElementById("root"))
 
 window.showClient()
+window.toggleNight(true)
+
 if (window.android) {
 	window.android.loadFinished()
 }

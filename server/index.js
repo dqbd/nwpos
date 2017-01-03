@@ -1,8 +1,11 @@
 const express = require("express")
+const fs = require("fs")
+const path = require("path")
 const bodyParser = require("body-parser")
 
 const database = require("./database") 
 const escpos = require("./printer/printer")
+const customer = require("./customer")
 
 let printer = null
 let device = null
@@ -90,6 +93,22 @@ app.post("/suggest", (req, res) => {
 		}) 
 	} else {
 		res.sendStatus(500)
+	}
+})
+
+
+
+app.post("/stream", (req, res) => {
+	if (req.body !== undefined && req.body.customer !== undefined) {
+		customer.render(req.body.customer).then(data => {
+			console.log(path.resolve("data", "customer.png"))
+			fs.writeFileSync(path.resolve("data", "customer.png"), data)
+			res.status(200).send("Loaded")
+		}).catch(err => {
+			res.status(500).send(err)
+		})
+	} else {
+		res.status(500).send("No customer")
 	}
 })
 
