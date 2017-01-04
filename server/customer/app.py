@@ -70,8 +70,6 @@ itemHeight = listHeight / limit
 
 state = json.loads('{"cart": { "items": [] }}')
 
-
-
 def drawText(text, x, y, mode):
 	global mytft
 
