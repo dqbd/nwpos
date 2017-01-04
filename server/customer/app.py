@@ -70,7 +70,7 @@ itemHeight = listHeight / limit
 
 state = json.loads('{"cart": { "items": [] }}')
 
-mytft.screen.fill(white)
+
 
 def drawText(text, x, y, mode):
 	global mytft
@@ -90,6 +90,7 @@ def drawText(text, x, y, mode):
 def drawCustomer(items):
 	global mytft
 	relative = 0
+	mytft.screen.fill(white)
 
 	for item in items[-limit:]:
 		center = itemHeight * relative + itemHeight * .5
@@ -115,6 +116,8 @@ def drawCustomer(items):
 	mytft.screen.blit(final, finalrect)
 
 	pygame.display.flip()
+
+
 
 drawCustomer(state["cart"]["items"])
 
