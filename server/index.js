@@ -1,16 +1,19 @@
 const express = require("express")
-const fs = require("fs")
 const path = require("path")
+const mdns = require("mdns")
 const bodyParser = require("body-parser")
 
 const database = require("./database") 
 const escpos = require("./printer/printer")
 const customer = require("./customer")
 
-let printer = null
-let device = null
+const app = express()
 
+customer.init()
+
+let printer = null
 try {
+	let device = null
 	if (/^win/.test(process.platform)) {
 		const usb = require("./printer/usb")
 		device = new usb()
@@ -20,14 +23,9 @@ try {
 	}
 
 	device.open(() => printer = new escpos(device))
-} catch (err) {
-	console.error("Printer not found")
-}
+} catch (err) { console.error("Printer not found") }
 
-const app = express()
-app.use(bodyParser.json())
 let advert = "nodecashier-services"
-
 if (process.argv[2] === "--dev") {
 	const webpack = require("webpack")
 	let compiler = webpack(require("../webpack.dev.config.js"))
@@ -40,15 +38,13 @@ if (process.argv[2] === "--dev") {
 	app.use("/", express.static(path.resolve(__dirname, "dist")))
 }
 
-
-const mdns = require("mdns")
-mdns.createAdvertisement(mdns.tcp("http"), 80, { name: advert }, 
-(error, service) => {
+mdns.createAdvertisement(mdns.tcp("http"), 80, { name: advert }, (error, service) => {
 	if (!error) {
 		console.log("MDNS started: " + advert)
 	}
 }).start()
 
+app.use(bodyParser.json())
 app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*")
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
@@ -96,17 +92,10 @@ app.post("/suggest", (req, res) => {
 	}
 })
 
-
-
 app.post("/stream", (req, res) => {
 	if (req.body !== undefined && req.body.customer !== undefined) {
-		customer.render(req.body.customer).then(data => {
-			console.log(path.resolve("data", "customer.png"))
-			fs.writeFileSync(path.resolve("data", "customer.png"), data)
-			res.status(200).send("Loaded")
-		}).catch(err => {
-			res.status(500).send(err)
-		})
+		customer.set(req.body.customer)
+		res.status(200).send(req.body.customer)
 	} else {
 		res.status(500).send("No customer")
 	}
