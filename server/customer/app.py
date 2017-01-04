@@ -85,6 +85,8 @@ def drawText(text, x, y, mode):
 		textRect.right = x
 	mytft.screen.blit(textSurface, textRect)
 
+
+
 def drawCustomer(items):
 	global mytft
 	relative = 0
