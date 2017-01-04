@@ -57,6 +57,8 @@ t.start()
 
 mytft = pitft()
 
+pygame.mouse.set_visible(False)
+
 size = width, height = 1280, 1024
 limit = 10
 listHeight = 870
@@ -84,8 +86,6 @@ def drawText(text, x, y, mode):
 	elif (mode is "right"):
 		textRect.right = x
 	mytft.screen.blit(textSurface, textRect)
-
-
 
 def drawCustomer(items):
 	global mytft
@@ -116,8 +116,6 @@ def drawCustomer(items):
 	mytft.screen.blit(final, finalrect)
 
 	pygame.display.flip()
-
-
 
 drawCustomer(state["cart"]["items"])
 
