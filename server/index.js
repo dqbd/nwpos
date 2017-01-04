@@ -140,3 +140,7 @@ app.listen(80, (err, port) => {
 		console.log("Listening on port", 80)
 	}
 })
+
+process.on('exit', () => {
+	customer.clear()
+})

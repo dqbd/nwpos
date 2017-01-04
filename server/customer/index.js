@@ -26,6 +26,12 @@ module.exports.update = () => {
 	}
 }
 
+module.exports.clear = () => {
+	stopped = true
+	kiosk.stdin.pause()
+	kiosk.kill()
+}
+
 module.exports.set = (state) => {
 	kiosk_state = state
 	module.exports.update()
