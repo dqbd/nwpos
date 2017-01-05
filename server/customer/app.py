@@ -3,23 +3,33 @@ import sys, os, json, pygame
 from threading import Thread
 from Queue import Queue, Empty
 
+size = width, height = 1280, 1024
+limit = 10
+
 def enqueue_output(stdin, queue):
 	for line in iter(stdin.readline, b''):
    		queue.put(line)
 
-class pitft:
-	screen = None;
+class customer:
+	global width, height, limit
+
+	screen = None
+
+	listHeight = height * 870 / 1024
+	itemHeight = listHeight / limit
+	padding = width * 40 / 1280
+
+	white = (255, 255, 255)
+	statusColor = (33, 150, 243)
+	textBlack = (50, 50, 50)
+	lineBlack = (200, 200, 200)
 
 	def __init__(self):
-		"Ininitializes a new pygame screen using the framebuffer"
-		# Based on "Python GUI in Linux frame buffer"
 		# http://www.karoltomala.com/blog/?p=679
-
 		if os.name != 'nt':
 			disp_no = os.getenv("DISPLAY")
 			if disp_no:
 				print "I'm running under X display = {0}".format(disp_no)
-			
 			# Check which frame buffer drivers are available
 			# Start with fbcon since directfb hangs with composite output
 			drivers = ['fbcon', 'directfb', 'svgalib']
@@ -40,18 +50,94 @@ class pitft:
 				raise Exception('No suitable video driver found!')
 			
 			size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
-			print "Framebuffer size: %d x %d" % (size[0], size[1])
 			self.screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
-			# Clear the screen to start
 			self.screen.fill((0, 0, 0))		
-			# Initialise font support
 			pygame.font.init()
-			# Render the screen
 			pygame.display.update()
 
 		else:
 			pygame.init()
-			self.screen = pygame.display.set_mode((1280, 1024))
+			self.screen = pygame.display.set_mode((width, height))
+			pygame.display.set_caption("nwpos")
+
+		# pygame.mouse.set_visible(False)
+		self.render()
+
+	def render(self, state = json.loads('{"cart": { "items": [] }, "paid": 0, "status": "STAGE_TYPING"}')):
+		relative = 0
+		self.screen.fill(self.white)
+		
+		items = state["cart"]["items"]
+		for item in items[-limit:]:
+			item["index"] = relative + 1 + max(0, len(items) - limit)
+			self.drawItem(item, relative)
+			relative = relative + 1
+
+		self.drawStatus(items, state["status"], state["paid"])
+
+		pygame.display.flip()
+
+	def drawText(self, text, x, y, mode):
+		basicfont = pygame.font.SysFont("Verdana", 28 * width / 1280)
+		textSurface = basicfont.render(text, True, self.textBlack)
+		textRect = textSurface.get_rect()
+		textRect.centery = y
+		if (mode is "left"):
+			textRect.left = x
+		elif (mode is "center"):
+			textRect.centerx = x
+		elif (mode is "right"):
+			textRect.right = x
+		self.screen.blit(textSurface, textRect)
+
+	def drawItem(self, item, relative):
+		center = self.itemHeight * relative + self.itemHeight * .5
+		end = self.itemHeight * (relative + 1)
+
+		self.drawText(u"Zboží" if len(item["name"].strip()) == 0 else item["name"], width * 120 / 1280, center, "left")
+		self.drawText(str(item["index"]), self.padding * 5 / 4, center, "center")
+		self.drawText(str(item["price"]) + u" Kč", width * 800 / 1280, center, "right")
+		self.drawText(str(item["qty"]) + u" ks", width * 1000 / 1280, center, "right")
+		self.drawText(str(item["price"] * item["qty"]) + u" Kč", width - self.padding, center, "right")
+
+		pygame.draw.line(self.screen, self.lineBlack, [0, end], [width, end])
+		relative = relative + 1
+
+	def drawStatus(self, items, status, paid):
+		pygame.draw.rect(self.screen, self.statusColor, (0, self.listHeight, width, height - self.listHeight))
+
+		sumItems = sum([item["price"] * item["qty"] for item in items]) 
+
+		mainText = "celkem: " + str(sumItems) + u" Kč"
+
+		if status == "COMMIT_END":
+			mainText = u"vráceno: " + str((sumItems - paid) * -1 ) + u" Kč"
+
+			totalfont = pygame.font.SysFont("Verdana", 28 * width / 1280)
+			total = totalfont.render("celkem: "+ str(sumItems) + u" Kč", True, self.white)
+			totalrect = total.get_rect()
+
+			cashfont = pygame.font.SysFont("Verdana", 28 * width / 1280)
+			cash = cashfont.render("hotovost: " + str(paid) + u" Kč", True, self.white)
+			cashrect = cash.get_rect()
+
+			cashrect.left = self.padding
+			totalrect.left = self.padding
+			
+			leftHeight = height - self.listHeight - totalrect.height - cashrect.height - 10
+			totalrect.top =  self.listHeight + leftHeight / 2
+			cashrect.top = self.listHeight + totalrect.height + 10 + leftHeight / 2
+
+			self.screen.blit(total, totalrect)
+			self.screen.blit(cash, cashrect)
+		
+		finalfont = pygame.font.SysFont("Verdana", 64 * width / 1280)
+		final = finalfont.render(mainText, True, self.white)
+		finalrect = final.get_rect()
+		finalrect.right = width - self.padding
+		finalrect.centery = self.listHeight + ((height - self.listHeight) / 2)
+		self.screen.blit(final, finalrect)
+
 
 	def __del__(self):
 		"Destructor to make sure pygame shuts down, etc."
@@ -61,74 +147,12 @@ t = Thread(target=enqueue_output, args=(sys.stdin, q))
 t.daemon = True 
 t.start()
 
-mytft = pitft()
-
-pygame.mouse.set_visible(False)
-
-size = width, height = 1280, 1024
-limit = 10
-listHeight = 870
-padding = 30
-
-white = (255, 255, 255)
-purple = (152, 35, 158)
-black = (33, 33, 33)
-
-itemHeight = listHeight / limit
-
-state = json.loads('{"cart": { "items": [] }}')
-
-def drawText(text, x, y, mode):
-	global mytft
-
-	basicfont = pygame.font.SysFont("Verdana", 28)
-	textSurface = basicfont.render(text, True, (33, 33, 33))
-	textRect = textSurface.get_rect()
-	textRect.centery = y
-	if (mode is "left"):
-		textRect.left = x
-	elif (mode is "center"):
-		textRect.centerx = x
-	elif (mode is "right"):
-		textRect.right = x
-	mytft.screen.blit(textSurface, textRect)
-
-def drawCustomer(items):
-	global mytft
-	relative = 0
-	mytft.screen.fill(white)
-
-	for item in items[-limit:]:
-		center = itemHeight * relative + itemHeight * .5
-		end = itemHeight * (relative + 1)
-
-		drawText(str(relative + 1 + max(0, len(items) - limit)), padding + 20, center, "center")
-		drawText(item["name"], 120, center, "left")
-		drawText(str(item["price"]) + u" Kč", 800, center, "right")
-		drawText(str(item["qty"]) + u" ks", 1000, center, "right")
-		drawText(str(item["price"] * item["qty"]) + u" Kč", width - padding, center, "right")
-
-		pygame.draw.line(mytft.screen, black, [0, end], [width, end])
-		relative = relative + 1
-
-	pygame.draw.rect(mytft.screen, purple, (0, listHeight, width, height))
-
-	sumItems = sum([item["price"] * item["qty"] for item in items]) 
-	finalfont = pygame.font.SysFont("Verdana", 48)
-	final = finalfont.render("CELKEM: " + str(sumItems) + u" Kč", True, white)
-	finalrect = final.get_rect()
-	finalrect.left = padding
-	finalrect.centery = listHeight + ((height - listHeight) / 2)
-	mytft.screen.blit(final, finalrect)
-
-	pygame.display.flip()
-
-drawCustomer(state["cart"]["items"])
+app = customer()
+app.render()
 
 while True:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT: sys.exit()
-
 	try: line = q.get(timeout=.1)
 	except Empty: pass
-	else: drawCustomer(json.loads(line)["cart"]["items"])
+	else: app.render(json.loads(line))

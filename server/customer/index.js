@@ -3,7 +3,7 @@ const path = require("path")
 
 let stopped = false
 let kiosk = null
-let kiosk_state = { cart: { items: [] } }
+let kiosk_state = { cart: { items: [] }, paid: 0, status: "STAGE_TYPING" }
 
 module.exports.init = () => {
 	module.exports.loop()
@@ -16,7 +16,6 @@ module.exports.loop = () => {
 			module.exports.loop()
 		}
 	})
-
 	module.exports.update()
 }
 
@@ -34,7 +33,5 @@ module.exports.clear = () => {
 
 module.exports.set = (state) => {
 	kiosk_state = Object.assign(kiosk_state, state)
-
-	console.log(kiosk_state, "set")
 	module.exports.update()
 }
