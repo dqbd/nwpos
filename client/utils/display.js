@@ -7,7 +7,7 @@ function sendStream(newVal, loc) {
 	let payload = {}
 	payload[loc.replace("customer.", "")] = newVal
 
-	fetch("http://localhost/stream", {
+	fetch("/stream", {
 		method: "POST",
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({customer: payload})
