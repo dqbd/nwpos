@@ -33,6 +33,8 @@ module.exports.clear = () => {
 }
 
 module.exports.set = (state) => {
-	kiosk_state = state
+	kiosk_state = Object.assign(kiosk_state, state)
+
+	console.log(kiosk_state, "set")
 	module.exports.update()
 }
