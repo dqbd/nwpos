@@ -22,7 +22,11 @@ module.exports.init = () => {
 module.exports.print = (customer) => {
 	let items = customer.cart.items
 	let total = items.reduce((memo, item) => memo + item.qty * item.price, 0)
-	let date = new Date(Date.parse(customer.date))
+
+	let date = new Date()
+	if (customer.date) {
+		date = new Date(Date.parse(customer.date))
+	}
 
 	let lines = formatter.printCart(items, total, customer.paid, date)
 	return module.exports.printRaw(lines)
