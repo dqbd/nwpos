@@ -60,7 +60,7 @@ class customer:
 			self.screen = pygame.display.set_mode((width, height))
 			pygame.display.set_caption("nwpos")
 
-		# pygame.mouse.set_visible(False)
+		pygame.mouse.set_visible(False)
 		self.render()
 
 	def render(self, state = json.loads('{"cart": { "items": [] }, "paid": 0, "status": "STAGE_TYPING"}')):

@@ -4,26 +4,16 @@ const mdns = require("mdns")
 const bodyParser = require("body-parser")
 
 const database = require("./database") 
-const escpos = require("./printer/printer")
+const printer = require("./printer")
 const customer = require("./customer")
+const graph = require("./graph")
+
+const config = require("./config.json")
 
 const app = express()
 
 customer.init()
-
-let printer = null
-try {
-	let device = null
-	if (/^win/.test(process.platform)) {
-		const usb = require("./printer/usb")
-		device = new usb()
-	} else {
-		const serial = require("./printer/serial")
-		device = new serial("/dev/usb/lp0")
-	}
-
-	device.open(() => printer = new escpos(device))
-} catch (err) { console.error("Printer not found") }
+printer.init()
 
 let advert = "nodecashier-services"
 if (process.argv[2] === "--dev") {
@@ -53,18 +43,7 @@ app.use(function(req, res, next) {
 
 app.post("/print", (req, res) => {
 	if (req.body !== undefined && req.body.lines !== undefined) {
-
-		if (printer !== null) {
-			req.body.lines.forEach((line) => {
-				printer.text(line)
-			})
-
-			printer.feed()
-
-			return res.sendStatus(200)
-		} else {
-			console.log("Printer not ready")
-		}
+		printer.print(req.body.lines).then(a => res.sendStatus(200)).catch(err => res.status(500).send(err))
 	} else {
 		console.log("Invalid request")
 	}
@@ -139,4 +118,9 @@ app.listen(80, (err, port) => {
 	if (!err) {
 		console.log("Listening on port", 80)
 	}
+})
+
+process.on("SIGTERM", () => {
+	console.log("exiting")
+	customer.clear()
 })
