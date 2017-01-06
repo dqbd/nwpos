@@ -121,6 +121,7 @@ app.listen(80, (err, port) => {
 })
 
 process.on("SIGTERM", () => {
-	console.log("exiting")
+	console.log("Killing screen and exiting")
 	customer.clear()
+	process.exit(0)
 })
