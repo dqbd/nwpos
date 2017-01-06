@@ -12,33 +12,9 @@ const initialState = {
 	stats: undefined
 }
 
-const infoState = {
-	name: "",
-	ic: "",
-	dic: "",
-	street: "",
-	psc: "",
-	city: "",
-}
-
-const eetState = {
-	idProvoz: "",
-	idPokl: "",
-	cert: "",
-	pass: ""
-}
-
-
-const info = (state = infoState, action) => {
+const info = (state = "", action) => {
 	if (action.type === seller.SETINFO) {
-		return Object.assign({}, state, action.info)
-	}
-	return state
-}
-
-const eet = (state = eetState, action) => {
-	if (action.type === seller.SETEET) {
-		return Object.assign({}, state, action.eet)
+		return action.info
 	}
 	return state
 }
@@ -46,7 +22,6 @@ const eet = (state = eetState, action) => {
 module.exports = (state = initialState, action) => {
 	return {
 		info: info(state.info, action),
-		eet: eet(state.eet, action),
 		customer: customer.reducer(state.customer, action),
 		suggestions: suggestions.reducer(state.suggestions, action),
 		stats: stats.reducer(state.stats, action)

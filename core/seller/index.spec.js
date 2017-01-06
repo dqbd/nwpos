@@ -22,20 +22,8 @@ test("shop still working", () => {
 	store.dispatch(screen.addDigit(5))
 
 	expect(store.getState()).toEqual({
-		info: {
-			name: "",
-			ic: "",
-			dic: "",
-			street: "",
-			psc: "",
-			city: "",
-		},
-		eet: {
-			idProvoz: "",
-			idPokl: "",
-			cert: "",
-			pass: ""
-		},
+		info: "",
+		stats: [],
 		suggestions: {
 			all: {},
 			contextual: ["vejce", "moje matka"]
@@ -60,27 +48,7 @@ test("shop still working", () => {
 })
 
 test("set info", () => {
-	let info = {
-		name: "Obchod u Růženky",
-		ic: "123456789",
-		dic: "CZ1212121218",
-		street: "Ostravská 136/6",
-		psc: "748 01",
-		city: "Hlučín"
-	}
-
+	let info = "CZ123456789"
 	store.dispatch(seller.setInfo(info))
 	expect(store.getState().info).toEqual(info)
-})
-
-test("set eet", () => {
-	let eet = {
-		idPokl: "273",
-		idProvoz: "/5546/RO24",
-		cert: "CZ1212121218.p12",
-		pass: "eet"
-	}
-
-	store.dispatch(seller.setEet(eet))
-	expect(store.getState().eet).toEqual(eet)
 })

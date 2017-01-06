@@ -1,9 +1,6 @@
 const types = require("./actionTypes")
 const fetch = require("isomorphic-fetch")
-
-const getUrl = (endpoint) => {
-	return process.env.BROWSER ? endpoint : "http://localhost" + endpoint
-}
+const { getUrl } = require("../utils")
 
 module.exports.reset = () => {
 	return { type: types.SUGGEST, suggestions: [] }

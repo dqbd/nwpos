@@ -7,8 +7,7 @@ const divider = (char = "-") => {
 	return char.repeat(32)
 }
 
-const datestamp = () => {
-	let date = new Date()
+const datestamp = (date) => {
 	let dateString = "Datum: "
 	dateString += ["Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"][date.getDay()] + " "
 	dateString += ("0" + date.getDate()).slice(-2) + "."
@@ -56,7 +55,7 @@ module.exports.print = (lines) => {
 	return lines.map(line => line.substring(0, 32))
 }
 
-module.exports.printCart = (items, total, paid, tax = 21) => {
+module.exports.printCart = (items, total, paid, date, tax = 21) => {
 	let body = [
 		"Obchod u Růženky",
 		"Ostravská 136/6",
@@ -64,6 +63,10 @@ module.exports.printCart = (items, total, paid, tax = 21) => {
 		"IČ: 43965547",
 		divider()
 	]
+
+	if (!date) {
+		date = new Date()
+	}
 
 	let returned = -1 * (total - paid)
 
@@ -88,7 +91,7 @@ module.exports.printCart = (items, total, paid, tax = 21) => {
 	body.push(alignRight("VRÁCENO", `${returned}.00`))
 
 	body.push(divider("-"))
-	body.push(datestamp())
+	body.push(datestamp(date))
 
 	body.push("DĚKUJEME ZA VÁŠ NÁKUP")
 

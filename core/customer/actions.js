@@ -60,9 +60,7 @@ module.exports.edit = () => (dispatch) => {
 }
 
 module.exports.print = () => (dispatch, getState) => {
-	let { newCart, newPaid } = wrapState(getState())
-	let total = cart.getTotal(newCart)
-	dispatch(services.printCart(newCart.items, total, newPaid))
+	dispatch(services.printCart(getState().customer))
 }
 
 module.exports.qty = () => (dispatch, getState) => {

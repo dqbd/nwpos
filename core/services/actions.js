@@ -1,38 +1,18 @@
 const types = require("./actionTypes")
 
 const suggestions = require("../suggestions/actionTypes")
-
-const printer = require("./printer")
 const fetch = require("isomorphic-fetch")
-
-const getUrl = (endpoint) => {
-	return process.env.BROWSER ? endpoint : "http://localhost" + endpoint
-}
+const { getUrl } = require("../utils")
 
 module.exports.reset = () => {
 	return { type: types.RESET }
 }
 
-module.exports.print = (lines) => (dispatch) => {
+module.exports.printCart = (customer) => (dispatch) => {
 	return fetch(getUrl(`/print`), {
 		method: "POST",
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ 
-			lines: printer.print(lines)
-		})
-	}).then(a => {
-		dispatch({ type: types.PRINT })
-	})
-	
-}
-
-module.exports.printCart = (items, total, paid, tax = 21) => (dispatch) => {
-	return fetch(getUrl(`/print`), {
-		method: "POST",
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ 
-			lines: printer.printCart(items, total, paid, tax)
-		})
+		body: JSON.stringify({ customer })
 	}).then(a => {
 		dispatch({ type: types.PRINT })
 	})
@@ -54,7 +34,6 @@ module.exports.log = (customer) => (dispatch) => {
 	.then(a => a.json())
 	.then(a => {
 		dispatch({ type: types.LOG, log: true })
-		dispatch({ type: suggestions.SETLIST, grouped: a })
 	}).catch(e => {
 		console.error(e)
 		dispatch({ type: types.LOG, log: false })

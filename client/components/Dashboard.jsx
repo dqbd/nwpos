@@ -22,20 +22,30 @@ class Customer extends Component {
 		this.setState({ opened: !this.state.opened })
 	}
 
+	onPrintClick(e) {
+		e.stopPropagation()
+		this.props.onPrint(this.props.customer)
+	}
+
 	renderItems() {
 		let {customer} = this.props
 		if (this.state.opened) {
-			return <ul className="items">
-				{customer.cart.items.map((item, index) => (
-					<li key={index}>
-						<span className="name">{item.name}</span>
-						<span className="price">{item.price} Kč</span>
-						<span className="qty">{item.qty} ks</span>
-						<span className="total">{item.qty * item.price} Kč</span>
-					</li>
-				))}
+			return <div className="expanded">
+				<ul className="items">
+					{customer.cart.items.map((item, index) => (
+						<li key={index}>
+							<span className="name">{item.name}</span>
+							<span className="price">{item.price} Kč</span>
+							<span className="qty">{item.qty} ks</span>
+							<span className="total">{item.qty * item.price} Kč</span>
+						</li>
+					))}
 
-			</ul>
+				</ul>
+				<div className="actions">
+					<div className="btn print" onClick={this.onPrintClick.bind(this)}><a>Vytisknout</a></div>
+				</div>
+			</div>
 		}
 	}
 
@@ -74,7 +84,7 @@ export default class Dashboard extends Component {
 		let day = this.props.stats[this.state.selected]	
 		if (day !== undefined) {
 			return day.customers.map(customer => (
-				<Customer key={customer._id} customer={customer} />
+				<Customer key={customer._id} onPrint={this.props.onPrint} customer={customer} />
 			))
 		}
 	}

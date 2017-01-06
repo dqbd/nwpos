@@ -1,5 +1,7 @@
 'use strict';
 const Printer = require('./printer')
+const formatter = require("./formatter")
+
 let printer = null
 
 module.exports.init = () => {
@@ -17,7 +19,17 @@ module.exports.init = () => {
 	} catch (err) { console.error("Printer not found") }
 }
 
-module.exports.print = (lines) => new Promise((resolve, reject) => {
+module.exports.print = (customer) => {
+	let items = customer.cart.items
+	let total = items.reduce((memo, item) => memo + item.qty * item.price, 0)
+	let date = new Date(Date.parse(customer.date))
+
+	let lines = formatter.printCart(items, total, customer.paid, date)
+	return module.exports.printRaw(lines)
+}
+
+module.exports.printRaw = (lines) => new Promise((resolve, reject) => {
+	console.log(lines)
 	if (printer !== null) {
 		lines.forEach((line) => {
 			printer.text(line)

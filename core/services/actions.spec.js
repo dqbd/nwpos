@@ -7,13 +7,20 @@ const thunk = require("redux-thunk").default
 
 const mockStore = configureMockStore([thunk])
 
-test("print", () => {
+test("print customer", () => {
+	let customer = {
+		status: "STAGE_TYPING",
+		screen: 0, paid: 0,
+		services: { print: false, eet: false, log: false },
+		cart: { selection: 0, items: [] }
+	}
+
 	nock("http://localhost")
-		.post("/print", { lines: ["jedna", "dva", "tři"] })
+		.post("/print", { customer })
 		.reply(200, "good job")
 
 	let store = mockStore()
-	return store.dispatch(actions.print(["jedna", "dva", "tři"])).then(() => {
+	return store.dispatch(actions.printCart(customer)).then(() => {
 		expect(store.getActions()).toEqual([
 			{ type: actionTypes.PRINT }
 		])
@@ -29,11 +36,7 @@ test("log customer", () => {
 		services: {
 			print: false,
 			eet: false,
-			log: false,
-			suggestions: {
-				all: {},
-				contextual: []
-			}
+			log: false
 		},
 		cart: {
 			selection: 1,
@@ -76,8 +79,7 @@ test("log customer", () => {
 		let actions = store.getActions()
 
 		expect(actions).toEqual([
-			{ type: actionTypes.LOG, log: true },
-			{ type: actionTypes.SETLIST, grouped: suggestions }
+			{ type: actionTypes.LOG, log: true }
 		])
 	})
 })

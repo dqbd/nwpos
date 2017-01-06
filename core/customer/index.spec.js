@@ -24,11 +24,7 @@ test("add item via keyboard", () => {
 		services: {
 			print: false,
 			eet: false,
-			log: false,
-			suggestions: {
-				all: {},
-				contextual: []
-			}
+			log: false
 		},
 		cart: {
 			selection: 1,
@@ -52,11 +48,7 @@ test("clear screen after adding", () => {
 		services: {
 			print: false,
 			eet: false,
-			log: false,
-			suggestions: {
-				all: {},
-				contextual: []
-			}
+			log: false
 		},
 		cart: {
 			selection: 1,
@@ -78,11 +70,7 @@ test("checkout begin", () => {
 		services: {
 			print: false,
 			eet: false,
-			log: false,
-			suggestions: {
-				all: {},
-				contextual: []
-			}
+			log: false
 		},
 		cart: {
 			selection: 1,
@@ -106,11 +94,7 @@ test("checkout payment", () => {
 		services: {
 			print: false,
 			eet: false,
-			log: false,
-			suggestions: {
-				all: {},
-				contextual: []
-			}
+			log: false
 		},
 		cart: {
 			selection: 1,
@@ -134,11 +118,7 @@ test("payment finished", () => {
 		services: {
 			print: false,
 			eet: false,
-			log: false,
-			suggestions: {
-				all: {},
-				contextual: []
-			}
+			log: false
 		},
 		cart: {
 			selection: 1,
@@ -159,11 +139,7 @@ test("new payment", () => {
 		services: {
 			print: false,
 			eet: false,
-			log: false,
-			suggestions: {
-				all: {},
-				contextual: []
-			}
+			log: false
 		},
 		cart: {
 			selection: 0,
@@ -191,11 +167,7 @@ test("direct payment", () => {
 		services: {
 			print: false,
 			eet: false,
-			log: false,
-			suggestions: {
-				all: {},
-				contextual: []
-			}
+			log: false
 		},
 		cart: {
 			selection: 2,
@@ -232,11 +204,7 @@ test("revert back to edit", () => {
 		services: {
 			print: false,
 			eet: false,
-			log: false,
-			suggestions: {
-				all: {},
-				contextual: []
-			}
+			log: false
 		},
 		cart: {
 			selection: 3,
@@ -264,11 +232,7 @@ test("quantity payment", () => {
 		services: {
 			print: false,
 			eet: false,
-			log: false,
-			suggestions: {
-				all: {},
-				contextual: []
-			}
+			log: false
 		},
 		cart: {
 			selection: 3,
@@ -300,11 +264,7 @@ test("multiple adding", () => {
 		services: {
 			print: false,
 			eet: false,
-			log: false,
-			suggestions: {
-				all: {},
-				contextual: []
-			}
+			log: false
 		},
 		cart: {
 			selection: 1,
@@ -338,11 +298,7 @@ test("set qty", () => {
 		services: {
 			print: false,
 			eet: false,
-			log: false,
-			suggestions: {
-				all: {},
-				contextual: []
-			}
+			log: false
 		},
 		cart: {
 			selection: 0,
@@ -366,11 +322,7 @@ test("clears correctly", () => {
 		services: {
 			print: false,
 			eet: false,
-			log: false,
-			suggestions: {
-				all: {},
-				contextual: []
-			}
+			log: false
 		},
 		cart: {
 			selection: 0,
@@ -390,11 +342,7 @@ test("doesnt add on screen 0", () => {
 		services: {
 			print: false,
 			eet: false,
-			log: false,
-			suggestions: {
-				all: {},
-				contextual: []
-			}
+			log: false
 		},
 		cart: {
 			selection: 0,

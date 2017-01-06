@@ -1,9 +1,6 @@
 const stats = require("./actionTypes")
 const fetch = require("isomorphic-fetch")
-
-const getUrl = (endpoint) => {
-	return process.env.BROWSER ? endpoint : "http://localhost" + endpoint
-}
+const { getUrl } = require("../utils")
 
 const setLogs = (logs) => {
 	return { type: stats.SETLOGS, logs }

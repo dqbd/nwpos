@@ -41,15 +41,6 @@ app.use(function(req, res, next) {
 	next()
 })
 
-app.post("/print", (req, res) => {
-	if (req.body !== undefined && req.body.lines !== undefined) {
-		printer.print(req.body.lines).then(a => res.sendStatus(200)).catch(err => res.status(500).send(err))
-	} else {
-		console.log("Invalid request")
-	}
-
-	res.sendStatus(500)
-})
 
 app.get("/suggest", (req, res) => {
 	database.suggestion().getGrouped().then(data => {
@@ -100,6 +91,15 @@ app.post("/store", (req, res) => {
 		res.sendStatus(500)
 	}
 })
+
+app.post("/print", (req, res) => {
+	if (req.body !== undefined && req.body.customer !== undefined) {
+		printer.print(req.body.customer).then(a => res.sendStatus(200)).catch(err => res.status(500).send(err))
+	} else {
+		res.status(500).send("Invalid request")
+	}
+})
+
 
 app.get("/logs", (req, res) => {
 	database.logs().retrieveLogs().then(a => {
