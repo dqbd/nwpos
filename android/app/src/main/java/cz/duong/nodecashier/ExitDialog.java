@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author d^2
@@ -40,10 +41,9 @@ class ExitDialog extends Dialog {
         setContentView(R.layout.exit_dialog);
 
         ListView listView = (ListView) findViewById(R.id.exit_listview);
+
         final List<String> actions = new ArrayList<String>(){{
-            this.add(TO_REGISTER);
-            this.add(TO_STATS);
-            this.add(TO_NIGHT);
+            this.addAll(callback.getActions().keySet());
             this.add(TO_RELOAD);
             this.add(TO_EXIT);
         }};
@@ -68,20 +68,14 @@ class ExitDialog extends Dialog {
                 String action = actions.get(position);
 
                 switch (action) {
-                    case TO_REGISTER:
-                        callback.onShowRegister();
-                        break;
                     case TO_EXIT:
                         callback.onExit();
                         break;
                     case TO_RELOAD:
                         callback.onReload();
                         break;
-                    case TO_STATS:
-                        callback.onShowStats();
-                        break;
-                    case TO_NIGHT:
-                        callback.onNightToggle();
+                    default:
+                        callback.onJavascriptFunction(callback.getActions().get(action));
                         break;
                 }
 
@@ -91,11 +85,11 @@ class ExitDialog extends Dialog {
     }
 
     interface ExitInterface {
-        void onShowStats();
-        void onShowRegister();
+        void onJavascriptFunction(String function);
         void onExit();
         void onReload();
         void onRediscover();
-        void onNightToggle();
+
+        Map<String, String> getActions();
     }
 }

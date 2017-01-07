@@ -1,5 +1,5 @@
 'use strict';
-const Printer = require('./printer')
+const escpos = require('./escpos')
 const formatter = require("./formatter")
 
 let printer = null
@@ -18,7 +18,7 @@ module.exports.init = (graph) => {
 			device = new serial("/dev/usb/lp0")
 		}
 
-		device.open(() => printer = new Printer(device))
+		device.open(() => printer = new escpos(device))
 	} catch (err) { console.error("Printer not found") }
 }
 
@@ -40,7 +40,7 @@ module.exports.printRaw = (lines) => new Promise((resolve, reject) => {
 	console.log(lines)
 	if (printer !== null) {
 		lines.forEach((line) => {
-			printer.text(line)
+			printer.text(formatter.print(line))
 		})
 
 		printer.feed()

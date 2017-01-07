@@ -25,8 +25,6 @@ module.exports.retrieveCert = (filename, pass) => new Promise((resolve, reject) 
 	})
 })
 
-
-
 module.exports.upload = (options, total) => new Promise((resolve, reject) => {
 	let { dic, idPokl, idProvoz } = options
 	let gen = {

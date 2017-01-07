@@ -24,43 +24,46 @@ let hashHistory = useRouterHistory(createHashHistory)()
 injectTapEventPlugin()
 bindDisplayEvents(store)
 
-window.showStats = () => {
-	let { pathname } = hashHistory.getCurrentLocation()
-	if (pathname !== "/stats") {
-		hashHistory.push("/stats")
-		store.dispatch(stats.retrieve())
-	}
-}
-
-window.showClient = () => {
-	let { pathname } = hashHistory.getCurrentLocation()
-	if (pathname !== "/") {
-		hashHistory.push("/")
-	}
-	store.dispatch(suggestions.listSuggestions())
-}
-
-window.toggleNight = (ignore = false) => {
-	let body = document.querySelector("body")
-	let value = JSON.parse(window.localStorage.getItem("dark"))
-	if (value === null) {
-		value = false
-	}
-
-	if (ignore === false) {
-		value = !value
-	}
-
-	if (body) {
-		if (value) {
-			body.classList.add("dark")
-		} else {
-			body.classList.remove("dark")
+const actions = {
+	showStats: Object.assign(() => {
+		let { pathname } = hashHistory.getCurrentLocation()
+		if (pathname !== "/stats") {
+			hashHistory.push("/stats")
+			store.dispatch(stats.retrieve())
 		}
-	}
+	}, { title: "Zobrazit statistiky" }),
+	showClient: Object.assign(() => {
+		let { pathname } = hashHistory.getCurrentLocation()
+		if (pathname !== "/") {
+			hashHistory.push("/")
+		}
+		store.dispatch(suggestions.listSuggestions())
+	}, { title: "Přejít k pokladně" }),
+	toggleNight: Object.assign((ignore = false) => {
+		let body = document.querySelector("body")
+		let value = JSON.parse(window.localStorage.getItem("dark"))
+		if (value === null) {
+			value = false
+		}
 
-	window.localStorage.setItem("dark", value)
+		if (ignore === false) {
+			value = !value
+		}
+
+		if (body) {
+			if (value) {
+				body.classList.add("dark")
+			} else {
+				body.classList.remove("dark")
+			}
+		}
+
+		window.localStorage.setItem("dark", value)
+	}, { title: "Přepnout tmavý režim" })
 }
+
+
+
 
 render(<Provider store={store}>
 	<Router history={hashHistory}>
@@ -69,9 +72,17 @@ render(<Provider store={store}>
 	</Router>
 </Provider>, document.getElementById("root"))
 
-window.showClient()
-window.toggleNight(true)
+actions.showClient()
+actions.toggleNight(true)
+
+Object.assign(window, actions)
 
 if (window.android) {
-	window.android.loadFinished()
+	let payload = Object.keys(actions).map(a => {
+		return {func: a, name: actions[a].title}
+	})
+
+	console.log(JSON.stringify(payload))
+
+	window.android.loadFinished(JSON.stringify({ actions: payload }))
 }

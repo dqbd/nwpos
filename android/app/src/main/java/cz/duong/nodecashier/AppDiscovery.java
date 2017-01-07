@@ -17,7 +17,7 @@ import java.net.Inet6Address;
 class AppDiscovery {
     private static final String PREFS_NAME = "MyPrefsFile";
     private static final String SERVICE_TYPE = "_http._tcp";
-    private static final String SERVICE_NAME = "nodecashier-services";
+    private static final String SERVICE_NAME = "nodecashier-services-dev";
 
     private Context context;
     private UrlListener urlListener;

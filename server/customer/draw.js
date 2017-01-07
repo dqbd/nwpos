@@ -40,7 +40,6 @@ module.exports.render = (state = initialState) => new Promise((resolve, reject) 
 		ctx.font = "32px sans-serif"
 		ctx.textBaseline = "middle"
 
-
 		ctx.textAlign = "center"
 		ctx.fillText(i + 1, padding + 20, center)
 		
@@ -51,7 +50,6 @@ module.exports.render = (state = initialState) => new Promise((resolve, reject) 
 		ctx.fillText(item.price + " Kč", 800, center)
 		ctx.fillText(item.qty + " ks", 1000, center)
 		ctx.fillText((item.price * item.qty) + " Kč", width - padding, center)
-
 	}
 
 	ctx.restore()

@@ -69,3 +69,21 @@ test("print existing info", () => {
 		"DĚKUJEME ZA VÁŠ NÁKUP"
 	])
 })
+
+test("print seller info", () => {
+	let seller = {
+		name: "Obchod",
+		street: "Praha 123",
+		ic: "123456789",
+		psc: "748 01",
+		city: "Hlučín"
+	}
+
+	expect(printer.printHeader(seller)).toEqual([
+		"Obchod",
+		"Praha 123",
+		"748 01 HLUČÍN",
+		"IČ: 123456789",
+		"--------------------------------"
+	])
+})

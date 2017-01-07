@@ -28,7 +28,9 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends Activity implements ExitDialog.ExitInterface, AppInterface.AppLoadListener {
 
@@ -40,6 +42,8 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
 
     private BroadcastReceiver powerReceiver;
     private PowerManager.WakeLock wakeLock;
+
+    private Map<String, String> actions = new HashMap<>();
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -265,13 +269,8 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
     }
 
     @Override
-    public void onShowStats() {
-        webView.loadUrl("javascript:showStats()");
-    }
-
-    @Override
-    public void onShowRegister() {
-        webView.loadUrl("javascript:showClient()");
+    public void onJavascriptFunction(String function) {
+        webView.loadUrl("javascript:"+function+"()");
     }
 
     @Override
@@ -316,12 +315,13 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
     }
 
     @Override
-    public void onAppLoaded() {
+    public void onAppLoaded(Map<String, String> actions) {
+        this.actions = actions;
         showBrowser();
     }
 
     @Override
-    public void onNightToggle() {
-        webView.loadUrl("javascript:toggleNight()");
+    public Map<String, String> getActions() {
+        return this.actions;
     }
 }

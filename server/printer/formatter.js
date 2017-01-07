@@ -95,7 +95,7 @@ module.exports.printHeader = (seller) => {
 	return [
 		seller.name,
 		seller.street,
-		`${seller.psc} ${seller.city}`,
+		`${seller.psc} ${seller.city.toUpperCase()}`,
 		`IČ: ${seller.ic}`,
 		// `DIČ: ${seller.dic}`,
 		divider()
