@@ -27,7 +27,7 @@ class customer:
 	white = (255, 255, 255)
 	statusColor = (33, 150, 243)
 	eetColor = (230, 230, 230)
-	selectedColor = (240, 240, 240)
+	selectedColor = (250, 250, 250)
 	textBlack = (50, 50, 50)
 	lineBlack = (200, 200, 200)
 
