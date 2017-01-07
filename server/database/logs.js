@@ -25,7 +25,7 @@ class Logs extends Database {
 
 	retrieveLogs() {
 		return new Promise((resolve, reject) => {
-			fs.readdir("data", (err, files) => {
+			fs.readdir(path.resolve(__dirname, "..", "data"), (err, files) => {
 				if (err) {
 					return reject(err)
 				}

@@ -2,7 +2,7 @@ const nedb = require("nedb")
 const path = require("path")
 
 const storage = (dbname) => {
-	let db = new nedb({ filename: path.resolve("data", dbname + ".db"), autoload: true })
+	let db = new nedb({ filename: path.resolve(__dirname, "..", "data", dbname + ".db"), autoload: true })
 	db.persistence.compactDatafile()
 	return db
 }
