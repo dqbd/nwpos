@@ -2,6 +2,7 @@ package cz.duong.nodecashier;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.SoundEffectConstants;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
@@ -11,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -43,7 +45,7 @@ class AppInterface {
     public void loadFinished(String json) {
         if (listener != null) {
 
-            final HashMap<String, String> actionMap = new HashMap<>();
+            final LinkedHashMap<String, String> actionMap = new LinkedHashMap<>();
 
             try {
                 JSONObject map = new JSONObject(json);
