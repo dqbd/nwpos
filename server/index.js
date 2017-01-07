@@ -13,7 +13,7 @@ const config = require("./config.json")
 const app = express()
 
 customer.init()
-printer.init()
+printer.init(graph.load(config))
 
 let advert = "nodecashier-services"
 if (process.argv[2] === "--dev") {

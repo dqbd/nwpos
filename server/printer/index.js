@@ -3,8 +3,11 @@ const Printer = require('./printer')
 const formatter = require("./formatter")
 
 let printer = null
+let seller = null
 
-module.exports.init = () => {
+module.exports.init = (graph) => {
+	seller = graph
+
 	try {
 		let device = null
 		if (/^win/.test(process.platform)) {
@@ -28,8 +31,9 @@ module.exports.print = (customer) => {
 		date = new Date(Date.parse(customer.date))
 	}
 
-	let lines = formatter.printCart(items, total, customer.paid, date)
-	return module.exports.printRaw(lines)
+	let header = formatter.printHeader(seller.getSeller(total))
+	let cart = formatter.printCart(items, total, customer.paid, date)
+	return module.exports.printRaw([...header, ...cart])
 }
 
 module.exports.printRaw = (lines) => new Promise((resolve, reject) => {

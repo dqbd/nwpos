@@ -1,10 +1,10 @@
 const limit = 32
 const alignRight = (left, right) => {
-	return left + " ".repeat(32 - left.length - right.length) + right
+	return left + " ".repeat(limit - left.length - right.length) + right
 }
 
 const divider = (char = "-") => {
-	return char.repeat(32)
+	return char.repeat(limit)
 }
 
 const datestamp = (date) => {
@@ -36,7 +36,7 @@ const table = (rows, spacing = 2) => {
 
 		//first row unimportant, truncate
 		let rest = Object.keys(sizes).reduce((memo, a) => memo + sizes[a], 0)
-		let firstRow = 32 - spacing * (row.length-1) - rest
+		let firstRow = limit - spacing * (row.length-1) - rest
 
 		newRow += row[0].substring(0, firstRow)
 		newRow += " ".repeat(firstRow - newRow.length)
@@ -52,17 +52,10 @@ const table = (rows, spacing = 2) => {
 }
 
 module.exports.print = (lines) => {
-	return lines.map(line => line.substring(0, 32))
+	return lines.map(line => line.substring(0, limit))
 }
 
 module.exports.printCart = (items, total, paid, date, tax = 21) => {
-	let body = [
-		"Obchod u Růženky",
-		"Ostravská 136/6",
-		"748 01  HLUČÍN",
-		"IČ: 43965547",
-		divider()
-	]
 
 	if (!date) {
 		date = new Date()
@@ -70,13 +63,13 @@ module.exports.printCart = (items, total, paid, date, tax = 21) => {
 
 	let returned = -1 * (total - paid)
 
-	body = [...body, ...table(items.map(item => [
+	body = table(items.map(item => [
 		(item.name.length == 0) ? "Zboží" : item.name,
 		item.price.toFixed(2),
 		item.qty + " ks",
 		(item.price * item.qty).toFixed(2)
-	]))]
-
+	]))
+	
 	body.push(divider())
 
 	let taxed = (total / (100 + tax) * 100).toFixed(2)
@@ -97,3 +90,14 @@ module.exports.printCart = (items, total, paid, date, tax = 21) => {
 
 	return body
 }
+
+module.exports.printHeader = (seller) => {
+	return [
+		seller.name,
+		seller.street,
+		`${seller.psc} ${seller.city}`,
+		`IČ: ${seller.ic}`,
+		// `DIČ: ${seller.dic}`,
+		divider()
+	]
+} 
