@@ -13,7 +13,7 @@ class customer:
 	global width, height
 
 	screen = None
-	eetMode = False
+	eetMode = True
 
 	limit = 9 if eetMode else 10
 	itemHeight = height * 87 / 1024
@@ -26,8 +26,8 @@ class customer:
 
 	white = (255, 255, 255)
 	statusColor = (33, 150, 243)
-	eetColor = (240, 240, 240)
-	selectedColor = (250, 250, 250)
+	eetColor = (230, 230, 230)
+	selectedColor = (240, 240, 240)
 	textBlack = (50, 50, 50)
 	lineBlack = (200, 200, 200)
 
@@ -67,7 +67,7 @@ class customer:
 			self.screen = pygame.display.set_mode((width, height))
 			pygame.display.set_caption("nwpos")
 
-		# pygame.mouse.set_visible(False)
+		pygame.mouse.set_visible(False)
 		self.render()
 
 	def render(self, state = json.loads('{"cart": { "items": [], "selection": 0 }, "paid": 0, "status": "STAGE_TYPING"}')):
