@@ -3,7 +3,7 @@ const path = require("path")
 
 let stopped = false
 let kiosk = null
-let kiosk_state = { cart: { items: [] }, paid: 0, status: "STAGE_TYPING" }
+let kiosk_state = { cart: { items: [], selection: 0 }, paid: 0, status: "STAGE_TYPING" }
 
 module.exports.init = () => {
 	module.exports.loop()
