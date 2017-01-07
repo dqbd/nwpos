@@ -70,7 +70,7 @@ class customer:
 		# pygame.mouse.set_visible(False)
 		self.render()
 
-	def render(self, state = json.loads('{"cart": { "items": [{"name": "ahoj", "qty": 1, "price": 150},{"name": "test", "qty": 1, "price": 150},{"name": "test", "qty": 1, "price": 150},{"name": "test", "qty": 1, "price": 150},{"name": "test", "qty": 1, "price": 150},{"name": "test", "qty": 1, "price": 150},{"name": "test", "qty": 1, "price": 150},{"name": "test", "qty": 1, "price": 150},{"name": "test", "qty": 1, "price": 150},{"name": "test", "qty": 1, "price": 150}, {"name": "test", "qty": 1, "price": 150}, {"name": "test", "qty": 1, "price": 150}, {"name": "test", "qty": 1, "price": 150}], "selection": 0 }, "paid": 0, "status": "STAGE_TYPING"}')):
+	def render(self, state = json.loads('{"cart": { "items": [], "selection": 0 }, "paid": 0, "status": "STAGE_TYPING"}')):
 		relative = 0
 
 		self.screen.fill(self.white)
