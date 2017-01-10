@@ -2,3 +2,11 @@ hdmi_force_hotplug=1
 hdmi_group=2
 hdmi_mode=35
 dtparam=audio=on
+
+#<--config-->
+user_psk=""
+wifi_ssid=""
+wifi_psk=""
+git_user=""
+git_psk=""
+#<--end-->
