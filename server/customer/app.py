@@ -31,7 +31,7 @@ class customer:
 	textBlack = (50, 50, 50)
 	lineBlack = (200, 200, 200)
 
-	font = "montserrat.ttf"
+	font = os.path.dirname(os.path.realpath(__file__)) + "/montserrat.ttf"
 
 	def __init__(self):
 		# http://www.karoltomala.com/blog/?p=679
@@ -85,7 +85,6 @@ class customer:
 
 		leftLimit = min(max(0, len(items) - self.limit), max(0, selected - self.limit + 1))
 		rightLimit = min(len(items), max(self.limit, selected + 1))
-		print len(items), selected, leftLimit, rightLimit
 
 		for item in items[leftLimit : rightLimit]:
 			item["index"] = relative + 1 + leftLimit

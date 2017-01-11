@@ -11,6 +11,16 @@ module.exports.init = () => {
 
 module.exports.loop = () => {
 	kiosk = child_process.spawn("python", [path.resolve(__dirname, "app.py")])
+
+	kiosk.stdout.on("data", (data) => {
+		console.log(data.toString())
+	})
+
+	kiosk.stderr.on("data", (data) => {
+		console.log(data.toString())
+	})
+	
+
 	kiosk.on("exit", () => {
 		if (!stopped) {
 			module.exports.loop()

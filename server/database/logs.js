@@ -24,14 +24,9 @@ class Logs extends Database {
 	}
 
 	retrieveLogs() {
-		return new Promise((resolve, reject) => {
-			fs.readdir(path.resolve(__dirname, "..", "data"), (err, files) => {
-				if (err) {
-					return reject(err)
-				}
-				resolve(files.filter(file => /[0-9]{2}\.[0-9]{2}\.[0-9]{4}\.db/.test(file)).sort((a, b) => {
-					return this.getDateFromString(b).getTime() - this.getDateFromString(a).getTime()
-				}))
+		return super.listDb().then(files => {
+			return files.filter(file => /[0-9]{2}\.[0-9]{2}\.[0-9]{4}\.db/.test(file)).sort((a, b) => {
+				return this.getDateFromString(b).getTime() - this.getDateFromString(a).getTime()
 			})
 		}).then(dates => {
 			let final = Promise.resolve([])
