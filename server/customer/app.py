@@ -31,6 +31,8 @@ class customer:
 	textBlack = (50, 50, 50)
 	lineBlack = (200, 200, 200)
 
+	font = "montserrat.ttf"
+
 	def __init__(self):
 		# http://www.karoltomala.com/blog/?p=679
 		if os.name != 'nt':
@@ -95,7 +97,7 @@ class customer:
 		pygame.display.flip()
 
 	def drawText(self, text, x, y, mode):
-		basicfont = pygame.font.SysFont("Verdana", 28 * width / 1280)
+		basicfont = pygame.font.Font(self.font, 28 * width / 1280)
 		textSurface = basicfont.render(text, True, self.textBlack)
 		textRect = textSurface.get_rect()
 		textRect.centery = y
@@ -111,7 +113,7 @@ class customer:
 
 		pygame.draw.rect(self.screen, self.eetColor, (0, self.listHeight, width, self.eetHeight))
 
-		linefont = pygame.font.SysFont("Verdana", 20 * width / 1280)
+		linefont = pygame.font.Font(self.font, 20 * width / 1280)
 
 		line = linefont.render(u"Podle zákona o evidenci tržeb je prodávající povinen vystavit kupujícímu účtenku. Zároveň je povinen zaevidovat", True, self.textBlack)
 		lineRect = line.get_rect()
@@ -156,11 +158,11 @@ class customer:
 		if status == "COMMIT_END":
 			mainText = u"vráceno: " + str((sumItems - paid) * -1 ) + u" Kč"
 
-			totalfont = pygame.font.SysFont("Verdana", 28 * width / 1280)
+			totalfont = pygame.font.Font(self.font, 28 * width / 1280)
 			total = totalfont.render("celkem: "+ str(sumItems) + u" Kč", True, self.white)
 			totalrect = total.get_rect()
 
-			cashfont = pygame.font.SysFont("Verdana", 28 * width / 1280)
+			cashfont = pygame.font.Font(self.font, 28 * width / 1280)
 			cash = cashfont.render("hotovost: " + str(paid) + u" Kč", True, self.white)
 			cashrect = cash.get_rect()
 
@@ -173,7 +175,7 @@ class customer:
 			self.screen.blit(total, totalrect)
 			self.screen.blit(cash, cashrect)
 		
-		finalfont = pygame.font.SysFont("Verdana", 64 * width / 1280)
+		finalfont = pygame.font.Font(self.font, 64 * width / 1280)
 		final = finalfont.render(mainText, True, self.white)
 		finalrect = final.get_rect()
 		finalrect.right = width - self.padding
