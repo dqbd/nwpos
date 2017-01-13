@@ -93,6 +93,13 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
         settings.setSaveFormData(false);
 
         webView.addJavascriptInterface(new AppInterface(webView, this), "android");
+        webView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return true;
+            }
+        });
+        webView.setHapticFeedbackEnabled(false);
         WebView.setWebContentsDebuggingEnabled(true);
 
         appDiscovery = new AppDiscovery(this, new AppDiscovery.UrlListener() {
