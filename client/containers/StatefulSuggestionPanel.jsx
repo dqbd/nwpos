@@ -1,7 +1,7 @@
 import { connect } from "react-redux"
 import SuggestionPanel from "../components/SuggestionPanel.jsx"
 
-import { cart } from "../../core"
+import { cart, customer } from "../../core"
 import { hapticFeedback, capitalize } from "../utils"
 
 const mapStateToProps = (state) => {
@@ -11,7 +11,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => hapticFeedback({
-	onItemRename: (name) => dispatch(cart.renameItem(capitalize(name))),
+	onItemRename: (name) => dispatch(customer.add(capitalize(name))),
 	onLetter: (letter) => dispatch(cart.addLetterItem(letter))
 })
 

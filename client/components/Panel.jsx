@@ -38,7 +38,7 @@ export default class Panel extends Component {
 
 		return (
 			<div className="panel">
-				<SuggestionPanel />
+				{[types.STAGE_TYPING, types.STAGE_ADDED].indexOf(status) >= 0 ? <SuggestionPanel /> : null}
 				<div className="actions">{actions}</div>
 			</div>
 		)

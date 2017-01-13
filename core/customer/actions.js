@@ -20,7 +20,7 @@ const wrapState = (state) => {
 }
 
 
-module.exports.add = () => (dispatch, getState) => {
+module.exports.add = (name) => (dispatch, getState) => {
 	let { newCart, newScreen, newStatus } = wrapState(getState())
 
 	let lastItem = newCart.items.slice(-1)[0]
@@ -30,10 +30,38 @@ module.exports.add = () => (dispatch, getState) => {
 		dispatch({ type: types.SETSTATUS, status: statusTypes.STAGE_ADDED })
 
 		if (newStatus === statusTypes.STAGE_ADDED && lastItem !== undefined && lastItem.price === screenValue) {
-			dispatch(cart.addQty(1, newCart.items.length - 1))
+			if (name !== lastItem.name && name !== undefined && name.trim().length > -1) {
+				dispatch(cart.renameItem(name))
+			} else { 
+				dispatch(cart.addQty(1, newCart.items.length - 1))
+			}
 		} else {
 			dispatch(cart.addItem(screenValue))
+			if (name !== undefined && name.trim().length > 0) {
+				dispatch(cart.renameItem(name))
+			}
 		}
+	}
+
+}
+
+// TODO: decide if use to purely just add items or rename
+module.exports.rename = (name) => (dispatch, getState) => {
+	let { newCart, newScreen, newStatus } = wrapState(getState())
+	let last = newCart.items.length - 1
+	let lastItem = newCart.items.slice(-1)[0]
+	let screenValue = screen.getValue(newScreen)
+
+	//increment
+	if (newStatus === statusTypes.STAGE_ADDED && newCart.selection == last && lastItem !== undefined && lastItem.price === screenValue && lastItem.name === name) {
+		dispatch(cart.addQty(1, last))
+	} else {
+		//add	
+		if ( newStatus === statusTypes.STAGE_TYPING && newCart.selection == last && screenValue != 0) {
+			dispatch({ type: types.SETSTATUS, status: statusTypes.STAGE_ADDED })
+			dispatch(cart.addItem(screenValue))
+		}
+
 	}
 }
 
@@ -84,7 +112,9 @@ module.exports.log = () => (dispatch, getState) => {
 }
 
 module.exports.suggest = () => (dispatch, getState) => {
-	let { newScreen } = wrapState(getState())
-	dispatch(suggestions.suggest(screen.getValue(newScreen)))
-}
+	let { newScreen, newStatus } = wrapState(getState())
 
+	if ( [statusTypes.STAGE_ADDED, statusTypes.STAGE_TYPING].indexOf(newStatus) >= 0 ) {
+		dispatch(suggestions.suggest(screen.getValue(newScreen)))
+	}
+}

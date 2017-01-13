@@ -1,4 +1,4 @@
-import { suggestions, stats } from "../../core"
+import { suggestions, customer, stats } from "../../core"
 
 let showClient = function() {
 	let { pathname } = this.hashHistory.getCurrentLocation()
@@ -6,6 +6,7 @@ let showClient = function() {
 		this.hashHistory.push("/")
 	}
 	this.store.dispatch(suggestions.listSuggestions())
+	this.store.dispatch(customer.suggest())
 }
 
 let showStats = function() {

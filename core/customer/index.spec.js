@@ -350,3 +350,42 @@ test("doesnt add on screen 0", () => {
 		}
 	})
 })
+
+test("add item with name", () => {
+	store.dispatch(screen.clear())
+	store.dispatch(cart.clear())
+
+	store.dispatch(screen.set(123))
+	store.dispatch(customer.add())
+
+	store.dispatch(screen.set(123))
+	store.dispatch(customer.add("Věc"))
+
+	store.dispatch(screen.set(256))
+	store.dispatch(customer.add("Novinka"))
+	store.dispatch(customer.add("Přepsáno"))
+	store.dispatch(customer.add("Přepsáno"))
+
+	store.dispatch(screen.set(256))
+	store.dispatch(customer.add("Přepsáno"))
+
+	expect(store.getState()).toEqual({
+		status: customer.types.STATUS_TYPES.STAGE_ADDED,
+		screen: 256,
+		paid: 0,
+		services: {
+			print: false,
+			eet: false,
+			log: false
+		},
+		cart: {
+			selection: 3,
+			items: [
+				{ name: "", price: 123, qty: 1 },
+				{ name: "Věc", price: 123, qty: 1 },
+				{ name: "Přepsáno", price: 256, qty: 2 },
+				{ name: "Přepsáno", price: 256, qty: 1 },
+			]
+		}
+	})
+})
