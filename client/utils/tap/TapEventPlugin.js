@@ -33,13 +33,13 @@ var isStartish = EventPluginUtils.isStartish;
 var isEndish = EventPluginUtils.isEndish;
 
 var isTouch = function(topLevelType) {
-  var touchTypes = [
-    'topTouchCancel',
-    'topTouchEnd',
-    'topTouchStart',
-    'topTouchMove'
-  ];
-  return touchTypes.indexOf(topLevelType) >= 0;
+	var touchTypes = [
+		'topTouchCancel',
+		'topTouchEnd',
+		'topTouchStart',
+		'topTouchMove'
+	];
+	return touchTypes.indexOf(topLevelType) >= 0;
 }
 
 /**
@@ -49,123 +49,167 @@ var isTouch = function(topLevelType) {
 var tapMoveThreshold = 110;
 var ignoreMouseThreshold = 750;
 var startCoords = {x: null, y: null};
-var lastTouchEvent = null;
+var cancelCoords = {x: null, y: null};
 
 var Axis = {
-  x: {page: 'pageX', client: 'clientX', envScroll: 'currentPageScrollLeft'},
-  y: {page: 'pageY', client: 'clientY', envScroll: 'currentPageScrollTop'}
+	x: {page: 'pageX', client: 'clientX', envScroll: 'currentPageScrollLeft'},
+	y: {page: 'pageY', client: 'clientY', envScroll: 'currentPageScrollTop'}
 };
 
 function getAxisCoordOfEvent(axis, nativeEvent) {
-  var singleTouch = TouchEventUtils.extractSingleTouch(nativeEvent);
-  if (singleTouch) {
-    return singleTouch[axis.page];
-  }
-  return axis.page in nativeEvent ?
-    nativeEvent[axis.page] :
-    nativeEvent[axis.client] + ViewportMetrics[axis.envScroll];
+	var singleTouch = TouchEventUtils.extractSingleTouch(nativeEvent);
+	if (singleTouch) {
+		return singleTouch[axis.page];
+	}
+	return axis.page in nativeEvent ?
+		nativeEvent[axis.page] :
+		nativeEvent[axis.client] + ViewportMetrics[axis.envScroll];
 }
 
 function getDistance(coords, nativeEvent) {
-  var pageX = getAxisCoordOfEvent(Axis.x, nativeEvent);
-  var pageY = getAxisCoordOfEvent(Axis.y, nativeEvent);
-  return Math.pow(
-    Math.pow(pageX - coords.x, 2) + Math.pow(pageY - coords.y, 2),
-    0.5
-  );
+	var pageX = getAxisCoordOfEvent(Axis.x, nativeEvent);
+	var pageY = getAxisCoordOfEvent(Axis.y, nativeEvent);
+	return Math.pow(
+		Math.pow(pageX - coords.x, 2) + Math.pow(pageY - coords.y, 2),
+		0.5
+	);
 }
 
 var touchEvents = [
-  'topTouchStart',
-  'topTouchCancel',
-  'topTouchEnd',
-  'topTouchMove',
+	'topTouchStart',
+	'topTouchCancel',
+	'topTouchEnd',
+	'topTouchMove',
 ];
 
 var dependencies = [
-  'topMouseDown',
-  'topMouseMove',
-  'topMouseUp',
+	'topMouseDown',
+	'topMouseMove',
+	'topMouseUp',
 ].concat(touchEvents);
 
 var eventTypes = {
-  touchTap: {
-    phasedRegistrationNames: {
-      bubbled: keyOf({onTouchTap: null}),
-      captured: keyOf({onTouchTapCapture: null})
-    },
-    dependencies: dependencies
-  }
+	touchTap: {
+		phasedRegistrationNames: {
+			bubbled: keyOf({onTouchTap: null}),
+			captured: keyOf({onTouchTapCapture: null})
+		},
+		dependencies: dependencies
+	},
+	longTouchTap: {
+		phasedRegistrationNames: {
+			bubbled: keyOf({onLongTouchTap: null}),
+			captured: keyOf({onLongTouchTapCapture: null})
+		},
+		dependencies: dependencies
+	}
 };
 
 var now = (function() {
-  if (Date.now) {
-    return Date.now;
-  } else {
-    // IE8 support: http://stackoverflow.com/questions/9430357/please-explain-why-and-how-new-date-works-as-workaround-for-date-now-in
-    return function () {
-      return +new Date;
-    }
-  }
+	if (Date.now) {
+		return Date.now;
+	} else {
+		// IE8 support: http://stackoverflow.com/questions/9430357/please-explain-why-and-how-new-date-works-as-workaround-for-date-now-in
+		return function () {
+			return +new Date;
+		}
+	}
 })();
 
-function createTapEventPlugin(shouldRejectClick) {
-  return {
+let longTouchTimeout = null
 
-    tapMoveThreshold: tapMoveThreshold,
 
-    ignoreMouseThreshold: ignoreMouseThreshold,
+function createTapEventPlugin() {
+	return {
+		tapMoveThreshold: tapMoveThreshold,
+		ignoreMouseThreshold: ignoreMouseThreshold,
+		eventTypes: eventTypes,
 
-    eventTypes: eventTypes,
+		/**
+		 * @param {string} topLevelType Record from `EventConstants`.
+		 * @param {DOMEventTarget} targetInst The listening component root node.
+		 * @param {object} nativeEvent Native browser event.
+		 * @return {*} An accumulation of synthetic events.
+		 * @see {EventPluginHub.extractEvents}
+		 */
+		extractEvents: function(
+			topLevelType,
+			targetInst,
+			nativeEvent,
+			nativeEventTarget
+		) {
 
-    /**
-     * @param {string} topLevelType Record from `EventConstants`.
-     * @param {DOMEventTarget} targetInst The listening component root node.
-     * @param {object} nativeEvent Native browser event.
-     * @return {*} An accumulation of synthetic events.
-     * @see {EventPluginHub.extractEvents}
-     */
-    extractEvents: function(
-      topLevelType,
-      targetInst,
-      nativeEvent,
-      nativeEventTarget
-    ) {
+			if (!isStartish(topLevelType) && !isEndish(topLevelType)) {
+				return null;
+			}
 
-      if (!isStartish(topLevelType) && !isEndish(topLevelType)) {
-        return null;
-      }
+			if (!isTouch(topLevelType) && (navigator.platform.indexOf('Win') == -1)) {
+				return null;
+			}
 
-      if (isTouch(topLevelType)) {
-        lastTouchEvent = now();
-      } else {
-        if (shouldRejectClick(lastTouchEvent, now())) {
-          return null;
-        }
-      }
+			if (topLevelType === "topTouchStart") {
+				cancelCoords.x = 0;
+				cancelCoords.y = 0;
 
-      var event = null;
-      var distance = getDistance(startCoords, nativeEvent);
-      if (isEndish(topLevelType) && distance < tapMoveThreshold) {
-        event = SyntheticUIEvent.getPooled(
-          eventTypes.touchTap,
-          targetInst,
-          nativeEvent,
-          nativeEventTarget
-        );
-      }
-      if (isStartish(topLevelType)) {
-        startCoords.x = getAxisCoordOfEvent(Axis.x, nativeEvent);
-        startCoords.y = getAxisCoordOfEvent(Axis.y, nativeEvent);
-      } else if (isEndish(topLevelType)) {
-        startCoords.x = 0;
-        startCoords.y = 0;
-      }
-      EventPropagators.accumulateTwoPhaseDispatches(event);
-      return event;
-    }
+				clearTimeout(longTouchTimeout)
+				longTouchTimeout = setTimeout(() => {
+					let event = new TouchEvent("touchcancel", {
+						touches: nativeEvent.touches,
+						targetTouches: nativeEvent.targetTouches,
+						changedTouches: nativeEvent.changedTouches,
+						bubbles: true,
+						cancelable: true
+					});
+					nativeEventTarget.dispatchEvent(event)
+				}, 300)
+			} 
 
-  };
+			if (topLevelType === "topTouchCancel") {
+				cancelCoords.x = getAxisCoordOfEvent(Axis.x, nativeEvent);
+				cancelCoords.y = getAxisCoordOfEvent(Axis.y, nativeEvent);
+			}
+
+			if (topLevelType === "topTouchEnd") {
+				clearTimeout(longTouchTimeout)
+				if (getDistance(cancelCoords, nativeEvent) < tapMoveThreshold) {
+					return null
+				} 
+			}
+
+			var event = null;
+			var distance = getDistance(startCoords, nativeEvent);
+			if (isEndish(topLevelType) && distance < tapMoveThreshold) {
+
+				if (topLevelType === "topTouchCancel") {
+					event = [SyntheticUIEvent.getPooled(
+						eventTypes.longTouchTap,
+						targetInst,
+						nativeEvent,
+						nativeEventTarget
+					)];
+				} else {
+					event = [SyntheticUIEvent.getPooled(
+						eventTypes.touchTap,
+						targetInst,
+						nativeEvent,
+						nativeEventTarget
+					)];
+				}
+			}
+
+			if (isStartish(topLevelType)) {
+				startCoords.x = getAxisCoordOfEvent(Axis.x, nativeEvent);
+				startCoords.y = getAxisCoordOfEvent(Axis.y, nativeEvent);
+			} else if (isEndish(topLevelType)) {
+				startCoords.x = 0;
+				startCoords.y = 0;
+			}
+
+			EventPropagators.accumulateTwoPhaseDispatches(event);
+			return event;
+		}
+
+	};
 }
 
 module.exports = createTapEventPlugin;
