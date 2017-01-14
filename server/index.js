@@ -94,8 +94,12 @@ app.post("/store", (req, res) => {
 
 app.post("/print", (req, res) => {
 	if (req.body !== undefined && req.body.customer !== undefined) {
-		printer.print(req.body.customer).then(a => res.sendStatus(200)).catch(err => res.status(500).send(err))
+		printer.print(req.body.customer).then(a => res.sendStatus(200)).catch(err => {
+			res.status(500).send(err)
+			console.log(err)
+		})
 	} else {
+
 		res.status(500).send("Invalid request")
 	}
 })

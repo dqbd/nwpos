@@ -1,5 +1,5 @@
 'use strict';
-const escpos = require('./escpos')
+const native = require('./native')
 const formatter = require("./formatter")
 
 let printer = null
@@ -8,18 +8,19 @@ let seller = null
 module.exports.init = (graph) => {
 	seller = graph
 
-	try {
-		let device = null
-		if (/^win/.test(process.platform)) {
-			const usb = require("./usb")
-			device = new usb()
-		} else {
-			const serial = require("./serial")
-			device = new serial("/dev/usb/lp0")
-		}
+	if (/^win/.test(process.platform)) {
+		try {
+			let device = new require("./usb")()
+			device.open(() => printer = new require("./escpos")(device))
+		} catch (err) { console.error("Printer not found") }
+	} else {
+		printer = new native("test.txt")
+		printer.init().catch(err => {
+			console.log(err)
+			printer = null
+		})
+	} 	
 
-		device.open(() => printer = new escpos(device))
-	} catch (err) { console.error("Printer not found") }
 }
 
 module.exports.print = (customer) => {
@@ -37,10 +38,9 @@ module.exports.print = (customer) => {
 }
 
 module.exports.printRaw = (lines) => new Promise((resolve, reject) => {
-	console.log(lines)
 	if (printer !== null) {
-		lines.forEach((line) => {
-			printer.text(formatter.print(line))
+		formatter.print(lines).forEach(line => {
+			printer.text(line)
 		})
 
 		printer.feed()

@@ -71,9 +71,7 @@ sudo chown pi "$INSTALL_PATH/nwpos" -R
 
 # install dependencies
 cd "$INSTALL_PATH/nwpos/server"
-
 npm install --production
-npm install serialport
 
 # install forever / forever-service
 sudo npm config set prefix /usr/local
