@@ -14,7 +14,7 @@ module.exports.init = (graph) => {
 			device.open(() => printer = new require("./escpos")(device))
 		} catch (err) { console.error("Printer not found") }
 	} else {
-		printer = new native("test.txt")
+		printer = new native("/dev/usb/lp0")
 		printer.init().catch(err => {
 			console.log(err)
 			printer = null
