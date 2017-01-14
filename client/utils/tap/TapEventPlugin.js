@@ -49,7 +49,7 @@ var isTouch = function(topLevelType) {
 var tapMoveThreshold = 110;
 var ignoreMouseThreshold = 750;
 var startCoords = {x: null, y: null};
-var cancelCoords = {x: null, y: null};
+var isCancelled = false;
 
 var Axis = {
 	x: {page: 'pageX', client: 'clientX', envScroll: 'currentPageScrollLeft'},
@@ -148,8 +148,7 @@ function createTapEventPlugin() {
 			}
 
 			if (topLevelType === "topTouchStart") {
-				cancelCoords.x = 0;
-				cancelCoords.y = 0;
+				isCancelled = false
 
 				clearTimeout(longTouchTimeout)
 				longTouchTimeout = setTimeout(() => {
@@ -165,13 +164,12 @@ function createTapEventPlugin() {
 			} 
 
 			if (topLevelType === "topTouchCancel") {
-				cancelCoords.x = getAxisCoordOfEvent(Axis.x, nativeEvent);
-				cancelCoords.y = getAxisCoordOfEvent(Axis.y, nativeEvent);
+				isCancelled = true
 			}
 
 			if (topLevelType === "topTouchEnd") {
 				clearTimeout(longTouchTimeout)
-				if (getDistance(cancelCoords, nativeEvent) < tapMoveThreshold) {
+				if (isCancelled) {
 					return null
 				} 
 			}
