@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.2",
-    "bonjour": "^3.5.0",
+    "bonjour": "github:resin-io/bonjour",
     "eet": "^0.5.1",
     "express": "^4.14.0",
     "iconv-lite": "^0.4.15",

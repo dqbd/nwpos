@@ -8,6 +8,8 @@ const printer = require("./printer")
 const customer = require("./customer")
 const graph = require("./graph")
 
+const bonjour = require('bonjour')()
+
 const config = require("./config.json")
 
 const app = express()
@@ -28,11 +30,7 @@ if (process.argv[2] === "--dev") {
 	app.use("/", express.static(path.resolve(__dirname, "dist")))
 }
 
-mdns.createAdvertisement(mdns.tcp("http"), 80, { name: advert }, (error, service) => {
-	if (!error) {
-		console.log("MDNS started: " + advert)
-	}
-}).start()
+bonjour.publish({ name: advert, type: "http", port: 80 })
 
 app.use(bodyParser.json())
 app.use(function(req, res, next) {
