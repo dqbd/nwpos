@@ -105,9 +105,12 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
         appDiscovery = new AppDiscovery(this, new AppDiscovery.UrlListener() {
             @Override
             public void onUrlReceived(String url) {
+                Log.d("APP-DISCOVERY", url);
                 webView.loadUrl(url);
             }
         });
+        appDiscovery.setup();
+
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -200,7 +203,7 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
         super.onDestroy();
 
         if (appDiscovery != null) {
-            appDiscovery.destroy();
+            appDiscovery.clear();
             appDiscovery = null;
         }
 
@@ -318,6 +321,7 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
     @Override
     public void onRediscover() {
         Toast.makeText(this, "Znova načítám", Toast.LENGTH_LONG).show();
+        hideBrowser();
         appDiscovery.rediscover();
     }
 

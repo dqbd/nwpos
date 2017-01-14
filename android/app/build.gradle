@@ -26,4 +26,5 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
     compile 'org.jetbrains:annotations-java5:15.0'
+    compile 'org.jmdns:jmdns:3.5.1'
 }
