@@ -1,6 +1,5 @@
 const express = require("express")
 const path = require("path")
-const mdns = require("mdns")
 const bodyParser = require("body-parser")
 
 const database = require("./database") 
