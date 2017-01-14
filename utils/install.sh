@@ -54,7 +54,7 @@ sudo sysctl -p
 sudo ifdown wlan0 && sudo ifup wlan0
 
 # install depedencies
-sudo apt-get install -y libavahi-compat-libdnssd-dev python-pygame build-essential git
+sudo apt-get install -y python-pygame build-essential git
 
 # install node
 git clone https://github.com/audstanley/NodeJs-Raspberry-Pi

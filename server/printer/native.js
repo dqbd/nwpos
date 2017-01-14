@@ -28,6 +28,10 @@ class Printer {
 		this.stream.write(iconv.encode(line + _.EOL, "CP1250"))
 	}
 
+	align(align) {
+		this.stream.write(_.TEXT_FORMAT['TXT_ALIGN_' + align.toUpperCase()])
+	}
+
 	feed() {
 		this.stream.write(new Array(3).fill(_.EOL).join(""))
 	}
