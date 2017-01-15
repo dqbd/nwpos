@@ -1,15 +1,14 @@
 import React from "react"
 import { findDOMNode } from "react-dom"
-import { capitalize } from "../utils"
+import { capitalize, czechAlphabet } from "../utils"
 
 import StatefulSuggestionGroup from "../containers/StatefulSuggestionGroup.jsx"
-
 
 class RenamePopup extends React.Component {
 
 	constructor(props) {
 		super(props)
-		this.state = { input: this.props.current }
+		this.state = { input: this.props.current, typed: false }
 	}
 
 	componentDidMount() {
@@ -22,7 +21,7 @@ class RenamePopup extends React.Component {
 	}
 
 	onInputChange(event) {
-		this.setState({input: capitalize(event.target.value)})
+		this.setState({input: capitalize(event.target.value), typed: true})
 	}
 
 	onSuggestionEdit(event) {
@@ -37,8 +36,10 @@ class RenamePopup extends React.Component {
 	render() {
 		let { index, onEdit, onClose } = this.props
 
+		let filter = (this.state.typed) ? this.state.input.toLowerCase().split("").filter(a => czechAlphabet.indexOf(a) >= 0).join("") : null
+
 		return (
-			<form className="rename popup" onSubmit={this.onFormSubmit.bind(this)}>
+			<form className="rename popup" onTouchTap={(e) => e.stopPropagation()} onSubmit={this.onFormSubmit.bind(this)}>
 				<div className="inside">
 					<div className="header">
 						<div className="heading">
@@ -61,7 +62,7 @@ class RenamePopup extends React.Component {
 						</div>
 					</div>
 					<div className="content">
-						<StatefulSuggestionGroup onSuggestionEdit={this.onSuggestionEdit.bind(this)} />
+						<StatefulSuggestionGroup filter={filter} onSuggestionEdit={this.onSuggestionEdit.bind(this)} />
 					</div>
 					
 				</div>

@@ -1,8 +1,8 @@
 import React, { Component } from "react"
 
 import { customer } from "../../core"
+import { czechAlphabet } from "../utils"
 
-const alphabet = "aábcčdďeéěfghiíjklmnňoópqrřsštťuúůvwxyýzžAÁBCČDĎEÉĚFGHIÍJKLMNŇOÓPQRŘSŠTŤUÚŮVWXYÝZŽ "
 const types = customer.types.STATUS_TYPES
 
 export default class Keyboard extends Component {
@@ -17,7 +17,7 @@ export default class Keyboard extends Component {
 	onKey(event) {
 		if("0123456789".indexOf(event.key) >= 0) {
 			this.onNumberKeyPress(event)
-		} else if (alphabet.indexOf(event.key) >= 0) {
+		} else if (czechAlphabet.indexOf(event.key) >= 0) {
 			this.onKeyType(event)
 		} else if (event.key === "Backspace") {
 			this.onBackspace()

@@ -5,6 +5,13 @@ module.exports.hapticFeedback = (mapDispatch) => {
 	return mapDispatch
 }
 
+module.exports.czechAlphabet = "aábcčdďeéěfghiíjklmnňoópqrřsštťuúůvwxyýzžAÁBCČDĎEÉĚFGHIÍJKLMNŇOÓPQRŘSŠTŤUÚŮVWXYÝZŽ "
+
+module.exports.czechToEnglish = (str) => {
+	let english = "aabccddeeefghiijklmnnoopqrrssttuuuvwxyyzzAABCCDDEEEFGHIIJKLMNNOOPQRRSSTTUUUVWXYYZZ "
+	return str.split("").map(a => english[module.exports.czechAlphabet.indexOf(a)]).join("")
+}
+
 module.exports.bindFeedback = (func) => {
 	return function() {
 		module.exports.invokeFeedback()
@@ -14,7 +21,6 @@ module.exports.bindFeedback = (func) => {
 
 module.exports.invokeFeedback = () =>{
 	navigator.vibrate(90)
-
 	if (window.android) {
 		window.android.buttonClick()
 	}

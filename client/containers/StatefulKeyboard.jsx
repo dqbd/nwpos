@@ -4,6 +4,8 @@ import Keyboard from "../components/Keyboard.jsx"
 import { customer, cart, screen, suggestions } from "../../core"
 import { capitalize } from "../utils"
 
+let throttle = null
+
 const mapStateToProps = (state) => {
 	return {
 		screen: state.customer.screen,
@@ -22,9 +24,17 @@ const mapDispatchToProps = (dispatch) => {
 			dispatch(customer.pay())
 			dispatch(customer.log())
 		},
-		onNumber: (digit) => dispatch(screen.addDigit(digit)),
+		onNumber: (digit) => {
+			dispatch(screen.addDigit(digit))
+			clearTimeout(throttle)
+			throttle = setTimeout(() => dispatch(customer.suggest()), 400)
+		},
 		onLetterBackspace: () => dispatch(cart.removeLetter()),
-		onNumberBackspace: () => dispatch(screen.removeDigit()),
+		onNumberBackspace: () => {
+			dispatch(screen.removeDigit())
+			clearTimeout(throttle)
+			throttle = setTimeout(() => dispatch(customer.suggest()), 400)
+		},
 		onMoveSelection: (diff) => dispatch(cart.moveSelection(diff)),
 		onAddQty: (diff) => dispatch(cart.addQty(diff)),
 		onDelete: () => dispatch(cart.removeItem())

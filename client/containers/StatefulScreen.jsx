@@ -25,9 +25,13 @@ const mapDispatchToProps = (dispatch) => hapticFeedback({
 	onNumber: (digit) => {
 		dispatch(screen.addDigit(digit))
 		clearTimeout(throttle)
-		throttle = setTimeout(() => dispatch(customer.suggest()), 100)
+		throttle = setTimeout(() => dispatch(customer.suggest()), 200)
 	},
-	onBackspace: () => dispatch(screen.removeDigit()),
+	onBackspace: () => {
+		dispatch(screen.removeDigit())
+		clearTimeout(throttle)
+		throttle = setTimeout(() => dispatch(customer.suggest()), 200)
+	},
 	onClear: () => dispatch(screen.clear())
 })
 

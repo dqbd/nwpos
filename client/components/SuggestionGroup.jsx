@@ -1,20 +1,34 @@
 import React from "react"
 
+import { capitalize, czechToEnglish } from "../utils"
+
 const Group = ({letter, items, onSuggestionEdit}) => (
 	<div className="group">
 		<strong className="groupname">{letter}</strong>
 		<ul>
 			{items.map((item, index) => 
-				<li key={index} className="item"><a onTouchTap={(e) => onSuggestionEdit(e)}>{item}</a></li>
+				<li key={index} className="item"><a onTouchTap={(e) => onSuggestionEdit(e)}>{capitalize(item)}</a></li>
 			)}
 		</ul>
 	</div>
 )
 
-const SuggestionGroup = ({suggestions, onSuggestionEdit}) => (
-	<div className="groups">
-		{Object.keys(suggestions).map((letter, index) => <Group key={letter} letter={letter} items={suggestions[letter]} onSuggestionEdit={onSuggestionEdit} />)}
-	</div>
-)
+const SuggestionGroup = ({filter, suggestions, onSuggestionEdit}) => {
+	let data = {}
+	if (filter) {
+		Object.keys(suggestions).forEach(a => {
+			let list = suggestions[a].filter(item => czechToEnglish(item).indexOf(czechToEnglish(filter)) >= 0) 
+			if (list.length > 0) {
+				data[a] = list
+			}
+		})
+	} else {
+		data = suggestions
+	}
 
+	return (<div className="groups">
+		{Object.keys(data).map((letter, index) => 
+			<Group key={letter} letter={letter} items={data[letter]} onSuggestionEdit={onSuggestionEdit} />)}
+	</div>)
+}
 export default SuggestionGroup

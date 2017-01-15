@@ -63,6 +63,9 @@ chmod +x Install-Node.sh
 sudo ./Install-Node.sh
 cd .. && rm -rf NodeJs-Raspberry-Pi/
 
+# install yarn for faster installs
+curl -o- -L https://yarnpkg.com/install.sh | sudo bash
+
 # clone git repository
 git clone "https://$git_user:$git_psk@github.com/delold/nwpos" nwpos
 
@@ -71,11 +74,13 @@ sudo chown pi "$INSTALL_PATH/nwpos" -R
 
 # install dependencies
 cd "$INSTALL_PATH/nwpos/server"
-npm install --production --no-optional # do not install ursa
+~/.yarn/bin/yarn install --production
+# npm install --production --no-optional # do not install ursa
 
 # install forever / forever-service
-sudo npm config set prefix /usr/local
-sudo npm install -g forever forever-service
+sudo ~/.yarn/bin/yarn global add forever forever-service --prefix /usr/local 
+# sudo npm config set prefix /usr/local
+# sudo npm install -g forever forever-service
 
 # install server
 sudo forever-service install nwpos --script index.js
