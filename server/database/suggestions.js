@@ -36,7 +36,7 @@ class Suggestions extends Database {
 				})
 
 				let ordered = {}
-				Object.keys(alphabet).sort().forEach(key => {
+				Object.keys(alphabet).sort((a,b) => a.localeCompare(b)).forEach(key => {
 					ordered[key] = alphabet[key].sort()
 				})
 
