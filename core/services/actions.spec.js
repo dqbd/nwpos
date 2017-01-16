@@ -87,7 +87,7 @@ test("log customer", () => {
 
 		expect(actions).toEqual([
 			{ type: actionTypes.LOG, log: true },
-			{ type: suggestions.SUGGEST, suggestions: answer }
+			{ type: suggestions.SETLIST, grouped: answer }
 		])
 	})
 })
