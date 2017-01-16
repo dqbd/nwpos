@@ -3,15 +3,24 @@ const watch = require("redux-watch")
 
 const customer = require("../../core").customer
 
+let throttle = null
+let cache = {} 
+
 function sendStream(newVal, loc) {
 	let payload = {}
 	payload[loc.replace("customer.", "")] = newVal
 
-	fetch("/stream", {
-		method: "POST",
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({customer: payload})
-	})
+	cache = Object.assign(cache, payload)
+
+	clearTimeout(throttle)
+	throttle = setTimeout(() => {
+		fetch("/stream", {
+			method: "POST",
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({customer: cache})
+		})
+		cache = {}
+	}, 200)
 }
 
 module.exports.bindDisplayEvents = (store) => {

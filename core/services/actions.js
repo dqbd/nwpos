@@ -19,7 +19,6 @@ module.exports.printCart = (customer) => (dispatch) => {
 }
 
 module.exports.log = (customer) => (dispatch) => {
-
 	let payload = {
 		returned: customer.screen,
 		paid: customer.paid,
@@ -34,6 +33,7 @@ module.exports.log = (customer) => (dispatch) => {
 	.then(a => a.json())
 	.then(a => {
 		dispatch({ type: types.LOG, log: true })
+		dispatch({ type: suggestions.SETLIST, grouped: a })
 	}).catch(e => {
 		console.error(e)
 		dispatch({ type: types.LOG, log: false })

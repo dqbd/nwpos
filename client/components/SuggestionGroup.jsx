@@ -7,7 +7,7 @@ const Group = ({letter, items, onSuggestionEdit}) => (
 		<strong className="groupname">{letter}</strong>
 		<ul>
 			{items.map((item, index) => 
-				<li key={index} className="item"><a onTouchTap={(e) => onSuggestionEdit(e)}>{capitalize(item)}</a></li>
+				<li key={index} className="item"><a onTouchTap={(e) => onSuggestionEdit(e)}>{capitalize(item.name)}</a></li>
 			)}
 		</ul>
 	</div>
@@ -17,7 +17,7 @@ const SuggestionGroup = ({filter, suggestions, onSuggestionEdit}) => {
 	let data = {}
 	if (filter) {
 		Object.keys(suggestions).forEach(a => {
-			let list = suggestions[a].filter(item => czechToEnglish(item).indexOf(czechToEnglish(filter)) >= 0) 
+			let list = suggestions[a].filter(item => czechToEnglish(item.name).indexOf(czechToEnglish(filter)) >= 0) 
 			if (list.length > 0) {
 				data[a] = list
 			}

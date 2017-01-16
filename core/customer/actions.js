@@ -67,7 +67,7 @@ module.exports.rename = (name) => (dispatch, getState) => {
 
 module.exports.checkout = () => (dispatch, getState) => {
 	let { newCart } = wrapState(getState())
-	
+
 	dispatch(screen.set(cart.getTotal(newCart)))
 	dispatch({ type: types.SETPAID, paid: 0 })
 	dispatch({ type: types.SETSTATUS, status: statusTypes.COMMIT_BEGIN })
@@ -103,6 +103,7 @@ module.exports.clear = () => (dispatch) => {
 	dispatch(screen.clear())
 	dispatch(cart.clear())
 	dispatch(services.reset())
+	dispatch(suggestions.reset())
 	dispatch({ type: types.SETPAID, paid: 0 })
 	dispatch({ type: types.SETSTATUS, status: statusTypes.STAGE_TYPING })
 }

@@ -32,12 +32,14 @@ class Suggestions extends Database {
 						alphabet[channel] = []
 					}
 
-					alphabet[channel].push(item.name.trim())
+					item.name = item.name.trim()
+
+					alphabet[channel].push(item)
 				})
 
 				let ordered = {}
 				Object.keys(alphabet).sort((a,b) => a.localeCompare(b)).forEach(key => {
-					ordered[key] = alphabet[key].sort((a,b) => a.localeCompare(b))
+					ordered[key] = alphabet[key].sort((a,b) => a.name.localeCompare(b.name))
 				})
 
 				resolve(ordered)
