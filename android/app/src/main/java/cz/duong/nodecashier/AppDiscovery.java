@@ -26,8 +26,6 @@ import javax.jmdns.ServiceListener;
 
 class AppDiscovery {
     private static final String PREFS_NAME = "MyPrefsFile";
-    private static final String SERVICE_TYPE = "_http._tcp.local.";
-    private static final String SERVICE_NAME = "nodecashier-services";
 
     private Context context;
     private UrlListener urlListener;
@@ -58,6 +56,7 @@ class AppDiscovery {
     }
 
     void discover() {
+        Log.d("APP-DISCOVER", "discovering");
         SharedPreferences preferences = context.getSharedPreferences(PREFS_NAME, 0);
         String url = preferences.getString("URL", null);
 
@@ -65,11 +64,13 @@ class AppDiscovery {
             Log.d("APP-DISCOVERY", "URL FOUND IN PREF: " + url);
             urlDiscovered(url, false);
         } else {
+            Log.d("APP-DISCOVER", "url not found, discovering");
             postTask();
         }
     }
 
     void rediscover() {
+        Log.d("APP-DISCOVER", "rediscovering");
         SharedPreferences preferences = context.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear().apply();
@@ -85,6 +86,7 @@ class AppDiscovery {
     }
 
     private void postTask() {
+        Log.d("APP-DISCOVER", "posting new task");
         handler.post(new AppDiscoveryTask(new AppDiscoveryTask.UrlListener() {
             @Override
             public void onUrlReceived(String url) {

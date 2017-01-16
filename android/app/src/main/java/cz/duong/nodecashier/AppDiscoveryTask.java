@@ -50,6 +50,7 @@ public class AppDiscoveryTask implements Runnable {
 
         @Override
         public void serviceResolved(ServiceEvent event) {
+            Log.d("APP-DISCOVER", "RESOLVED: " + event.getName());
             if (event.getName().equals(SERVICE_NAME) && event.getInfo().getURLs().length > 0 && event.getInfo().getInet4Addresses().length > 0) {
                 Log.d("APP-DISCOVERY", event.getInfo().getURLs()[0]);
                 urlDiscovered(event.getInfo().getURLs()[0]);
@@ -60,6 +61,7 @@ public class AppDiscoveryTask implements Runnable {
     @Override
     public void run() {
         try {
+            Log.d("APP-DISCOVER", "NEW TASK");
             jmdns = JmDNS.create();
             jmdns.addServiceListener(SERVICE_TYPE, listener);
         } catch (IOException e) {

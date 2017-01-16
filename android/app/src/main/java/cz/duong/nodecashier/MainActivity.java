@@ -45,6 +45,8 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
 
     private Map<String, String> actions = new HashMap<>();
 
+    private boolean isClosing = false;
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +137,10 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
                 Log.w("APPWEBVIEW", "RECEIVED ERROR: "+error.getDescription() + " : " + error.getErrorCode());
                 if (error.getErrorCode() == -2) {
                     hideBrowser();
-                    appDiscovery.rediscover();
+
+                    if (appDiscovery != null) {
+                        appDiscovery.rediscover();
+                    }
                 }
 
             }
@@ -147,8 +152,6 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
             }
         });
 
-
-        Log.d("APP-LIFECYCLE", "DISCOVERING IN ONCREATE");
         hideBrowser();
         appDiscovery.discover();
 
@@ -243,8 +246,10 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
     protected void onPause() {
         super.onPause();
 
-        ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-        am.moveTaskToFront(getTaskId(), 0);
+        if (!isClosing) {
+            ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+            am.moveTaskToFront(getTaskId(), 0);
+        }
     }
 
     private void initFullscreen() {
@@ -293,19 +298,20 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
 
         if (launchers != null && !launchers.isEmpty()) {
             for (ResolveInfo resolveInfo : launchers) {
-
                 if (!resolveInfo.activityInfo.packageName.contains("cz.duong.nodecasher")) {
-                    finish();
+                    isClosing = true;
 
                     ActivityInfo activity = resolveInfo.activityInfo;
                     ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
                     Intent i = new Intent(Intent.ACTION_MAIN);
 
+                    i.setAction(Intent.ACTION_MAIN);
                     i.addCategory(Intent.CATEGORY_LAUNCHER);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                     i.setComponent(name);
 
                     startActivity(i);
+                    finish();
                     break;
                 }
 
