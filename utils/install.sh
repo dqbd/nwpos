@@ -25,8 +25,6 @@ fi
 sudo echo "pi:$user_psk" | sudo chpasswd
 
 # Setup WiFi
-# read -p "SSID: " wifi_ssid
-# read -p "Heslo: " wifi_psk
 sudo wpa_passphrase "$wifi_ssid" "$wifi_psk" | sudo tee $WPA_SUPPLICANT > /dev/null
 sudo ifdown wlan0 && sudo ifup wlan0
 
@@ -44,7 +42,6 @@ echo "Connection detected"
 sudo update-rc.d ssh enable && sudo invoke-rc.d ssh start
 
 # change timezone
-# sudo dpkg-reconfigure tzdata
 sudo echo "Europe/Prague" | sudo tee /etc/timezone > /dev/null 
 sudo dpkg-reconfigure -f noninteractive tzdata
 
@@ -75,12 +72,9 @@ sudo chown pi "$INSTALL_PATH/nwpos" -R
 # install dependencies
 cd "$INSTALL_PATH/nwpos/server"
 ~/.yarn/bin/yarn install --production
-# npm install --production --no-optional # do not install ursa
 
 # install forever / forever-service
 sudo ~/.yarn/bin/yarn global add forever forever-service --prefix /usr/local 
-# sudo npm config set prefix /usr/local
-# sudo npm install -g forever forever-service
 
 # install server
 sudo forever-service install nwpos --script index.js
@@ -95,3 +89,4 @@ sudo chmod +x "$INSTALL_PATH/nwpos/.git/hooks/post-receive"
 
 #remove sensitive data from config.txt
 sed "/#<--config-->/,/#<--end-->/d" "$SCRIPT_PATH/config.txt" | sudo tee "$SCRIPT_PATH/config.txt"
+sudo reboot
