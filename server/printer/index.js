@@ -1,6 +1,7 @@
 'use strict';
 const native = require('./native')
 const formatter = require("./formatter")
+const os = require("os")
 
 let printer = null
 let seller = null
@@ -8,19 +9,16 @@ let seller = null
 module.exports.init = (graph) => {
 	seller = graph
 
-	if (/^win/.test(process.platform)) {
-		try {
-			let device = new require("./usb")()
-			device.open(() => printer = new require("./escpos")(device))
-		} catch (err) { console.error("Printer not found") }
+	if (os.platform() === "win32") {
+		printer = new native(`\\\\${os.hostname()}\\nwcashier-printer`, true)
 	} else {
 		printer = new native("/dev/usb/lp0")
-		printer.init().catch(err => {
-			console.log(err)
-			printer = null
-		})
 	} 	
 
+	printer.init().catch(err => {
+		console.log(err)
+		printer = null
+	})
 }
 
 module.exports.print = (customer) => {
@@ -57,3 +55,4 @@ module.exports.printRaw = (lines) => new Promise((resolve, reject) => {
 		reject("Printer not ready")
 	}
 })
+

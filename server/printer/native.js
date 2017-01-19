@@ -5,8 +5,14 @@ const fs = require("fs")
 const _ = require("./commands")
 
 class Printer {
-	constructor(target) {
+	constructor(target, autoclose = false) {
 		this.target = target
+		this.autoclose = autoclose
+
+		this.cache = []
+
+		this.stream = null
+		this.closed = false
 	}
 
 	init() {
@@ -15,25 +21,48 @@ class Printer {
 
 			stream.on("open", () => {
 				this.stream = stream
-				resolve()
+				this.closed = false
+				resolve(stream)
 			})
 
 			stream.on("error", (err) => {
+				//dump cache when printer not found
+				this.cache.length = 0
 				reject(err)
 			})
 		})
 	}
 
+	getStream() {
+		if (this.stream == null || this.closed) {
+			this.stream = null
+			return this.init()
+		} else {
+			return Promise.resolve(this.stream)
+		}
+	}
+
 	text(line) {
-		this.stream.write(iconv.encode(line + _.EOL, "CP1250"))
+		this.cache.push(iconv.encode(line + _.EOL, "CP1250"))
 	}
 
 	align(align) {
-		this.stream.write(_.TEXT_FORMAT['TXT_ALIGN_' + align.toUpperCase()])
+		this.cache.push(Buffer.from(_.TEXT_FORMAT['TXT_ALIGN_' + align.toUpperCase()]))
 	}
 
 	feed() {
-		this.stream.write(new Array(3).fill(_.EOL).join(""))
+		this.cache.push(Buffer.from(new Array(3).fill(_.EOL).join("")))
+		
+		this.getStream().then(stream => {
+			stream.write(Buffer.concat(this.cache))
+
+			if (this.autoclose) {
+				this.closed = true
+				stream.end()
+			}
+
+			this.cache.length = 0
+		})
 	}
 }
 

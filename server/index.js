@@ -1,20 +1,12 @@
-const express = require("express")
-const path = require("path")
-const bodyParser = require("body-parser")
-
-const database = require("./database") 
-const printer = require("./printer")
-const customer = require("./customer")
-const graph = require("./graph")
-
-const bonjour = require('bonjour')()
-
 const config = require("./config.json")
 
-const app = express()
+const express = require("express")
+const bodyParser = require("body-parser")
 
-customer.init()
-printer.init(graph.load(config))
+const bonjour = require('bonjour')()
+const interface = require("./interface")(config)
+
+const app = express()
 
 let advert = "nodecashier-services"
 if (process.argv[2] === "--dev") {
@@ -29,7 +21,7 @@ if (process.argv[2] === "--dev") {
 	app.use("/", express.static(path.resolve(__dirname, "dist")))
 }
 
-bonjour.publish({ name: advert, type: "http", port: 80 })
+bonjour.publish({ name: advert, type: "http", port: config.port })
 
 app.use(bodyParser.json())
 app.use(function(req, res, next) {
@@ -38,91 +30,25 @@ app.use(function(req, res, next) {
 	next()
 })
 
-
-app.get("/suggest", (req, res) => {
-	database.suggestion().getGrouped().then(data => {
-		res.status(200).send(JSON.stringify(data))	
-	}).catch(err => {
-		res.status(500).send(JSON.stringify(err))
-	})
-})
-
-app.post("/suggest", (req, res) => {
-	if (req.body !== undefined && req.body.price !== undefined) {
-		database.suggestion().suggest(Number.parseFloat(req.body.price)).then(data => {
-			res.status(200).send(JSON.stringify(data))
-		}).catch(err => {
-			res.status(500).send(JSON.stringify(err))
-		}) 
-	} else {
-		res.sendStatus(500)
-	}
-})
-
-app.post("/stream", (req, res) => {
-	if (req.body !== undefined && req.body.customer !== undefined) {
-		customer.set(req.body.customer)
-		res.status(200).send(req.body.customer)
-	} else {
-		res.status(500).send("No customer")
-	}
-})
-
-app.post("/store", (req, res) => {
-	if (req.body !== undefined && req.body.customer !== undefined) {
-		let customer = req.body.customer
-		customer.date = new Date()
-
-		database.logs().logCustomer(customer)
-
-		Promise.all(customer.cart.items.map(item => {
-			return database.suggestion().updateSuggestion(item["name"], item["price"])
-		}))
-		.then(a => database.suggestion().getGrouped())
-		.then(a => {
-			res.status(200).send(JSON.stringify(a))
-		}).catch(e => {
-			res.status(500).send(e)
+//apply functions
+for(let name of Object.getOwnPropertyNames(Object.getPrototypeOf(interface))) {
+	let [method, url, args] = name.toLowerCase().split("_")
+	if (url) {
+		app[method]("/"+url, (req, res) => {
+			interface[name](req.body)
+			.then(data => args === "pipe" ? data.pipe(res) : res.status(200).send(data))
+			.catch(err => res.status(500).send(err))
 		})
-	} else {
-		res.sendStatus(500)
 	}
-})
+}
 
-app.post("/print", (req, res) => {
-	if (req.body !== undefined && req.body.customer !== undefined) {
-		printer.print(req.body.customer).then(a => res.sendStatus(200)).catch(err => {
-			res.status(500).send(err)
-			console.log(err)
-		})
-	} else {
-
-		res.status(500).send("Invalid request")
-	}
-})
-
-
-app.get("/logs", (req, res) => {
-	database.logs().retrieveLogs().then(a => {
-		res.status(200).send(JSON.stringify(a))
-	}).catch(err => {
-		console.log(err)
-		res.status(500).send(err)
-	})
-})
-
-app.post("/eet", (req, res) => {
-	res.sendStatus(500)
-})
-
-app.listen(80, (err, port) => {
+app.listen(config.port, (err, port) => {
 	if (!err) {
-		console.log("Listening on port", 80)
+		console.log("Listening on port", config.port)
 	}
 })
 
 process.on("SIGTERM", () => {
-	console.log("Killing screen and exiting")
-	customer.clear()
+	interface.destroy()
 	process.exit(0)
 })

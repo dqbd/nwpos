@@ -1,4 +1,7 @@
 const path = require("path")
+const fs = require("fs")
+const archiver = require("archiver")
+
 const base = path.resolve(__dirname, "..", "data")
 
 let available = {
@@ -26,7 +29,10 @@ module.exports.backup = () => new Promise((resolve, reject) => {
 		resolve(files.filter(file => /\.db/.test(file)))
 	})
 }).then(files => {
-	//TODO: zip all the files
-	//TODO: upload to our backup
+	let archive = archiver("zip", { store: true })
+	files.forEach((file) => {
+		archive.append(fs.createReadStream(path.resolve(base, file)), { name: file })
+	})
+	archive.finalize()
+	return archive
 })
-
