@@ -57,8 +57,12 @@ class Interface {
 		return printer.print(customer)
 	}
 
-	GET_LOGS() {
-		return database.logs().retrieveLogs()
+	GET_LOGLIST() {
+		return database.logs().getLogList()
+	}
+
+	GET_LOGS({day}) {
+		return database.logs().retrieveLog(day)
 	}
 
 	POST_EET() {

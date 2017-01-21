@@ -35,7 +35,7 @@ for(let name of Object.getOwnPropertyNames(Object.getPrototypeOf(interface))) {
 	let [method, url, args] = name.toLowerCase().split("_")
 	if (url) {
 		app[method]("/"+url, (req, res) => {
-			interface[name](req.body)
+			interface[name](method === "post" ? req.body : req.query)
 			.then(data => args === "pipe" ? data.pipe(res) : res.status(200).send(data))
 			.catch(err => res.status(500).send(err))
 		})

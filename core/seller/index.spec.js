@@ -23,7 +23,10 @@ test("shop still working", () => {
 
 	expect(store.getState()).toEqual({
 		info: "",
-		stats: [],
+		stats: {
+			list: [],
+			day: undefined
+		},
 		suggestions: {
 			all: {},
 			contextual: ["vejce", "moje matka"]

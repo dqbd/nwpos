@@ -23,17 +23,21 @@ class Logs extends Database {
 		return new Date(a[2], a[1]-1, a[0], 0, 0, 0, 0)
 	}
 
-	retrieveLogs() {
+	getLogList() {
 		return super.listDb().then(files => {
 			return files.filter(file => /[0-9]{2}\.[0-9]{2}\.[0-9]{4}\.db/.test(file)).sort((a, b) => {
 				return this.getDateFromString(b).getTime() - this.getDateFromString(a).getTime()
-			})
-		}).then(dates => {
+			}).map(a => a.replace(".db", ""))
+		})
+	}
+
+	retrieveLogs() {
+		return this.getLogList().then(dates => {
 			let final = Promise.resolve([])
 
 			dates.forEach(date => {
 				final = final.then((result) => new Promise(resolve => {
-					return this.retrieveLog(date.replace(".db", "")).then(log => {
+					return this.retrieveLog(date).then(log => {
 						result.push(log)
 						resolve(result)
 					}).catch(err => {

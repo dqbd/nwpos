@@ -1,8 +1,15 @@
 const stats = require("./actionTypes")
 
-module.exports = (state = [], action) =>{
-	if (action.type === stats.SETLOGS) {
-		return action.logs
+const initialState = {
+	list: [],
+	day: undefined
+}
+
+module.exports = (state = initialState, action) =>{
+	if (action.type === stats.SETLIST) {
+		return Object.assign({}, state, { list: action.list })
+	} else if (action.type === stats.SETDAY) {
+		return Object.assign({}, state, { day: action.day })
 	}
 
 	return state

@@ -7,18 +7,35 @@ const thunk = require("redux-thunk").default
 
 const mockStore = configureMockStore([thunk])
 
-test("retrieve stats", () => {
-	let logs = [{date: "06.01.2017", total: 2780, customers: []}]
+test("retrieve day list", () => {
+	let list = ["19.01.2017"]
 
 	nock("http://localhost")
-		.get("/logs")
-		.reply(200, logs)
+		.get("/loglist")
+		.reply(200, list)
 
 	let store = mockStore()
 	return store.dispatch(actions.retrieve()).then(() => {
 		expect(store.getActions()).toEqual([{
-			type: actionTypes.SETLOGS,
-			logs
+			type: actionTypes.SETLIST,
+			list
+		}])
+	})
+})
+
+test("retrieve day info", () => {
+	let day = {"date":"19.01.2017","total":0,"customers":[]}
+
+	nock("http://localhost")
+		.get("/logs")
+		.query({"day": "19.01.2017"})
+		.reply(200, day)
+
+	let store = mockStore()
+	return store.dispatch(actions.retrieveDay("19.01.2017")).then(() => {
+		expect(store.getActions()).toEqual([{
+			type: actionTypes.SETDAY,
+			day
 		}])
 	})
 })

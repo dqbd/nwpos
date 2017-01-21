@@ -68,8 +68,7 @@ class Customer extends Component {
 
 const DayButton = ({active, day, onClick}) => (
 	<div className={active ? "day active" : "day"} onClick={onClick}>
-		<span className="label">{day.date.split(".").join(". ")}</span>
-		<span className="total">{day.total} Kč</span>
+		<span className="label">{day.split(".").join(". ")}</span>
 	</div>
 )
 
@@ -81,16 +80,16 @@ export default class Dashboard extends Component {
 	}
 
 	renderCustomers() {
-		let day = this.props.stats[this.state.selected]	
+		let day = this.props.day
 		if (day !== undefined) {
-			return day.customers.map(customer => (
-				<Customer key={customer._id} onPrint={this.props.onPrint} customer={customer} />
+			return day.customers.map((customer, key) => (
+				<Customer key={key} onPrint={this.props.onPrint} customer={customer} />
 			))
 		}
 	}
 
 	renderDayInfo() {
-		let day = this.props.stats[this.state.selected]	
+		let day = this.props.day
 
 		if (day !== undefined) {
 			return <div className="dayinfo">
@@ -100,12 +99,8 @@ export default class Dashboard extends Component {
 		}
 	}
 
-	onClick(selected) {
-		invokeFeedback()
-		this.setState({ selected })
-	}
-
 	render() {
+		let {day, list, onDaySelected} = this.props
 		return <div id="dashboard">
 			<div className="day">{this.renderDayInfo()}
 				<div className="customers">
@@ -113,8 +108,8 @@ export default class Dashboard extends Component {
 				</div>
 			</div>
 			<div className="days">
-				{this.props.stats.map((day, index) => (
-					<DayButton active={index == this.state.selected} onClick={this.onClick.bind(this, index)} key={day.date} day={day} />
+				{list.map(label => (
+					<DayButton active={day && label === day.date} onClick={() => onDaySelected(label)} day={label} key={label} />
 				))}
 			</div>
 		</div>
