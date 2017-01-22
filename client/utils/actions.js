@@ -13,8 +13,8 @@ let showStats = function() {
 	let { pathname } = this.hashHistory.getCurrentLocation()
 	if (pathname !== "/stats") {
 		this.hashHistory.push("/stats")
-		this.store.dispatch(stats.retrieve())
 	}
+	this.store.dispatch(stats.retrieve())
 }
 
 let toggleNight = function(ignore = false) {

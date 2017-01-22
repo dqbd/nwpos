@@ -1,5 +1,8 @@
 # Úvod
- - 
+## Motivace
+
+
+## Srovnání s konkurenčními řešeními 
 
 # Dokumentace
 ## Instalace
@@ -49,8 +52,33 @@ Jelikož není APK k dispozici na Play Store, musí se APK instalovat pomocí `s
 
 {Obrázek Zabezpečení}
 
-# Jak to funguje
-Celá aplikace byla napsána čistě v JavaScriptu se syntaxí ES6. Toto bylo čistě uvědomilé rozhodnutí, jelikož chceme, aby aplikace běžela na co nejvíce platforem, aniž by se musela psát pro každou platformu zvlášť. 
+## Návod k použití
 
-### Srovnání JS s ostatními platformami
-Před vývojem aplikace bylo provedeno srovnání všech vývojařských platforem, které umožňují psát multiplatforní aplikace. 
+{Obrázek rozhraní}
+
+# Jak to funguje
+Celá aplikace byla napsána v JavaScriptu, přesněji ES2016. Díky JavaScriptu můžeme provozovat aplikaci na virtuálně všech platformách, aniž by bylo třeba napsat pro každou platformu nativní variantu. Jedním z požadavků bylo napsat aplikaci, která bude primárně běžet na prohlížeči, proto jsem vynechal velké all-in-one frameworky, které jsou přímo navržené pro tvorbu mobilních aplikací, jako Xamarin nebo Apache Cordova. Tyto frameworky buď vyžadují vlastní runtime pro běh aplikace (C# a CLR) nebo se odkazují na knihovny, které nejsou k dispozici v prohlížeči (Apache Cordova). JavaScript je ideálním (a jediným) jazykem pro psaní webových aplikací. 
+
+# Frontend
+Psát aplikace v čistém JavaScriptu se v dlouhodobém horizontu nevyplatí, kód se časem hromadí a jeho správa je s časem čím dál tím více náročnější. Rozhodl jsem se použít nějaký framework, který by usnadnil strukturu projektu a tvorbu UI.
+
+## Redux
+
+## React
+
+# Backend
+Server, čili backend, byl navržen v tomto projektu tak, aby sloužil jako substituent pro nedostupnou funkcionalitu v prohlížeči nebo pro funkce, které se budou pravidelně obměňovat (správa dat, konektivita s EET).  
+
+## mDNS 
+mDNS, neboli multicast DNA, je technologie, která umožňuje najít servery a jejich IP adresy na lokální síti, aniž by na lokální síti běžel plnohodnotný DNS server. Pro provoz není třeba žádná konfigurace ze strany správce sítě. Stačí službu jenom spustit a klienti budou schopni automaticky objevit server a adresu serveru. Tato technologije je známá taky jako Apple Bonjour, nebo Network Service Discovery.
+
+Serverová implementaci mDNS je vyřešena importem knihovny `bonjour`, psána čistě v JavaScriptu. Vyhneme se instalaci Avahi daemonu a kompilaci nativních knihoven. Navíc funguje na všech platformách stejně. Před použitím bylo však třeba doimplementovat některé části specifikace mDNS, aby byla služba objevitelná na Androidu. 
+
+Pro klientskou Android aplikaci bylo nutné importovat knihovnu `jmdns`, která obsahuje modernější implementaci mDNS oproti zabudovanému Android NSD. Během testování se nativní NSD často zasekával a bylo nutné restartovat zařízení pro znovu objevení služby.
+
+## ESC/POS tiskárny
+
+## EET a propojení se státní správou
+
+## Databáze
+NoSQL databáze

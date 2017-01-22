@@ -2,43 +2,73 @@
 <!-- Generator: Adobe Illustrator 19.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#3F51B5;}
+	.st1{opacity:0.3;}
+	.st2{fill:#231F20;}
+	.st3{opacity:0.4;}
+	.st4{fill:#FFFFFF;}
+	.st5{opacity:0.1;}
+	.st6{fill:url(#SVGID_1_);}
+	.st7{fill:#03A9F4;}
+	.st8{fill:#D32F2F;}
+	.st9{fill:#EF6C00;}
+	.st10{fill:#FFA000;}
+	.st11{fill:#F2F2F2;}
+	.st12{fill:#E6E6E6;}
+	.st13{fill:#757575;}
+	.st14{opacity:0.22;}
+</style>
 <g>
-	<path style="fill:#3F51B5;" d="M449,489H63c-22.1,0-40-17.9-40-40V63c0-22.1,17.9-40,40-40h386c22.1,0,40,17.9,40,40v386
-		C489,471.1,471.1,489,449,489z"/>
+	<path class="st0" d="M-191,548.8h-386c-22.1,0-40-17.9-40-40v-386c0-22.1,17.9-40,40-40h386c22.1,0,40,17.9,40,40v386
+		C-151,530.8-168.9,548.8-191,548.8z"/>
+</g>
+<g class="st1">
+	<path class="st2" d="M-191,536.8h-386c-22.1,0-40-17.9-40-40v12c0,22.1,17.9,40,40,40h386c22.1,0,40-17.9,40-40v-12
+		C-151,518.8-168.9,536.8-191,536.8z"/>
+</g>
+<g class="st3">
+	<path class="st4" d="M-191,94.8h-386c-22.1,0-40,17.9-40,40v-12c0-22.1,17.9-40,40-40h386c22.1,0,40,17.9,40,40v12
+		C-151,112.7-168.9,94.8-191,94.8z"/>
+</g>
+<g class="st1">
+	<rect x="-515" y="392.8" class="st2" width="262" height="53"/>
+	<rect x="-515" y="209.8" class="st2" width="101" height="30"/>
+	<path class="st2" d="M-515,277.8v78h202v-78H-515z M-414,331.8h-84v-30h84V331.8z"/>
 </g>
 <g>
-	<defs>
-		<path id="SVGID_1_" d="M449,489H63c-22.1,0-40-17.9-40-40V63c0-22.1,17.9-40,40-40h386c22.1,0,40,17.9,40,40v386
-			C489,471.1,471.1,489,449,489z"/>
-	</defs>
-	<clipPath id="SVGID_2_">
-		<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
-	</clipPath>
+	<rect x="-515" y="380.8" class="st4" width="262" height="53"/>
+	<rect x="-515" y="197.8" class="st4" width="101" height="30"/>
+	<path class="st4" d="M-515,265.8v78h202v-78H-515z M-414,319.8h-84v-30h84V319.8z"/>
 </g>
-<g style="opacity:0.3;">
-	<path style="fill:#231F20;" d="M449,477H63c-22.1,0-40-17.9-40-40v12c0,22.1,17.9,40,40,40h386c22.1,0,40-17.9,40-40v-12
-		C489,459.1,471.1,477,449,477z"/>
-</g>
-<g style="opacity:0.4;">
-	<path style="fill:#FFFFFF;" d="M449,35H63c-22.1,0-40,17.9-40,40V63c0-22.1,17.9-40,40-40h386c22.1,0,40,17.9,40,40v12
-		C489,52.9,471.1,35,449,35z"/>
-</g>
-<g style="opacity:0.3;">
-	<rect x="125" y="333" style="fill:#231F20;" width="262" height="53"/>
-	<rect x="125" y="150" style="fill:#231F20;" width="101" height="30"/>
-	<path style="fill:#231F20;" d="M125,218v78h202v-78H125z M226,272h-84v-30h84V272z"/>
-</g>
-<g>
-	<rect x="125" y="321" style="fill:#FFFFFF;" width="262" height="53"/>
-	<rect x="125" y="138" style="fill:#FFFFFF;" width="101" height="30"/>
-	<path style="fill:#FFFFFF;" d="M125,206v78h202v-78H125z M226,260h-84v-30h84V260z"/>
-</g>
-<g style="opacity:0.1;">
-	<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="34.7157" y1="34.7157" x2="477.2843" y2="477.2843">
+<g class="st5">
+	
+		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-605.2875" y1="539.0375" x2="-162.7125" y2="96.4625" gradientTransform="matrix(1 0 0 -1 0 633.5)">
 		<stop  offset="0" style="stop-color:#FFFFFF"/>
 		<stop  offset="0.4839" style="stop-color:#FFFFFF;stop-opacity:0"/>
 	</linearGradient>
-	<path style="fill:url(#SVGID_3_);" d="M449,489H63c-22.1,0-40-17.9-40-40V63c0-22.1,17.9-40,40-40h386c22.1,0,40,17.9,40,40v386
-		C489,471.1,471.1,489,449,489z"/>
+	<path class="st6" d="M-191,548.8h-386c-22.1,0-40-17.9-40-40v-386c0-22.1,17.9-40,40-40h386c22.1,0,40,17.9,40,40v386
+		C-151,530.8-168.9,548.8-191,548.8z"/>
 </g>
+<rect x="327.7" y="394.5" class="st7" width="143.3" height="71.7"/>
+<rect x="41" y="394.5" class="st8" width="71.7" height="71.7"/>
+<rect x="112.7" y="394.5" class="st9" width="71.7" height="71.7"/>
+<rect x="184.3" y="394.5" class="st10" width="71.7" height="71.7"/>
+<rect x="256" y="394.5" class="st0" width="71.7" height="71.7"/>
+<polygon class="st7" points="327.7,394.5 471,394.5 361.5,319.3 291.2,319.3 "/>
+<polygon class="st8" points="41,394.5 112.7,394.5 185.6,319.3 150.5,319.3 "/>
+<polygon class="st9" points="112.7,394.5 184.3,394.5 220.8,319.3 185.6,319.3 "/>
+<polygon class="st10" points="184.3,394.5 256,394.5 256,319.3 220.8,319.3 "/>
+<polygon class="st0" points="256,394.5 327.7,394.5 291.2,319.3 256,319.3 "/>
+<polygon class="st1" points="361.5,319.3 150.5,319.3 41,394.5 471,394.5 "/>
+<rect x="107.8" y="294.8" class="st11" width="296.3" height="70"/>
+<polygon class="st12" points="404.2,294.8 107.8,294.8 148.5,264.1 359.3,264.1 "/>
+<rect x="145.9" y="202.6" class="st11" width="159" height="80.2"/>
+<polygon class="st12" points="304.9,202.6 145.9,202.6 167.7,190.2 289.7,190.2 "/>
+<rect x="327" y="153.4" class="st11" width="17" height="129.3"/>
+<polygon class="st12" points="327,282.8 322.5,278.8 322.5,149.4 327,153.4 "/>
+<polygon class="st11" points="395,155.8 280.3,155.8 276,108.8 388.4,108.8 393.4,132.3 "/>
+<polygon class="st13" points="376.3,146.4 289.5,146.4 288.3,132.4 286.5,118.1 372.3,118.1 375.9,132.3 "/>
+<polygon class="st12" points="276,108.8 271.5,155.8 276,155.8 280.3,155.8 279.4,132.3 "/>
+<polyline class="st14" points="375.9,132.3 376.3,146.4 289.5,146.4 "/>
 </svg>

@@ -25,14 +25,17 @@ const mapDispatchToProps = (dispatch) => hapticFeedback({
 	onNumber: (digit) => {
 		dispatch(screen.addDigit(digit))
 		clearTimeout(throttle)
-		throttle = setTimeout(() => dispatch(customer.suggest()), 100)
+		throttle = setTimeout(() => dispatch(customer.suggest()), 350)
 	},
 	onBackspace: () => {
 		dispatch(screen.removeDigit())
 		clearTimeout(throttle)
-		throttle = setTimeout(() => dispatch(customer.suggest()), 100)
+		throttle = setTimeout(() => dispatch(customer.suggest()), 350)
 	},
-	onClear: () => dispatch(screen.clear())
+	onClear: () => {
+		dispatch(screen.clear())
+		dispatch(customer.suggest())
+	}
 })
 
 const StatefulScreen = connect(mapStateToProps, mapDispatchToProps)(Screen)
