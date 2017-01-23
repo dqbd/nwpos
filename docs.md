@@ -86,7 +86,7 @@ Díky tomu je ladění aplikace velice jednoduché, všechny zmněy pocházejí 
 
 Abychom se vyvarovali nepředvídatelným změnám v aplikaci, je store v základu pouze read-only. Jediným způsobem, jak změnit náš store, je za pomocí tzv. "akce." Akce je prostý JavaScriptový objekt, který popisující změnu. 
 
-```
+```javascript
 let action = (number) => {
 	return { type: "set", number: number }
 }
@@ -94,7 +94,7 @@ let action = (number) => {
 
 Samotné změny jsou prováděny pomocí "reducerů." Tyto reducery jsou prosté funkce, které vezmou předchozí stav, aplikují akci a vrátí stav nový. Čekají uvnitř store, než zavoláme `store.dispatch(akce)`, který zavolá náš `reducer.`
 
-```
+```javascript
 let initialState = 0 //počáteční stav, při inicializaci
 let reducer = function(state = initialState, action) {
 	if (action.type === "set") { //pokud máme akci 
@@ -108,7 +108,7 @@ let reducer = function(state = initialState, action) {
 ```
 Jednotlivé stavy musí být immutable, tj. nemá žádnou metodu, která je schopna změnit nastavenou hodnotu. Tím tyto stavy jsou na sobě nezávislé a jsou předvídatelné, nazávisí na předchozích stavech. Z principu jsou primitivní typy immutable. Pro pole a objekty musíme používat syntaxi ES6, abychom zajistili tuto vlastnost.
 
-```
+```javascript
 //počáteční stav, při inicializaci
 let initialState = {
 	list: [],
@@ -128,18 +128,50 @@ let reducer = function(state = initialState, action) {
 }
 ```
 
-Nakonec inicializujeme store pomocí `createStore()`, budeme volat její funkci `dispatch()`, který zavolá všechny reducery s akcí. Změny ve storu můžeme odposlouchávat pomocí `subscribe`, jehož argument se zavolá při každé změně storu.
+Nakonec inicializujeme store pomocí `createStore()`, budeme volat její funkci `dispatch()`, který zavolá všechny reducery s akcí. Změny ve storu můžeme odposlouchávat pomocí `subscribe`, jehož argument se zavolá při každé změně storu. Celý obsah storu získáme voláním funkce `getStore()`.
 
 Na konec vkládám celou ukázku:
 
 
-```
+```javascript
+import redux from "redux"
 
+//počáteční stav, při inicializaci
+let initialState = {
+	list: [],
+	number: 0
+} 
 
+let set = (number) => {
+	return { type: "set", number: number }
+}
+
+let add = (item) => {
+	return { type: "add", number: number }
+}
+
+let reducer = function(state = initialState, action) {
+	if (action.type === "set") {
+		// vytváříme nový objekt a překopírujeme všechny prvky z předchozího stavu + aplikování akcí
+		return Object.assign({}, state, { number: action.number })
+	} else if (action.type === "add") { //vložení do pole 
+		// spread operátor z ES6, vytváříme nové pole
+		return Object.assign({}, state, { list: [...state.list, action.number] })
+	} 
+
+	return state // všechny akce provedeny, vrátíme nový stav
+}
+
+let store = redux.createStore(reducer)
+store.subscribe(() => {
+	console.log(store.getStore()) // Výsledek { list: [1], number: 5 }
+})
+
+store.dispatch(add(1))
+store.dispatch(set(5))
 ```
 
 ## React
-
 
 # Backend
 Server, čili backend, byl navržen v tomto projektu tak, aby sloužil jako substituent pro nedostupnou funkcionalitu v prohlížeči nebo pro funkce, které se budou pravidelně obměňovat (správa dat, konektivita s EET).  
