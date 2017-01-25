@@ -1,7 +1,6 @@
 # Úvod
 ## Motivace
 
-
 ## Srovnání s konkurenčními řešeními 
 
 # Dokumentace
@@ -67,16 +66,16 @@ ECMAScript 6, dále jen ES6, je nová verze JavaScriptu, následovník verze ECM
 
 Jelikož je podpora ES6 (aspoň v roce 2016-17) stále kolísává, rozhodl jsem se použít Babel. Jedná se o transpiler, který převádí nový syntax ES6 do starších verzí ECMAScriptu pro větší podporu. 
 
-Spolu s Babelem ještě používám Webpack, který usnadňuje kompilaci a vývoj javascriptových aplikací. Tento nástroj můžeme chápat jako MSBUILD pro C# nebo jako Gradle pro Android / Java aplikace. Spolu s ostatními moduly nám Webpack umožňuje live-reload (automatické obnovení při změnách), hot-reload (výměna částí kódů za běhu) a minifikace či uglifikace kódu. 
+Spolu s Babelem ještě používám Webpack, který usnadňuje kompilaci a vývoj javascriptových aplikací. Tento nástroj můžeme chápat jako MSBUILD pro C# nebo jako Gradle pro Android / Java aplikace. Spolu s ostatními moduly nám Webpack umožňuje live-reload (automatické obnovení při změnách), hot-reload (výměna částí kódů za běhu) a minifikace kódu. 
 
 ## Redux
 Redux je knihovna, která byla použita pro psaní business logic, čili části kódu, které se nestarají o vykreslení rozhraní. Sama o sobě se jedná o minimální knihovnu, jde spíše o strukturu business logiky. 
 
 Na stránkách můžeme najít, že se jedná o "kontejner stavů." Musíme si nejprve vysvětlit, co vlastně stav aplikace je. Stav aplikace je podoba aplikace se všemi změnami v určitém čase. Zahrnuje, CSS třídy, HTML, ale i globální proměnné apod. V běžné JavaScriptové aplikaci tento "aplikační stav" měníme několika způsoby
 	
-	- změnou CSS tříd (document.queryElement("a").toggleClass("trida"))
-	- změna HTML obsahu: (document.queryElement("p").innerHTML = "obsah"),
-	- změnou globálních promněných (window.localStorage.set("vnitřní promněná"))
+ - změnou CSS tříd (document.queryElement("a").toggleClass("trida"))
+ - změna HTML obsahu: (document.queryElement("p").innerHTML = "obsah"),
+ - změnou globálních promněných (window.localStorage.set("vnitřní promněná"))
 
 Z toho důvodu se pak data nepředvídatelně mění na různých místech. Testování takovéto aplikace je složitější a pokryje většinou pouze uživatelské rozhraní. 
 
@@ -130,8 +129,7 @@ let reducer = function(state = initialState, action) {
 
 Nakonec inicializujeme store pomocí `createStore()`, budeme volat její funkci `dispatch()`, který zavolá všechny reducery s akcí. Změny ve storu můžeme odposlouchávat pomocí `subscribe`, jehož argument se zavolá při každé změně storu. Celý obsah storu získáme voláním funkce `getStore()`.
 
-Na konec vkládám celou ukázku:
-
+Zjednodušený příklad užití Reduxu:
 
 ```javascript
 import redux from "redux"
@@ -172,6 +170,15 @@ store.dispatch(set(5))
 ```
 
 ## React
+React je knihovna pro vytváření webových komponenent, vyvíjena Facebookem. Spolu s AngularJS se jednají o 2 nejpopularnější frameworky pro vývoj UI. Oproti AngularJS má React plytší křivku učení, nemusíme se učit speciální syntax jako u AngularJS, jedná se o čistý JavaScript. Navíc vzhledem k tomu, že jsme použili pro naši business logiku Redux, která byla pro React přimo vyšitá, dává smysl, abychom použili React pro vývoj rozhraní. 
+
+Dalo by se říci, že React je 
+
+// React mění způsob psaní uživatelského rozhraní: kód, který píšeme, má pouze zobrazovat výsledek a nic víc. Tyto komponenty reflektují 
+
+// V jistém smyslu se jedná o View komponentu v MVC. V Reactu oproti ostatním frameworkům neměníme samotný Model (zjednodušeně neměníme přímo samotné promněné), nýbrž voláme akce, které pak změnu dělají za nás. Platí stejný princip jako u Reduxu, kde je stav komponentu jediným zdrojem pravdy. 
+
+
 
 # Backend
 Server, čili backend, byl navržen v tomto projektu tak, aby sloužil jako substituent pro nedostupnou funkcionalitu v prohlížeči nebo pro funkce, které se budou pravidelně obměňovat (správa dat, konektivita s EET).  
@@ -179,14 +186,27 @@ Server, čili backend, byl navržen v tomto projektu tak, aby sloužil jako subs
 ## mDNS 
 mDNS, neboli multicast DNA, je technologie, která umožňuje najít servery a jejich IP adresy na lokální síti, aniž by na lokální síti běžel plnohodnotný DNS server. Pro provoz není třeba žádná konfigurace ze strany správce sítě. Stačí službu jenom spustit a klienti budou schopni automaticky objevit server a adresu serveru. Tato technologije je známá taky jako Apple Bonjour, nebo Network Service Discovery.
 
-Serverová implementaci mDNS je vyřešena importem knihovny `bonjour`, psána čistě v JavaScriptu. Vyhneme se instalaci Avahi daemonu a kompilaci nativních knihoven. Navíc funguje na všech platformách stejně. Před použitím bylo však třeba doimplementovat některé části specifikace mDNS, aby byla služba objevitelná na Androidu. 
+Serverová implementaci mDNS je vyřešena importem knihovny `bonjour`, psána čistě v JavaScriptu. Vyhneme se instalaci Avahi daemonu a kompilaci nativních knihoven. Navíc funguje na všech platformách stejně. Před použitím bylo třeba použít fork `resin-io/bonjour`, který doimplementoval zbytek mDNS specifikace pro objevitelnost na Androidu. 
 
-Pro klientskou Android aplikaci bylo nutné importovat knihovnu `jmdns`, která obsahuje modernější implementaci mDNS oproti zabudovanému Android NSD. Během testování se nativní NSD často zasekával a bylo nutné restartovat zařízení pro znovu objezvení služby.
+Pro klientskou Android aplikaci bylo nutné importovat knihovnu `jmdns`, která obsahuje modernější implementaci mDNS oproti zabudovanému Android NSD. Během testování se nativní NSD často zasekával a byl onutné restartovat zařízení pro znovu objezvení služby. 
+
+Pro Android je zde zásadní omezení ve formě IPv6, kde Chrome pro Android stále nepodporuje IPv6 HTTP adresy. Problém nejspíš spočívá v samotném Androidu, který v době psaní této práce stále plně nepdoporuje IPv6. Z toho důvodu jsem zcela vypnul podporu pro IPv6 na úrovni systému, na kterém běží server. Vypnutí je automaticky provedeno při spuštění instalačního skriptu, manuálně lze na Debianu a odvozených operačních systémech IPv6 vypnout vložením tohoto řádku do `/etc/sysctl.conf`
+
+```
+net.ipv6.conf.all.disable_ipv6 = 1
+```
 
 ## ESC/POS tiskárny
+Většina termálních tiskáren do pokladen využívá protok ESC/POS, vyvinutý firmou EPSON. Jedná se o sadu příkazů, které se do tiskárny posílají. Veškeré příkazy lze najít v souboru `/server/printer/constants.js`. Všechny příkazy začínají znakem ESC (v ASCII = 27), kromě příkazu pro posun papíru LF (ASCII = 10) a pro seříznutí papíru GS (ASCII = 29). 
+
+Pro podporu češtiny je UTF-8 text překódován do kódování Windows-1250/CP1250, jelikož většina tiskáren UTF-8 přímo nepodporuje. Samotné posílání příkazu je řešeno otevření file descriptoru (FD) tiskárny, čili otevřením a zapisováním souboru reprezentující tiskárnu. Na Linuxu a dalších Unix-based OS se FD otevře ve složce /dev/usb/lp[0-9]. Na Windowsu je nutné nejprve tiskárnu sdílet na síti, posléze je k dispozici na `\\localhost\[název tiskárny]`.
+
+Původně jsem s tiskárnou přímo komunikoval za pomocí knihovny na úrovni ovladačů, přesněji za pomocí libusb ovladačů pro Windows. Tento způsob se nakonec ukázal příliš nespolehlivý a složitý pro koncového uživatele, jelikož pro instalaci musí uživatel restartovat systém do testovacího módu. 
+
+Jako testovací tiskárnu jsem použil ZJ-5890K dovozem z Číny. Tato tiskárna je identická s tiskárnou O2 Kasy, čimž je zaručena kompabalita s tablety O2 kasy. Vesměs jsou podporovány všechny tiskárny, které umí protokol ESC/POS, což je na trhu většina.
 
 ## EET a propojení se státní správou
 
-## Databáze
 
-NoSQL databáze
+
+## Databáze
