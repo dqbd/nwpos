@@ -4,7 +4,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
     defaultConfig {
-        applicationId "cz.duong.nodecashier"
+        applicationId "com.termux"
         minSdkVersion 23
         targetSdkVersion 23
         versionCode 1

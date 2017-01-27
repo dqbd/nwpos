@@ -3,12 +3,18 @@ package cz.duong.nodecashier;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import com.duong.R;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +28,7 @@ class ExitDialog extends Dialog {
 
     private ExitInterface callback;
 
-    private static final String TO_REGISTER = "Přejít k pokladně";
-    private static final String TO_STATS = "Zobrazit statistiky";
     private static final String TO_RELOAD = "Znovu načíst";
-    private static final String TO_NIGHT = "Přepnout tmavý režim";
     private static final String TO_EXIT = "Odejít z aplikace";
 
     ExitDialog(Context context, ExitInterface callback) {
@@ -92,4 +95,26 @@ class ExitDialog extends Dialog {
 
         Map<String, String> getActions();
     }
+
+    private class ExitActionsAdapter extends ArrayAdapter<String> {
+        ExitActionsAdapter(Context context, List<String> actions) {
+            super(context, 0, actions);
+        }
+
+        @Override
+        @NotNull
+        public View getView(int position, View convertView, @NotNull ViewGroup parent) {
+            String action = getItem(position);
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.exit_listitem, parent, false);
+            }
+
+            TextView name = (TextView) convertView.findViewById(R.id.exit_text);
+            name.setText(action);
+
+            return convertView;
+        }
+    }
+
 }

@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Pokladna</string>
+    <string name="bootstrap_installer_body">Instaluji server</string>
+    <string name="bootstrap_error_title">Instalace selhala</string>
+    <string name="bootstrap_error_body">Znovu nainstalovat?</string>
+    <string name="bootstrap_error_abort">Zrušit instalaci</string>
+    <string name="bootstrap_error_try_again">Zkusit znova</string>
+    <string name="bootstrap_error_not_primary_user_message">Znovu nainstalovat?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

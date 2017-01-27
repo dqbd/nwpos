@@ -2,7 +2,6 @@ package cz.duong.nodecashier;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.SoundEffectConstants;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
@@ -11,7 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -20,6 +18,9 @@ import java.util.Map;
  */
 
 class AppInterface {
+
+    public static final String JS_NAME = "android";
+
     private WebView view;
     private AppLoadListener listener;
 

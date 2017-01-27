@@ -8,93 +8,102 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+
+import com.duong.R;
+import cz.duong.nodecashier.termux.Task;
+import cz.duong.nodecashier.termux.TermuxService;
+import cz.duong.nodecashier.utils.LauncherUtils;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends Activity implements ExitDialog.ExitInterface, AppInterface.AppLoadListener {
+import static cz.duong.nodecashier.termux.EmulatorDebug.LOG_TAG;
+import static cz.duong.nodecashier.termux.TermuxService.ACTION_STOP_SERVICE;
 
-    private AppDiscovery appDiscovery;
+public class MainActivity extends Activity implements ExitDialog.ExitInterface, AppInterface.AppLoadListener, ServiceConnection {
+
+    private final static int MAX_ATTEMPTS = 3;
+
     private WebView webView;
+
+    private View errorView;
     private ProgressBar progressBar;
 
-    private static final String HOME_EXTRA = "android.intent.extra.FROM_HOME_KEY";
-
-    private BroadcastReceiver powerReceiver;
     private PowerManager.WakeLock wakeLock;
 
     private Map<String, String> actions = new HashMap<>();
 
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private TermuxService termuxService;
+
     private boolean isClosing = false;
+    private int attempts = 0;
+
+
+    private BroadcastReceiver powerReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+
+            //noinspection deprecation
+            wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE, "NW-WAKELOCK");
+            wakeLock.acquire();
+        }
+    };
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Intent intent = getIntent();
-        final String intentAction = intent.getAction();
-
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        LauncherUtils.setFullscreen(this);
 
-        if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && intentAction != null && intentAction.equals(Intent.ACTION_MAIN)) {
-
-            if (!isLauncher()) {
-                PackageManager p = getPackageManager();
-                ComponentName cN = new ComponentName(this, FakeHomeActivity.class);
-                p.setComponentEnabledSetting(cN, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-
-                Intent selector = new Intent(Intent.ACTION_MAIN);
-                selector.addCategory(Intent.CATEGORY_HOME);
-                startActivity(selector);
-
-                p.setComponentEnabledSetting(cN, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-            }
-
-            Intent mHomeIntent = new Intent(Intent.ACTION_MAIN, null);
-            mHomeIntent.addCategory(Intent.CATEGORY_HOME);
-            mHomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            mHomeIntent.putExtra(HOME_EXTRA, true);
-
-            finish();
-            startActivity(mHomeIntent);
-            Runtime.getRuntime().exit(0);
-
+        if (AppPreferences.shouldFirstInit(this)) {
+            showSetup();
             return;
         }
 
-        initFullscreen();
+        if (LauncherUtils.restartToLauncher(this)) {
+            return;
+        }
+
         setContentView(R.layout.activity_main);
+
+        if (AppPreferences.shouldRunServer(this)) {
+            Intent serviceIntent = new Intent(this, TermuxService.class);
+
+            startService(serviceIntent);
+            if (!bindService(serviceIntent, this, 0))
+                throw new RuntimeException("bindService() failed");
+        } else {
+            loadPage();
+        }
 
         webView = (WebView) findViewById(R.id.webView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        errorView = findViewById(R.id.main_error);
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setSaveFormData(false);
 
-        webView.addJavascriptInterface(new AppInterface(webView, this), "android");
+        webView.addJavascriptInterface(new AppInterface(webView, this), AppInterface.JS_NAME);
         webView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -104,111 +113,55 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
         webView.setHapticFeedbackEnabled(false);
         WebView.setWebContentsDebuggingEnabled(true);
 
-        appDiscovery = new AppDiscovery(this, new AppDiscovery.UrlListener() {
+        Button reloadButton = (Button) findViewById(R.id.retry_btn);
+        reloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onUrlReceived(String url) {
-                Log.d("APP-DISCOVERY", url);
-                webView.loadUrl(url);
-            }
-        });
-        appDiscovery.setup();
-
-
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                Log.w("APPWEBVIEW", "LOADED URL:" + url);
-            }
-
-            @Override
-            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-                super.onReceivedHttpError(view, request, errorResponse);
-                Log.w("APPWEBVIEW", "Http error: " + errorResponse.getStatusCode() + " -> " + request.getUrl().getPath());
-//                if (errorResponse.getStatusCode() == 404 && !request.getUrl().getPath().contains("favicon.ico")) {
-//                    hideBrowser();
-//                    appDiscovery.rediscover();
-//                }
-            }
-
-            @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
-                Log.w("APPWEBVIEW", "RECEIVED ERROR: "+error.getDescription() + " : " + error.getErrorCode());
-                if (error.getErrorCode() == -2) {
-                    hideBrowser();
-
-                    if (appDiscovery != null) {
-                        appDiscovery.rediscover();
-                    }
-                }
-
-            }
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-                hideBrowser();
+            public void onClick(View v) {
+                attempts = 0;
+                loadPage();
             }
         });
 
+        Button setupButton = (Button) findViewById(R.id.setup_btn);
+        setupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSetup();
+            }
+        });
+
+        hideError();
         hideBrowser();
-        appDiscovery.discover();
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-
-        powerReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d("AM-SLEEP", "OFF RECEIVED");
-                PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE, "NW-WAKELOCK");
-                wakeLock.acquire();
-            }
-        };
-
-        registerReceiver(powerReceiver, filter);
+        registerReceiver(powerReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (webView != null) {
-            webView.requestFocus();
-        }
-        Log.d("APP-LIFECYCLE", "ON RESUME");
+        if (webView != null) webView.requestFocus();
     }
 
     private void hideBrowser() {
-        if (progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        if (webView != null) {
-            webView.setVisibility(View.GONE);
-        }
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        if (webView != null) webView.setVisibility(View.GONE);
     }
 
     private void showBrowser() {
-        if (progressBar != null) {
-            progressBar.setVisibility(View.GONE);
-        }
+        if (progressBar != null) progressBar.setVisibility(View.GONE);
+        if (webView != null) webView.setVisibility(View.VISIBLE);
+    }
 
-        if (webView != null) {
-            webView.setVisibility(View.VISIBLE);
-        }
+    private void showError() {
+        if (errorView != null) errorView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideError() {
+        if (errorView != null) errorView.setVisibility(View.GONE);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if (appDiscovery != null) {
-            appDiscovery.clear();
-            appDiscovery = null;
-        }
 
         if (powerReceiver != null) {
             try {
@@ -232,6 +185,8 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             ExitDialog dialog = new ExitDialog(this, this);
 
+            if (dialog.getWindow() == null) return super.onKeyLongPress(keyCode, event);
+
             dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
             dialog.show();
             dialog.getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility());
@@ -252,37 +207,6 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
         }
     }
 
-    private void initFullscreen() {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        final View decorView = getWindow().getDecorView();
-        final int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-
-        decorView.setSystemUiVisibility(uiOptions);
-        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                    decorView.setSystemUiVisibility(uiOptions);
-                }
-            }
-        });
-    }
-
-    private boolean isLauncher() {
-        final Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        final ResolveInfo res = getPackageManager().resolveActivity(intent, 0);
-        return res.activityInfo != null &&
-                !"android".equals(res.activityInfo.packageName) &&
-                res.activityInfo.packageName.equals(BuildConfig.APPLICATION_ID);
-    }
-
     @Override
     public void onJavascriptFunction(String function) {
         webView.loadUrl("javascript:"+function+"()");
@@ -290,33 +214,13 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
 
     @Override
     public void onExit() {
-        PackageManager pm = getPackageManager();
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
+        isClosing = true;
 
-        List<ResolveInfo> launchers = pm.queryIntentActivities(intent, 0);
+        startService(new Intent(this, TermuxService.class).setAction(ACTION_STOP_SERVICE));
 
-        if (launchers != null && !launchers.isEmpty()) {
-            for (ResolveInfo resolveInfo : launchers) {
-                if (!resolveInfo.activityInfo.packageName.contains("cz.duong.nodecasher")) {
-                    isClosing = true;
-
-                    ActivityInfo activity = resolveInfo.activityInfo;
-                    ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
-                    Intent i = new Intent(Intent.ACTION_MAIN);
-
-                    i.setAction(Intent.ACTION_MAIN);
-                    i.addCategory(Intent.CATEGORY_LAUNCHER);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                    i.setComponent(name);
-
-                    startActivity(i);
-                    finish();
-                    break;
-                }
-
-            }
-        }
+        Intent launcher = LauncherUtils.getOtherLauncher(this);
+        startActivity(launcher);
+        finish();
     }
 
     @Override
@@ -324,21 +228,86 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
         webView.reload();
     }
 
-    @Override
-    public void onRediscover() {
-        Toast.makeText(this, "Znova načítám", Toast.LENGTH_LONG).show();
-        hideBrowser();
-        appDiscovery.rediscover();
+    private void showSetup() {
+        isClosing = true;
+        Intent intent = new Intent(this, SetupActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
     public void onAppLoaded(Map<String, String> actions) {
         this.actions = actions;
+        this.attempts = 0;
         showBrowser();
     }
 
     @Override
     public Map<String, String> getActions() {
         return this.actions;
+    }
+
+    void loadPage() {
+        if (attempts < MAX_ATTEMPTS) {
+            attempts += 1;
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    hideError();
+                    hideBrowser();
+                }
+            });
+
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(LOG_TAG, "Attempting to load: "+ AppPreferences.getServerUrl(MainActivity.this));
+                    webView.loadUrl(AppPreferences.getServerUrl(MainActivity.this));
+                    hideBrowser();
+                    hideError();
+                }
+            }, 5000);
+        } else {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    showError();
+                }
+            });
+            //show errr
+        }
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        termuxService = ((TermuxService.LocalBinder) service).service;
+        termuxService.mListener = new TermuxService.TaskListener() {
+            @Override
+            public void onStarted(String name) {
+                if (Task.fromName(name) == Task.RUN) {
+                    loadPage();
+                }
+            }
+
+            @Override
+            public void onStopped(String name, int exitCode) {
+                if (Task.fromName(name) == Task.RUN) {
+                    hideBrowser();
+                }
+            }
+        };
+
+        TermuxService.runScript(Task.RUN, this, this);
+    }
+
+    @Override
+    public void onRediscover() {
+        showSetup();
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        termuxService = null;
     }
 }

@@ -4,7 +4,7 @@
     android:id="@+id/activity_fake_home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cz.duong.nodecashier.FakeHomeActivity">
+    tools:context="cz.duong.nodecashier.utils.FakeHomeActivity">
 
     <ProgressBar
         style="?android:attr/progressBarStyle"
