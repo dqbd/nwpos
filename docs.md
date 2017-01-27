@@ -170,14 +170,44 @@ store.dispatch(set(5))
 ```
 
 ## React
-React je knihovna pro vytváření webových komponenent, vyvíjena Facebookem. Spolu s AngularJS se jednají o 2 nejpopularnější frameworky pro vývoj UI. Oproti AngularJS má React plytší křivku učení, nemusíme se učit speciální syntax jako u AngularJS, jedná se o čistý JavaScript. Navíc vzhledem k tomu, že jsme použili pro naši business logiku Redux, která byla pro React přimo vyšitá, dává smysl, abychom použili React pro vývoj rozhraní. 
+React je knihovna pro vytváření webových komponenent, vyvíjena Facebookem. Spolu s AngularJS se jednají o 2 nejpopularnější frameworky pro vývoj UI. Oproti AngularJS má React plytší křivku učení, nemusíme se učit speciální syntax jako u AngularJS, jedná se o čistý JavaScript. Navíc vzhledem k tomu, že jsme použili pro naši business logiku Redux, která byla pro React přimo vyšitá, dává smysl, abychom použili React pro vývoj rozhraní. React by se dala považovat jako View součást v MVC architektuře, jako je Latte v Nette. 
 
-Dalo by se říci, že React je 
+Klíčovou myšlenkou Reactu je jednosměrnost dat. Místo toho, abychom psali kód, který volá příkazy a vykonává změny, píšeme kód, který pouze vykresluje aktuální stav aplikace. Popisujeme, jak má výsledná stránka na základě příchozích dat vypadat. Jestliže chceme provést nějakou změnu v aplikaci, musíme ji provést příkazem, čili akcí. Je zde vidět jasné podobenství s knihovnou Redux. 
 
-// React mění způsob psaní uživatelského rozhraní: kód, který píšeme, má pouze zobrazovat výsledek a nic víc. Tyto komponenty reflektují 
+Další z definujících vlastností Reactu je JSX, což je vesměs jen syntaktický cukr usnadňující zápis. Hlavním poznávacím znakem JSX je jeho podobenství s HTML kódem.   
 
-// V jistém smyslu se jedná o View komponentu v MVC. V Reactu oproti ostatním frameworkům neměníme samotný Model (zjednodušeně neměníme přímo samotné promněné), nýbrž voláme akce, které pak změnu dělají za nás. Platí stejný princip jako u Reduxu, kde je stav komponentu jediným zdrojem pravdy. 
+V Reactu se každá aplikace skládá z jednotlivých komponent. Každá komponenta rozšiřuje třídu React.Component a musí implementovat funkci `render()`, který má za úkol vykreslit komponentu. 
 
+Typický zdrojový kód Reactu může vypadat takto:
+
+```javascript
+import React from "react" //musíme nejprve importovat knihovnu React
+
+class Ahoj extens React.Component {
+	render() {
+		return <div className="hello">Ahoj světe</div>
+	}
+}
+
+//...
+
+```
+
+Nejedná se o chybu, HTML tagy jsou tady schválně. V Reactu výstup komponent, to jest vykreslení HTML, zapisujeme ve formě "HTML tagů". JSX pak tento syntax převede do klasického JavaScriptu. Výhodou této funkce je oddělení od DOMu prohlížeče. Nejenže je testování komponent mnohem snažší, jelikož nepotřebujeme žádné prohlížeče, zároveň je tento způsob vykreslování výrazně rychlejší oproti vykreslování v DOMu (https://objectpartners.com/2015/11/19/comparing-react-js-performance-vs-native-dom/). Nemluvě o snadné údržbě kódu. Nejedná se však o 1:1 klon HTML, JSX má své omezení plynoucí ze specifikace DOM, jako jsou camelCase pojmenování atribut (místo `class` se musí psát `className`) apod.
+
+Po projetí JSX transpilátorem získaneme tento výstup:
+
+```javascript
+import React from "react" //musíme nejprve importovat knihovnu React
+
+class Ahoj extens React.Component {
+	render() {
+		return React.createElement("div", {className: "hello"}, "Ahoj světe")
+	}
+}
+
+//...
+```
 
 
 # Backend
@@ -205,8 +235,19 @@ Původně jsem s tiskárnou přímo komunikoval za pomocí knihovny na úrovni o
 
 Jako testovací tiskárnu jsem použil ZJ-5890K dovozem z Číny. Tato tiskárna je identická s tiskárnou O2 Kasy, čimž je zaručena kompabalita s tablety O2 kasy. Vesměs jsou podporovány všechny tiskárny, které umí protokol ESC/POS, což je na trhu většina.
 
-## EET a propojení se státní správou
+## Termux a emulace NodeJS v Androidu
+Aplikace byla na začátku koncipována tak, aby se skládala z klientské a serverové části. Tato architektura přináší výhody, které jsme si již zmínili. Dokážeme si ale představit, že instalace a údržba jak klientu, tak serveru by byla časově a v krajních případech i finančně náročná. Bylo by tedy ideální, kdyby šla zabalit funkcionalita serveru do klientské aplikace. Klasickým způsobem integrace by bylo oddělení business logic serveru (databáze, eet) od čistě serverové logiky (http server, mdns), což je dle našeho názoru neefektivní a přináší mnoho problému ve formě výkonu a chyb, které mohou nastat při takovém oddělení. 
 
+Naštěstí na pomoc přichází Termux. Termux je open-source emulátor terminálu pro Android. Spolu s výborným rozhraním terminálu obsahuje aplikace předkompilované Unix balíčky a svůj vlastní systém. Díky této aplikace máme k dispozici většinu Linuxových aplikací, včetně `bash`, `apt-get`, `sed` a hlavně `nodejs`, který potřebujeme pro server. Rozhodli jsme se forknout projekt a integrovat Termux přímo do naší aplikace. 
+
+### Struktura projektu
+Nejprve se stáhnou a rozbalí základní systémové balíčky a knihovny, jako je `bash`, `sh` a `busybox` do interní složky aplikace. Tato interní složka je automaticky přiřazována Androidem (viz `Context.getFilesDir()`) na základě `applicationId` v `app/build.gradle`. Bohužel většina binárek hledá závislosti a knihovny nebo přímo ukládá do `/data/data/com.termux`, bez ohledu na `applicationId`. Tento problém se v ideálním případě dá vyřešit rekompilací a provozováním vlastního apt serveru, což je vzhledem k povaze projektu časově a finančně náročné. Proto jsme se rozhodli nastavit `applicationId` na `com.termux`. Po nastavení jsou binárky spustitelné a plně funkční, aniž bychom museli binárky před spouštěním upravovat. Nevýhodou je však nepublikovatelnost na Google Play Store, který vyžaduje pro každou aplikaci unikátní `applicationId`. 
+
+Po rozbalení musíme ještě nastavit všechny symlinky v souboru `SYMLINKS.txt`, aby všechny aplikace vyžadující knihovny fungovaly správně. Celá instalace terminálu se provede voláním `TermuxService.`. 
+
+Po instalaci terminálu můžeme používat balíčky, na které jsme zvykli z klasických linuxových distribucí, jako je například Ubuntu, Debian apod. Inicializace samotného serveru se skládá ze 3 Bash skript, které jsou rozbaleny přímo z APK do kořenové složky terminál, kde jsou spuštěny. Nejprve se spuští `CHECK.sh`, který ověří, zda je server již nainstalovaný. Pokud je server již nainstalovaný, spustí se `RUN.sh`, který spustí server. v opačném případě se spustí `INSTALL.sh`, který nainstaluje všechny závislosti, stáhne a nainstaluje server.  
+
+## EET a propojení se státní správou
 
 
 ## Databáze
