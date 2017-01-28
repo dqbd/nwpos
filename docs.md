@@ -1,6 +1,7 @@
 # Úvod
 ## Motivace
 
+
 ## Srovnání s konkurenčními řešeními 
 
 # Dokumentace
@@ -9,20 +10,13 @@ Aplikaci lze provozovat dvěma způsoby. Jedním ze způsobů je instalace APK a
 
 ### Minimální požadavky
  - Tablet
- - USB tiskárna
+ - Tiskárna (Bluetooth nebo WiFi)
 
 ### Doporučené požadavky
+ - Tablet
+ - Tiskárna (Bluetooth / WiFi nebo USB)
  - Raspberry Pi 
  - Monitor pro Raspberry Pi
- - Tablet / počítač pro rozhraní prodavače
- - USB Tiskárna
-
-### TL;DR
- - koupit Raspberry Pi, dále jen RPi
- - upravit `utils/config.txt`
- - zkopírovat všechny soubory z `utils/` do SD karty pro RPi
- - zapojit RPi do sítě a do konzole napsat `sudo /boot/install.sh`
- - v prohlížeči otevřít `http://[ip adresa RPi]/` nebo nainstalovat APK pro Android
 
 ### Instalace serveru
 #### Pro Raspberry Pi
