@@ -176,7 +176,7 @@ Klíčovou myšlenkou Reactu je jednosměrnost dat. Místo toho, abychom psali k
 
 Další z definujících vlastností Reactu je JSX, což je vesměs jen syntaktický cukr usnadňující zápis. Hlavním poznávacím znakem JSX je jeho podobenství s HTML kódem.   
 
-V Reactu se každá aplikace skládá z jednotlivých komponent. Každá komponenta rozšiřuje třídu React.Component a musí implementovat funkci `render()`, který má za úkol vykreslit komponentu. 
+V Reactu se každá aplikace skládá z jednotlivých komponent. Každá komponenta rozšiřuje třídu React.Component a musí implementovat funkci `render()`, který má za úkol vykreslit komponentu. Prakticky jsme úplně odstínění od DOMu a nezávislí na prohlížeči, což nám umožňuje lepší testování a přenositelnost kódu.   
 
 Typický zdrojový kód Reactu může vypadat takto:
 
@@ -193,14 +193,14 @@ class Ahoj extens React.Component {
 
 ```
 
-Nejedná se o chybu, HTML tagy jsou tady schválně. V Reactu výstup komponent, to jest vykreslení HTML, zapisujeme ve formě "HTML tagů". JSX pak tento syntax převede do klasického JavaScriptu. Výhodou této funkce je oddělení od DOMu prohlížeče. Nejenže je testování komponent mnohem snažší, jelikož nepotřebujeme žádné prohlížeče, zároveň je tento způsob vykreslování výrazně rychlejší oproti vykreslování v DOMu (https://objectpartners.com/2015/11/19/comparing-react-js-performance-vs-native-dom/). Nemluvě o snadné údržbě kódu. Nejedná se však o 1:1 klon HTML, JSX má své omezení plynoucí ze specifikace DOM, jako jsou camelCase pojmenování atribut (místo `class` se musí psát `className`) apod.
+Nejedná se o chybu, HTML tagy jsou tady schválně. V Reactu výstup komponent, to jest vykreslení HTML, zapisujeme ve formě "HTML tagů". JSX transpilátor převede tento syntax do klasického JavaScriptu. Nejedná se však o 1:1 klon HTML, JSX má své omezení plynoucí ze specifikace DOM, jako jsou camelCase pojmenování atribut (místo `class` se musí psát `className`) apod.
 
-Po projetí JSX transpilátorem získaneme tento výstup:
+Výsledek JSX transpilátoru:
 
 ```javascript
 import React from "react" //musíme nejprve importovat knihovnu React
 
-class Ahoj extens React.Component {
+class Ahoj extends React.Component {
 	render() {
 		return React.createElement("div", {className: "hello"}, "Ahoj světe")
 	}
@@ -209,9 +209,91 @@ class Ahoj extens React.Component {
 //...
 ```
 
+Stejně jako v DOMu, React komponenty se dají do sebe skládat. Proto je potřeba, aby měly komponenty mezi sebou způsob předávání dat. V Reactu používáme `props`, se kterým předáváme stav aplikace. 
+
+Mějme nějakou hlavní komponentu, která bude mít vnořené další komponenty:
+
+```javascript
+// ...
+class Hlavní extends React.Component {
+	render() {
+		return <div>
+			<Ahoj />
+			<Jmeno name="David" surname="Duong" />
+			<Pocitadlo />
+		</div>
+	}
+}
+
+```
+
+<Ahoj /> je komponenta, kterou jsme si nadefinovali dříve. Jeho výstup bude vždy stejný ("Ahoj světe"). Jak jsme si již všimli, komponenta <Jmeno /> má dodatečné atributy, které dodávají komponentě data. Ty můžeme v komponentu číst z objektu `props`. Jakákoliv změna v `props` vyvolá vykreslení, o to se již postará React sám. 
+
+```javascript
+class Jmeno extends React.Component {
+	render() {
+		return <div>
+			<h1>{this.props.name}</h1>
+			<h2>{this.props.surname}</h2>
+		</div>
+	}
+}
+``` 
+
+Zároveň si můžeme povšimnout, že mezi složenými závorkami můžeme psát JavaScript. Závorku můžeme chápat jako proměnnou, kde výstup závorky se jakoby uloží do hypotetické proměnné.  
+
+```javascript
+<div>{true}</div>                // let obsah = true                 ... je OK 
+<div>{foo ? true : false}</div>  // let obsah = foo ? true : false   ... je OK
+<div>{if (foo) {}}</div>         // let obsah = if (foo) {}          ... nebude fungovat 
+```
+
+Nakonec můžeme mezi závorkami psát znova JSX. Často se využívá při vykreslení mnoha prvků, např. za pomocí cyklů.
+
+```javascript
+let pole = [1,2,3]
+
+<div>{pole.map(prvek => <span>{prvek}</span>)}</div>  // vytváříme pole divů
+
+// Výsledek je v HTML výstupu ekvivalentní:
+// <div>
+//     <span>1</span>
+//     <span>2</span>
+//     <span>3</span>
+// </div>
+```
+
+Kromě `props` můžeme pro uchování stavu používát i `state`. Ten se obvykle používá u těch stavů, které si spravuje sama komponenta, samotná aplikace jako taková se o tyto stavy zajímat nemusí. Příkladem může být třeba skrytí detailů při kliknutí, nebo zaznamenání počtu kliků. 
+
+Interaktivitu zajišťujeme pomocí inline event atributů jak jsme zvyklí z JavaScriptu, jako je `onClick`, `onSubmit` apod. Tyto eventy jsou stejně jako u vykreslování řízeny a optimalizovány Reactem. Nemusíme se tedy starat s recyklováním callbacků (funkce, které se volají), kdy u klasického JS se vytváří pro každý HTML prvek nový callback. 
+
+Každý callback musíme navázat vlastním objektem pro `this`. Jinak bude `this` odkazovat na DOM objekt, což nám znemnožňuje přístup ke komponentě. 
+
+```javascript
+class Pocitadlo extends React.Component {
+	constructor(props) {
+		super(props)
+
+		//inicializuje state, kdy ještě uživatel neklikl
+		this.state = {kliknuti: 0}                                
+	}
+
+	kliknul() {
+		//pro úpravu stavu musíme vždy volat this.setState(), který vyvolá vykreslení
+		this.setState({kliknuti: this.state.kliknuti + 1})       
+	}
+
+	render() {
+		<span onClick={this.kliknul.bind(this)}>{this.state.kliknuti}</span>
+	}
+}
+
+```
+
+Propojení s Reduxem je zajištěno knihovnou `react-redux`, která se stará o převádění dat ze store a akcí na `props` pro komponenty. Příklady implementace si můžete prohlédnout ve složce `client/containers`. 
 
 # Backend
-Server, čili backend, byl navržen v tomto projektu tak, aby sloužil jako substituent pro nedostupnou funkcionalitu v prohlížeči nebo pro funkce, které se budou pravidelně obměňovat (správa dat, konektivita s EET).  
+Server, čili backend, byl navržen v tomto projektu tak, aby sloužil jako substituent pro nedostupnou funkcionalitu v prohlížeči nebo pro funkce, které se budou pravidelně obměňovat (správa dat, konektivita s EET). Pro EET jsme použili open-source knihovnu `JakubMrozek/eet` a pro databázi jsme použili `louischatriot/nedb`.
 
 ## mDNS 
 mDNS, neboli multicast DNA, je technologie, která umožňuje najít servery a jejich IP adresy na lokální síti, aniž by na lokální síti běžel plnohodnotný DNS server. Pro provoz není třeba žádná konfigurace ze strany správce sítě. Stačí službu jenom spustit a klienti budou schopni automaticky objevit server a adresu serveru. Tato technologije je známá taky jako Apple Bonjour, nebo Network Service Discovery.
@@ -246,8 +328,3 @@ Nejprve se stáhnou a rozbalí základní systémové balíčky a knihovny, jako
 Po rozbalení musíme ještě nastavit všechny symlinky v souboru `SYMLINKS.txt`, aby všechny aplikace vyžadující knihovny fungovaly správně. Celá instalace terminálu se provede voláním `TermuxService.`. 
 
 Po instalaci terminálu můžeme používat balíčky, na které jsme zvykli z klasických linuxových distribucí, jako je například Ubuntu, Debian apod. Inicializace samotného serveru se skládá ze 3 Bash skript, které jsou rozbaleny přímo z APK do kořenové složky terminál, kde jsou spuštěny. Nejprve se spuští `CHECK.sh`, který ověří, zda je server již nainstalovaný. Pokud je server již nainstalovaný, spustí se `RUN.sh`, který spustí server. v opačném případě se spustí `INSTALL.sh`, který nainstaluje všechny závislosti, stáhne a nainstaluje server.  
-
-## EET a propojení se státní správou
-
-
-## Databáze
