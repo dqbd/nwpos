@@ -1,8 +1,11 @@
 # Úvod
 ## Motivace
-
+Dnem xx.xx.2015 vesla v platnost zakon o Elektronicke Evidenci Trzby, cili EET. Naskytla se tak ojedinela prilezitost pro podnikani, kdy se z cista jasna otevrel lukrativni nekolikamilionovy trh s elektronickymi pokladny. Bylo od zacatku jasne, ze trzby zde mohou dosahivat v radech nekolika milionu, proto neni ani divu, ze se teto prilezitosti chytla rada firem, zejmena telekomunikacni firmy, ktere si svoje portfolio internetovych sluzeb snadno rozsiri. I presto, ze nabidka pokladen je velka, nenasli jsme zadnou pokladnu, ktera by vyhovovala nasim pozadavkum a vesla se do minimalni cenove relace. 
 
 ## Srovnání s konkurenčními řešeními 
+Nejvetsimi poskytovateli registracnich pokladen je O2 Telefonica a Dotykacka s.r.o. Obe tyto firmy poskytuji jednotny balicek zahrnujici jak software, tak hardware, obvyklr ve forme Android tabletu s predinstalovanou aplikaci. Jejich pristroje jsou prezentovany na trh jako levna zarizeni, ktere se vejdou do 5 tisic korun Ceskych, ktere muzeme ziskat zpatky ve forme ulevou z dani. Po podrobnem prezkoumani vsak zjistujeme, ze jejich provoz neni tak levny, jak je mylne uvadeno v jejich reklamni kampani, coz neni zrovna prekvapujici. 
+
+Pro srovnani jsme se zamerili hlavne na O2 eKasu, ktera je v dobr psani teto prace nejprodavanejsi pokladnou na českém trhu. Cena zakladniho baleni je tesne nad 5000 Kc s DPH a sklada se z 
 
 # Dokumentace
 ## Instalace
