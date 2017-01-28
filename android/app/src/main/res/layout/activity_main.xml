@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true"
-    android:background="@color/colorPrimary"
-    tools:context="com.duong.cz.duong.nodecashier.MainActivity">
+    tools:context="cz.duong.nodecashier.MainActivity">
 
     <WebView
         android:id="@+id/webView"
@@ -27,20 +26,20 @@
         android:layout_centerHorizontal="true">
 
         <TextView
-            android:text="Instalace hotova"
+            android:text="Nemohu načíst server"
             android:textSize="40sp"
             android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:text="Už jen jeden krok k provozu!"
+            android:text="Je server zapnutý? A co internetové připojení?"
             android:layout_marginBottom="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <ImageView
-            android:src="@drawable/icon_done"
+            android:src="@drawable/icon_error"
             android:layout_width="220dp"
             android:layout_height="220dp"
             android:layout_marginBottom="20dp" />
@@ -66,19 +65,18 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
         </LinearLayout>
-
-
-
     </LinearLayout>
 
     <ProgressBar
         style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_centerInParent="true"
-        android:indeterminateTint="@color/colorAccent"
+        android:indeterminateTint="@android:color/white"
         android:indeterminateTintMode="src_in"
         android:id="@+id/progressBar" />
 </RelativeLayout>

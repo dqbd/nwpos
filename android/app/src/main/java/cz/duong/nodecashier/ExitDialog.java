@@ -12,8 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.duong.R;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

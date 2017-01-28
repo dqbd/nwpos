@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import cz.duong.nodecashier.CredDialog;
+import cz.duong.nodecashier.R;
 import cz.duong.nodecashier.termux.Task;
 import cz.duong.nodecashier.termux.TermuxInstaller;
 import cz.duong.nodecashier.termux.TermuxService;
@@ -34,8 +36,6 @@ public class InstallFragment extends Fragment implements ServiceConnection {
 
     private View progressBar;
     private View errorView;
-
-    private final String[] GITHUB_CREDS = new String[]{};
 
     final TermuxInstaller.InstallListener mInstallListener = new TermuxInstaller.InstallListener() {
         @Override
@@ -72,22 +72,30 @@ public class InstallFragment extends Fragment implements ServiceConnection {
         }
 
         @Override
-        public void onStopped(String name, int exitCode) {
+        public void onStopped(String name, final int exitCode) {
             if (!mIsVisible) return;
             Task task = Task.fromName(name);
             if (task == Task.INSTALL) {
                 runScript(Task.CHECK);
             } else if (task == Task.CHECK) {
-                if (exitCode == 42) {
-                    runScript(Task.INSTALL.args(GITHUB_CREDS));
-                } else {
-                    uiHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
+
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (exitCode == 42) {
+                            CredDialog dialog = new CredDialog(getActivity(), new CredDialog.CredInterface() {
+                                @Override
+                                public void onGithubCred(String username, String password) {
+                                    runScript(Task.INSTALL.args(new String[]{username, password}));
+                                }
+                            });
+
+                            dialog.show();
+                        } else {
                             onInstallFinished();
                         }
-                    });
-                }
+                    }
+                });
             }
         }
     };
@@ -107,12 +115,12 @@ public class InstallFragment extends Fragment implements ServiceConnection {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(com.duong.R.layout.fragment_install, container, false);
+        View view = inflater.inflate(R.layout.fragment_install, container, false);
 
-        progressBar = view.findViewById(com.duong.R.id.progressBar);
-        errorView = view.findViewById(com.duong.R.id.main_error);
+        progressBar = view.findViewById(R.id.progressBar);
+        errorView = view.findViewById(R.id.main_error);
 
-        Button cancelBtn = (Button) view.findViewById(com.duong.R.id.cancel_btn);
+        Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,7 +128,7 @@ public class InstallFragment extends Fragment implements ServiceConnection {
             }
         });
 
-        Button retryBtn = (Button) view.findViewById(com.duong.R.id.retry_btn);
+        Button retryBtn = (Button) view.findViewById(R.id.retry_btn);
         retryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true">
 
         <TextView
-            android:text="Instalace aplikace"
+            android:text="Instalace serveru"
             android:textSize="40sp"
             android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
@@ -26,19 +26,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <FrameLayout
-            android:layout_width="120dp"
-            android:layout_height="120dp">
-
-            <ProgressBar
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:indeterminateTint="@color/colorAccent"
-                android:indeterminateTintMode="src_in"
-                android:id="@+id/progressBar" />
-        </FrameLayout>
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:indeterminateTint="@android:color/white"
+            android:indeterminateTintMode="src_in"
+            android:id="@+id/progressBar" />
 
     </LinearLayout>
 

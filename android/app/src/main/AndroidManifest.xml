@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.duong">
+    package="cz.duong.nodecashier">
 
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
@@ -21,7 +22,12 @@
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden|navigation"
             android:launchMode="singleTask"
             android:screenOrientation="reverseLandscape">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="cz.duong.nodecashier.utils.FakeHomeActivity"
@@ -33,12 +39,7 @@
             </intent-filter>
         </activity>
         <activity android:name="cz.duong.nodecashier.SetupActivity" android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <service android:name="cz.duong.nodecashier.termux.TermuxService" android:exported="false" />
     </application>

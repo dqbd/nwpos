@@ -11,8 +11,6 @@ import android.system.Os;
 import android.util.Log;
 import android.util.Pair;
 
-import com.duong.R;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,6 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import cz.duong.nodecashier.R;
 
 /**
  * Install the Termux bootstrap packages if necessary by following the below steps:

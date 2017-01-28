@@ -1,13 +1,15 @@
 package cz.duong.nodecashier.termux;
 
+import cz.duong.nodecashier.R;
+
 /**
  * @author d^2
  */
 
 public enum Task {
-    INSTALL(com.duong.R.raw.install, new String[]{}),
-    RUN(com.duong.R.raw.run, null),
-    CHECK(com.duong.R.raw.check, null);
+    INSTALL(R.raw.install, new String[]{}),
+    RUN(R.raw.run, null),
+    CHECK(R.raw.check, null);
 
     public int rid;
     public String[] args;

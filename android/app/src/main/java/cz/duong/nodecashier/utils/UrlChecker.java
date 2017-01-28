@@ -28,8 +28,8 @@ public class UrlChecker extends AsyncTask<String, Void, Boolean> {
             URL param = new URL(url);
 
             HttpURLConnection connection = (HttpURLConnection) param.openConnection();
-            connection.setConnectTimeout(30000);
-            connection.setReadTimeout(15000);
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(8000);
 
             connection.setRequestMethod("GET");
             connection.connect();

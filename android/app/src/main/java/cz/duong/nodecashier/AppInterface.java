@@ -19,7 +19,7 @@ import java.util.Map;
 
 class AppInterface {
 
-    public static final String JS_NAME = "android";
+    static final String JS_NAME = "android";
 
     private WebView view;
     private AppLoadListener listener;

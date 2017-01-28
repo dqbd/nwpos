@@ -16,25 +16,32 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+import cz.duong.nodecashier.R;
 import cz.duong.nodecashier.utils.AppDiscoveryTask;
+import cz.duong.nodecashier.utils.UrlChecker;
 
-public class ServiceDetectFragment extends Fragment {
+public class ServiceDetectFragment extends Fragment implements UrlChecker.CheckListener {
 
-    WifiManager.MulticastLock lock;
+
     HandlerThread bgThread;
     Handler handler;
 
     Handler uiHandler;
 
     AppDiscoveryTask task;
+
     UrlAdapter adapter;
 
-    private static final String DNS_LOCK = "cz.duong.nodecashier.lock";
+    View serviceLoading;
+    View serviceView;
+    View progressView;
+
 
     public ServiceDetectFragment() {}
 
@@ -44,16 +51,23 @@ public class ServiceDetectFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(com.duong.R.layout.fragment_service_detect, container, false);
+        View view = inflater.inflate(R.layout.fragment_service_detect, container, false);
 
-        ListView listView = (ListView) view.findViewById(com.duong.R.id.service_list);
+        serviceLoading = view.findViewById(R.id.service_load);
+        serviceView = view.findViewById(R.id.service_view);
+        progressView = view.findViewById(R.id.progressBar);
+
+        ListView listView = (ListView) view.findViewById(R.id.service_list);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String url = (String) parent.getItemAtPosition(position);
-                showServiceSelected(url);
+                new UrlChecker(ServiceDetectFragment.this).execute(url);
+
+                serviceView.setVisibility(View.GONE);
+                progressView.setVisibility(View.VISIBLE);
             }
         });
 
@@ -67,22 +81,19 @@ public class ServiceDetectFragment extends Fragment {
         bgThread = new HandlerThread("AppDiscovery");
         bgThread.start();
 
-        WifiManager wifi = (WifiManager) context.getSystemService(android.content.Context.WIFI_SERVICE);
-        lock = wifi.createMulticastLock(DNS_LOCK);
-        lock.setReferenceCounted(true);
-        lock.acquire();
+
 
         handler = new Handler(bgThread.getLooper());
         uiHandler = new Handler(Looper.getMainLooper());
 
         adapter = new UrlAdapter(getContext());
-        task = new AppDiscoveryTask(new AppDiscoveryTask.UrlListener() {
+        task = new AppDiscoveryTask(getActivity(), new AppDiscoveryTask.UrlListener() {
             @Override
             public void onUrlReceived(final String url) {
-                Log.d("APP-DISCOVERY", url);
                 uiHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        serviceLoading.setVisibility(View.GONE);
                         adapter.add(url);
                     }
                 });
@@ -96,12 +107,24 @@ public class ServiceDetectFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
 
+        Log.d("APP-DISCOVERY", "detaching: " + String.valueOf(task != null));
+
         if (task != null) task.stop();
         if (handler != null) handler.removeCallbacksAndMessages(null);
         if (uiHandler != null) uiHandler.removeCallbacksAndMessages(null);
-        if (lock != null) lock.release();
+    }
 
-        lock = null;
+    @Override
+    public void onUrlValid(String url, boolean valid) {
+        if (valid) {
+            showServiceSelected(url);
+        } else {
+            serviceView.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.GONE);
+
+            Toast.makeText(getActivity(), "Nemohu se připojit k: " + url, Toast.LENGTH_LONG).show();
+        }
+
     }
 
     class UrlAdapter extends ArrayAdapter<String> {
@@ -127,15 +150,15 @@ public class ServiceDetectFragment extends Fragment {
             String action = getItem(position);
 
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(com.duong.R.layout.server_listitem, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.server_listitem, parent, false);
             }
 
             Uri uri = Uri.parse(action);
 
-            TextView name = (TextView) convertView.findViewById(com.duong.R.id.hostname_text);
+            TextView name = (TextView) convertView.findViewById(R.id.hostname_text);
             name.setText(uri.getHost());
 
-            TextView port = (TextView) convertView.findViewById(com.duong.R.id.port_text);
+            TextView port = (TextView) convertView.findViewById(R.id.port_text);
             port.setText("Port: " + String.valueOf(uri.getPort()));
 
             return convertView;

@@ -24,11 +24,11 @@ public class SetupActivity extends Activity implements IntroListener, InstallLis
 
         AppPreferences.setFirstInit(this, true);
 
-        setContentView(com.duong.R.layout.activity_setup);
+        setContentView(R.layout.activity_setup);
         fragmentManager = getFragmentManager();
 
         fragmentManager.beginTransaction()
-                .replace(com.duong.R.id.activity_setup, IntroFragment.newInstance())
+                .replace(R.id.activity_setup, IntroFragment.newInstance())
                 .commit();
     }
 
@@ -37,12 +37,12 @@ public class SetupActivity extends Activity implements IntroListener, InstallLis
         if (noServer) {
             fragmentManager.beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(com.duong.R.id.activity_setup, InstallFragment.newInstance())
+                .replace(R.id.activity_setup, InstallFragment.newInstance())
                 .commit();
         } else {
             fragmentManager.beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(com.duong.R.id.activity_setup, ServiceDetectFragment.newInstance())
+                .replace(R.id.activity_setup, ServiceDetectFragment.newInstance())
                 .commit();
         }
     }
@@ -61,7 +61,7 @@ public class SetupActivity extends Activity implements IntroListener, InstallLis
 
         fragmentManager.beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(com.duong.R.id.activity_setup, FinishFragment.newInstance())
+                .replace(R.id.activity_setup, FinishFragment.newInstance())
                 .commit();
     }
 
@@ -69,7 +69,7 @@ public class SetupActivity extends Activity implements IntroListener, InstallLis
     public void cancel() {
         fragmentManager.beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(com.duong.R.id.activity_setup, IntroFragment.newInstance())
+                .replace(R.id.activity_setup, IntroFragment.newInstance())
                 .commit();
     }
 }

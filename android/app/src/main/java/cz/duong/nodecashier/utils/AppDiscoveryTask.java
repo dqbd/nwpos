@@ -1,8 +1,14 @@
 package cz.duong.nodecashier.utils;
 
+import android.app.Activity;
+import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Collections;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
@@ -16,13 +22,46 @@ public class AppDiscoveryTask implements Runnable {
     private static final String SERVICE_TYPE = "_http._tcp.local.";
     private static final String SERVICE_NAME = "nodecashier-services";
 
+    private static final String DNS_LOCK = "cz.duong.nodecashier.lock";
+
+    private WifiManager.MulticastLock lock;
     private UrlListener urlListener;
     private JmDNS jmdns;
 
-    public AppDiscoveryTask(UrlListener listener) {
+    private InetAddress deviceAddress;
+
+    public AppDiscoveryTask(Activity context, UrlListener listener) {
         this.urlListener = listener;
 
+        WifiManager wifi = (WifiManager) context.getSystemService(android.content.Context.WIFI_SERVICE);
+
+        deviceAddress = getLocalAddress();
+
+        lock = wifi.createMulticastLock(DNS_LOCK);
+        lock.setReferenceCounted(true);
+        lock.acquire();
     }
+
+    private InetAddress getLocalAddress() {
+        try {
+            for(NetworkInterface intf : Collections.list(NetworkInterface.getNetworkInterfaces())) {
+                for (InetAddress iadr : Collections.list(intf.getInetAddresses())) {
+                    if (iadr.isLoopbackAddress()) continue;
+
+                    String address = iadr.getHostAddress();
+
+                    if (!address.contains(":")) { //je to ipv4
+                        return iadr;
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            Log.d("APP-DISCOVERY", Log.getStackTraceString(e));
+        }
+
+        return null;
+    }
+
     private void urlDiscovered(String url) {
         if (urlListener != null) urlListener.onUrlReceived(url);
     }
@@ -51,8 +90,14 @@ public class AppDiscoveryTask implements Runnable {
     @Override
     public void run() {
         try {
-            Log.d("APP-DISCOVER", "NEW TASK");
-            jmdns = JmDNS.create();
+            if (deviceAddress != null) {
+                Log.d("APP-DISCOVER", "NEW TASK with device address");
+                jmdns = JmDNS.create(deviceAddress, deviceAddress.getHostName());
+            } else {
+                Log.d("APP-DISCOVER", "NEW TASK");
+                jmdns = JmDNS.create();
+            }
+
             jmdns.addServiceListener(SERVICE_TYPE, listener);
         } catch (IOException e) {
             Log.d("APP-DISCOVER", Log.getStackTraceString(e));
@@ -60,13 +105,22 @@ public class AppDiscoveryTask implements Runnable {
     }
 
     public void stop() {
+        Log.d("APP-DISCOVER", "Stopping");
         if (jmdns != null) {
-            jmdns.removeServiceListener(SERVICE_TYPE, listener);
+            jmdns.unregisterAllServices();
+
             try {
                 jmdns.close();
+                jmdns = null;
+                Log.d("APP-DISCOVER", "Stopped");
             } catch (IOException e) {
                 Log.d("APP-DISCOVER", Log.getStackTraceString(e));
             }
+        }
+
+        if (lock != null) {
+            lock.release();
+            lock = null;
         }
     }
 

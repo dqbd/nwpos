@@ -23,23 +23,23 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.duong.R;
+import java.util.HashMap;
+import java.util.Map;
+
 import cz.duong.nodecashier.termux.Task;
 import cz.duong.nodecashier.termux.TermuxService;
 import cz.duong.nodecashier.utils.LauncherUtils;
-
-import java.util.HashMap;
-import java.util.Map;
+import cz.duong.nodecashier.utils.UrlChecker;
 
 import static cz.duong.nodecashier.termux.EmulatorDebug.LOG_TAG;
 import static cz.duong.nodecashier.termux.TermuxService.ACTION_STOP_SERVICE;
 
-public class MainActivity extends Activity implements ExitDialog.ExitInterface, AppInterface.AppLoadListener, ServiceConnection {
+public class MainActivity extends Activity implements AppInterface.AppLoadListener, ServiceConnection, UrlChecker.CheckListener {
 
     private final static int MAX_ATTEMPTS = 3;
+    private final static int DELAY_FACTOR = 3000;
 
     private WebView webView;
-
     private View errorView;
     private ProgressBar progressBar;
 
@@ -52,7 +52,6 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
 
     private boolean isClosing = false;
     private int attempts = 0;
-
 
     private BroadcastReceiver powerReceiver = new BroadcastReceiver() {
         @Override
@@ -84,15 +83,7 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
 
         setContentView(R.layout.activity_main);
 
-        if (AppPreferences.shouldRunServer(this)) {
-            Intent serviceIntent = new Intent(this, TermuxService.class);
 
-            startService(serviceIntent);
-            if (!bindService(serviceIntent, this, 0))
-                throw new RuntimeException("bindService() failed");
-        } else {
-            loadPage();
-        }
 
         webView = (WebView) findViewById(R.id.webView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -130,38 +121,26 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
             }
         });
 
-        hideError();
-        hideBrowser();
+
+        showLoading();
         registerReceiver(powerReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        startServer();
+
         if (webView != null) webView.requestFocus();
-    }
-
-    private void hideBrowser() {
-        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
-        if (webView != null) webView.setVisibility(View.GONE);
-    }
-
-    private void showBrowser() {
-        if (progressBar != null) progressBar.setVisibility(View.GONE);
-        if (webView != null) webView.setVisibility(View.VISIBLE);
-    }
-
-    private void showError() {
-        if (errorView != null) errorView.setVisibility(View.VISIBLE);
-    }
-
-    private void hideError() {
-        if (errorView != null) errorView.setVisibility(View.GONE);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if (termuxService != null) {
+            termuxService.onDestroy();
+        }
 
         if (powerReceiver != null) {
             try {
@@ -183,7 +162,36 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            ExitDialog dialog = new ExitDialog(this, this);
+            ExitDialog dialog = new ExitDialog(this, new ExitDialog.ExitInterface() {
+                @Override
+                public void onJavascriptFunction(String function) {
+                    if (webView != null) webView.loadUrl("javascript:"+function+"()");
+                }
+
+                @Override
+                public void onExit() {
+                    isClosing = true;
+
+                    Intent launcher = LauncherUtils.getOtherLauncher(MainActivity.this);
+                    startActivity(launcher);
+                    finish();
+                }
+
+                @Override
+                public void onReload() {
+                    if (webView != null) webView.reload();
+                }
+
+                @Override
+                public void onRediscover() {
+                    showSetup();
+                }
+
+                @Override
+                public Map<String, String> getActions() {
+                    return actions;
+                }
+            });
 
             if (dialog.getWindow() == null) return super.onKeyLongPress(keyCode, event);
 
@@ -204,35 +212,9 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
         if (!isClosing) {
             ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
             am.moveTaskToFront(getTaskId(), 0);
+        } else {
+            stopServer();
         }
-    }
-
-    @Override
-    public void onJavascriptFunction(String function) {
-        webView.loadUrl("javascript:"+function+"()");
-    }
-
-    @Override
-    public void onExit() {
-        isClosing = true;
-
-        startService(new Intent(this, TermuxService.class).setAction(ACTION_STOP_SERVICE));
-
-        Intent launcher = LauncherUtils.getOtherLauncher(this);
-        startActivity(launcher);
-        finish();
-    }
-
-    @Override
-    public void onReload() {
-        webView.reload();
-    }
-
-    private void showSetup() {
-        isClosing = true;
-        Intent intent = new Intent(this, SetupActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     @Override
@@ -242,32 +224,28 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
         showBrowser();
     }
 
-    @Override
-    public Map<String, String> getActions() {
-        return this.actions;
-    }
-
     void loadPage() {
         if (attempts < MAX_ATTEMPTS) {
-            attempts += 1;
+
             mHandler.removeCallbacksAndMessages(null);
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    hideError();
-                    hideBrowser();
+                    showLoading();
                 }
             });
 
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    attempts += 1;
+
                     Log.d(LOG_TAG, "Attempting to load: "+ AppPreferences.getServerUrl(MainActivity.this));
-                    webView.loadUrl(AppPreferences.getServerUrl(MainActivity.this));
-                    hideBrowser();
-                    hideError();
+                    showLoading();
+
+                    new UrlChecker(MainActivity.this).execute(AppPreferences.getServerUrl(MainActivity.this));
                 }
-            }, 5000);
+            }, attempts * DELAY_FACTOR);
         } else {
             mHandler.post(new Runnable() {
                 @Override
@@ -275,7 +253,49 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
                     showError();
                 }
             });
-            //show errr
+        }
+    }
+
+    void showBrowser() {
+        if (webView != null) webView.setVisibility(View.VISIBLE);
+        if (errorView != null) errorView.setVisibility(View.GONE);
+        if (progressBar != null) progressBar.setVisibility(View.GONE);
+    }
+
+    void showLoading() {
+        if (webView != null) webView.setVisibility(View.GONE);
+        if (errorView != null) errorView.setVisibility(View.GONE);
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+    }
+
+    void showError() {
+        if (webView != null) webView.setVisibility(View.GONE);
+        if (errorView != null) errorView.setVisibility(View.VISIBLE);
+        if (progressBar != null) progressBar.setVisibility(View.GONE);
+    }
+
+    void showSetup() {
+        isClosing = true;
+        Intent intent = new Intent(this, SetupActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    void startServer() {
+        if (AppPreferences.shouldRunServer(this)) {
+            Intent serviceIntent = new Intent(this, TermuxService.class);
+
+            startService(serviceIntent);
+            if (!bindService(serviceIntent, this, 0))
+                throw new RuntimeException("bindService() failed");
+        } else {
+            loadPage();
+        }
+    }
+
+    void stopServer() {
+        if (AppPreferences.shouldRunServer(MainActivity.this)) {
+            startService(new Intent(MainActivity.this, TermuxService.class).setAction(ACTION_STOP_SERVICE));
         }
     }
 
@@ -293,7 +313,11 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
             @Override
             public void onStopped(String name, int exitCode) {
                 if (Task.fromName(name) == Task.RUN) {
-                    hideBrowser();
+                    showLoading();
+
+                    if (!isClosing) {
+                        TermuxService.runScript(Task.RUN, MainActivity.this, MainActivity.this);
+                    }
                 }
             }
         };
@@ -302,12 +326,16 @@ public class MainActivity extends Activity implements ExitDialog.ExitInterface, 
     }
 
     @Override
-    public void onRediscover() {
-        showSetup();
+    public void onServiceDisconnected(ComponentName name) {
+        termuxService = null;
     }
 
     @Override
-    public void onServiceDisconnected(ComponentName name) {
-        termuxService = null;
+    public void onUrlValid(String url, boolean valid) {
+        if (!valid) {
+            loadPage();
+        } else {
+            if (webView != null) webView.loadUrl(url);
+        }
     }
 }

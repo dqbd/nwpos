@@ -6,7 +6,8 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 
-import com.duong.BuildConfig;
+import cz.duong.nodecashier.BuildConfig;
+import cz.duong.nodecashier.R;
 
 /**
  * @author d^2
@@ -16,7 +17,7 @@ public class FakeHomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.duong.R.layout.activity_fake_home);
+        setContentView(R.layout.activity_fake_home);
     }
 
     public static boolean isLauncher(final Context context) {

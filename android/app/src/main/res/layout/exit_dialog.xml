@@ -7,6 +7,5 @@
         android:layout_height="match_parent"
         android:divider="#12ffffff"
         android:dividerHeight="1dp"
-
         android:id="@+id/exit_listview" />
 </FrameLayout>

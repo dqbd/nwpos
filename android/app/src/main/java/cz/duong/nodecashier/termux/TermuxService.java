@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import cz.duong.nodecashier.MainActivity;
+import cz.duong.nodecashier.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -131,9 +132,9 @@ public final class TermuxService extends Service {
         }
 
         Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle(getText(com.duong.R.string.app_name));
+        builder.setContentTitle(getText(R.string.app_name));
         builder.setContentText(contentText);
-        builder.setSmallIcon(com.duong.R.drawable.icon_notification);
+        builder.setSmallIcon(R.drawable.icon_notification);
         builder.setContentIntent(pendingIntent);
         builder.setOngoing(true);
 
