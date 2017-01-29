@@ -1,28 +1,53 @@
 # Úvod
 ## Motivace
-Dnem xx.xx.2015 vesla v platnost zakon o Elektronicke Evidenci Trzby, cili EET. Naskytla se tak ojedinela prilezitost pro podnikani, kdy se z cista jasna otevrel lukrativni nekolikamilionovy trh s elektronickymi pokladny. Bylo od zacatku jasne, ze trzby zde mohou dosahivat v radech nekolika milionu, proto neni ani divu, ze se teto prilezitosti chytla rada firem, zejmena telekomunikacni firmy, ktere si svoje portfolio internetovych sluzeb snadno rozsiri. I presto, ze nabidka pokladen je velka, nenasli jsme zadnou pokladnu, ktera by vyhovovala nasim pozadavkum a vesla se do minimalni cenove relace. 
+Dnem 13. 04. 2016 (https://www.zakonyprolidi.cz/cs/2016-112) vešla v platnost zákon o elektronické evidenci třžeb, zkráceně EET. Naskytla se tak ojedinělá příležitost pro podnikání, kdy se čista z jasna otevřel lukrativní trh s elektronickými pokladnami. Od začátku bylo jasné, že tento trh může obnášet příjmy v řádech několika miliónů, proto není ani divu, že se této příležitosti chytly velké korporace, jako jsou telekomunikační firmy, které v zásadě si pouze rožšíří svoje existující portfólio internetových služeb. Zároveň se na trhu vyrojilo mnoho startupů, bojující o podíl na trhu s agresivními reklamami a billboardy. Tento zákon se nás obzvlášť týkal, jelikož provozujeme maloobchod s oblečením a používáme staré klasické pokladny, stejně jako většina prodejen před EET. Jelikož jsme chtěli mít rozhraní pokladny plně pod kontrolu, obzvlášt pro vietnamské obchodníky, rozhodli jsme se napsat svoji vlastní aplikaci, která dokáže odesílat účtenku na Finanční správu. 
 
 ## Srovnání s konkurenčními řešeními 
-Nejvetsimi poskytovateli registracnich pokladen je O2 Telefonica a Dotykacka s.r.o. Obe tyto firmy poskytuji jednotny balicek zahrnujici jak software, tak hardware, obvyklr ve forme Android tabletu s predinstalovanou aplikaci. Jejich pristroje jsou prezentovany na trh jako levna zarizeni, ktere se vejdou do 5 tisic korun Ceskych, ktere muzeme ziskat zpatky ve forme ulevou z dani. Po podrobnem prezkoumani vsak zjistujeme, ze jejich provoz neni tak levny, jak je mylne uvadeno v jejich reklamni kampani, coz neni zrovna prekvapujici. 
 
-Pro srovnani jsme se zamerili hlavne na O2 eKasu, ktera je v dobr psani teto prace nejprodavanejsi pokladnou na českém trhu. Cena zakladniho baleni je tesne nad 5000 Kc s DPH a sklada se z 
+Pro srovnání jsme hledali pokladní systémy, které v době psaní této práce na trhu existovaly. Finanční strop jsme si stanovili na 5 000 Kč a jako jediný požadavek jsme měli podporu vietnamštiny. Finanční strop jsme vybrali z důvodu možné daňové úlevy, kdy můžeme uvést veškeré náklady plynoucí z nákupu EET přístrojů do výdajů. Nalezli jsme pouze 2 řešení, které na stránkách uvádějí podporu češtiny: O2 eKasa a Dotykačka. 
 
-# Dokumentace
+O2 eKasa je v tuto chvíli nejprodávanější registrační pokladnou na trhu, s více než 10 000 zákazníky ve dne oficálního spuštění EET (https://www.o2.cz/spolecnost/tiskove-centrum/513034-eKasa_vstoupila_do_ostreho_provozu_EET_v_roli_lidra_trhu.html). Jedná se v základě o balíček Android tabletu s tiskárnou a platebním terminálem a pronajímaným softwarem. Počáteční pořizovací náklady se pohybují od 6 000 Kč s DPH do 20 000 Kč s DPH, v závislosti na příslušenství. Měsíční poplatek za software je stanoven na 500 Kč, kde O2 nabízí nabídku ve formě snížení měsíčního poplatku až na nulu, v závislosti na výši třžby provedené přes jejich platební terminál.
+
+Původně jsme uvažovali právě nad tuto pokladnou, díky její jednoduchosti a možné podpory ze strany O2. Po bližším prozkoumání se však ukázalo, že její náklady na provoz jsou po přepočtu vyšší než u konkurence. Když si propočítáme jejich nabídku snížení měsíčního poplatku, zjistíme, že po přičtení 0.99% procentuální sazby při platbou kartou můžeme platit více než původních 500 Kč. 
+
+Pro srovnání jsme přidali graf výdajů při prostou platbou kartou bez měsíčních poplatků za terminál. Díky vyhláškám Evropské Unie byla stanovena horní hranice procentuální sazby na 0.2% u debetních karet a na 0.3% u kreditních karet. (http://www.mfcr.cz/cs/aktualne/tiskove-zpravy/2015/zmeny-mezibankovnich-poplatku-za-platebn-21456). Pro úplnost jsme také přidali graf simulující procentuální sazbu 0.99%. 
+
+Procentuální sazba je vyjednávána individuálně, tudiž není jednotná a nedá se přesně určit, o kolik platí zákazník více. Můžeme ale s jistotou řici, že si zákazník za provoz O2 připlatí, než kdyby provozoval svoji vlastní pokladnu a platební terminál.
+
+Problémovým se také ukazuje nedostupnost API pro vývojáře, kde vešekrá data tržeb je nahrávána na servery O2 bez možnosti exportu. Poslední kapkou byla cena za montáž, když za poradenství bylo účtováno 1 000 Kč a výš. 
+
+Dotykačka je další z plejády poskytovatelů EET služeb, který má výrazný podíl na trhu (v první fázi EET zakoupilo systém přes 5 000 zákazníků). Oproti O2 eKase nezahrnuje balíček platební terminál a má vlastní API, na který se může napojit vývojář. Stále ale platíme měsíční poplatek v rozmezí od 289 Kč do 590 Kč, v závislosti na počtu funkcí, což nás odradilo od koupi.
+
+# Návod k použití
+Pro uživatele nabízíme 3 způsoby, jak tuto aplikaci provozovat. Díky tomu můžeme úspěšně říci, že naše aplikace běží na všech možných myslitelných platformách. Nejedná se o nic převrátného, jelikož v jádru aplikace se skrývá prostá webová aplikace. Byla však navržena tak, aby podávala stejný výkon jako klasická nativní aplikace. Strukturu projektu si rozebereme v další kapitole. Tento návod se bude v jistých částech opakovat, chceme napsat návod, který by chápal i běžný uživatel. 
+
+
 ## Instalace
-Aplikaci lze provozovat dvěma způsoby. Jedním ze způsobů je instalace APK aplikace, určena pro Android. Toto APK zahrnuje všechnu základní funkcionalitu, za předpokladu, že je dotyčné zařízení dostatečně vybavené (viz. minimální podmínky). V případě nevhodného zařízení lze aplikaci provozovat ve formě služby běžící na serveru.
+### 1. způsob: All-in-one 
+Z pohledu uživatele nejjednodušší způsob, jak aplikaci nainstalovat. Stačí zapojit veškeré příslušenství a nainstalovat aplikaci na zařízení. Není vyžadováno žádné složité nastavení. Tento způsob je podporován na těchto platformách: Windows, Mac, Linux a Android. Pro iOS zařízení je v tuto chvíli k dispozici pouze 3. způsob, jelikož nemáme k dispozici dostatečně vybavené zařízení pro vývoj iOS aplikací. 
 
-### Minimální požadavky
- - Tablet
- - Tiskárna (Bluetooth nebo WiFi)
+#### Instalace pro Windows, Mac, Linux
 
-### Doporučené požadavky
- - Tablet
- - Tiskárna (Bluetooth / WiFi nebo USB)
- - Raspberry Pi 
- - Monitor pro Raspberry Pi
+#### Instalace pro Android zařízení
+Balíčky pro instalaci se nacházejí ve složce `android/build` 
 
-### Instalace serveru
-#### Pro Raspberry Pi
+Jelikož není APK k dispozici na Play Store, musí se APK instalovat pomocí `sideloadingu`. APK se nakopíruje do zařízení a instalace je spuštěna otevřením APK ve správci souborů. Je možné, že bude nutné vypnout ověřování původu APK pro úspěšnou instalaci.
+
+{Obrázek Zabezpečení}
+
+
+### 2. způsob: Rodič a potomek
+V případě, že si pořizujeme druhou pokladnu do prodejny, můžeme tyto pokladny navzájem propojit. Všechny údaje o skladě, produktech, tržbách se budou synchronizovat na obou zařízeních. Pro mateřské zařízení platí obdobné minimální požadavky na zařízení: Windows, Mac, Linux a Android. Pro zařízení připojené k matce se tyto požadavky rozšiřují na všechna zařízení s internetovým prohlížečem. 
+
+#### Instalace mateřského zařízení
+Obraťtse se na sekci "All-in-one", postupy jsou v tomto případě identické.
+
+#### Instalace klienta
+
+### 3. způsob: Server a klienti
+
+#### Instalace serveru
+##### Pro Raspberry Pi
 Pro Raspberry Pi je připravený instalační skript. Stačí nakopírovat všechny soubory ze složky `utils/` do kořenové složky SD karty operačního systému a doplnit promněné v souboru `utils/config.txt`.
 
 Po nabootování je pak třeba do konzole napsat:
@@ -30,7 +55,7 @@ Po nabootování je pak třeba do konzole napsat:
 
 Aplikace se nainstaluje jako služba běžící na pozadí a po instalaci se počítač automaticky restartuje.
 
-### Manuální instalace
+##### Manuální instalace
 Pro instalaci aplikace je nutné nainstalovat následující závislosti. 
 
  - python2
@@ -41,16 +66,14 @@ Předpokládá se, že jsou na systému již nainstalovány. Instalace serveru j
 
 `nwpos/server/$ npm install --production`
 
-## Instalace APK
-Balíčky pro instalaci se nacházejí ve složce `android/build` 
-
-Jelikož není APK k dispozici na Play Store, musí se APK instalovat pomocí `sideloadingu`. APK se nakopíruje do zařízení a instalace je spuštěna otevřením APK ve správci souborů. Je možné, že bude nutné vypnout ověřování původu APK pro úspěšnou instalaci.
-
-{Obrázek Zabezpečení}
+#### Instalace klienta
+Obraťtse se na sekci "Rodič a potomek", postupy jsou v tomto případě identické.
 
 ## Návod k použití
+Po spuštění budete přívítání tuto obrazovkou:
 
 {Obrázek rozhraní}
+
 
 # Jak to funguje
 Celá aplikace byla napsána v JavaScriptu, přesněji ES2016. Díky JavaScriptu můžeme provozovat aplikaci na virtuálně všech platformách, aniž by bylo třeba napsat pro každou platformu nativní variantu. Jedním z požadavků bylo napsat aplikaci, která bude primárně běžet na prohlížeči, proto jsem vynechal velké all-in-one frameworky, které jsou přímo navržené pro tvorbu mobilních aplikací, jako Xamarin nebo Apache Cordova. Tyto frameworky buď vyžadují vlastní runtime pro běh aplikace (C# a CLR) nebo se odkazují na knihovny, které nejsou k dispozici v prohlížeči (Apache Cordova). JavaScript je ideálním (a jediným) jazykem pro psaní webových aplikací. 
