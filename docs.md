@@ -22,60 +22,89 @@ Pro uživatele nabízíme 3 způsoby, jak tuto aplikaci provozovat. Díky tomu m
 
 ## Instalace
 ### 1. způsob: All-in-one 
+{Obrázek mapy}
+
 Z pohledu uživatele nejjednodušší způsob, jak aplikaci nainstalovat. Stačí zapojit veškeré příslušenství a nainstalovat aplikaci na zařízení. Není vyžadováno žádné složité nastavení. Tento způsob je podporován na těchto platformách: Windows, Mac, Linux a Android. Pro iOS zařízení je v tuto chvíli k dispozici pouze 3. způsob, jelikož nemáme k dispozici dostatečně vybavené zařízení pro vývoj iOS aplikací. 
 
 #### Instalace pro Windows, Mac, Linux
-Kurva jak já mám vědět.
+Ujistěte se, zda je počítač připojen po celou dobu instalace připojen k internetu, aplikace bude před spuštěním stahovat dodatečné soubory. Zároveň si připravte přihlašovací údaje, které jste obdrželi při pořízení aplikace.
+
+Stáhneme si instalační soubor z oficiální stránky aplikace: http://pos.duong.cz a dvojitým kliknutím na soubor spustíme instalaci.
+
+Po inicializaci klikneme na tlačítko `Spustit bez serveru`, která připraví aplikaci pro provoz. 
+
+{Obrázek intro setup}
+
+Je možné, že během instalace budete vyžádáni o přihlašovací údaje. V tom případě zadejte údaje, které jste obdrželi při pořizování. V případě, že žádné údaje jste neobdrželi, kontaktujte nás emailem na `david@duong.cz`. 
+
+{Obrázek loginu}
+
+Instalaci aplikace dokončíte kliknutím na `Přejít k aplikaci`. 
+
+{Obrázek finish}
 
 #### Instalace pro Android zařízení
-Stáhneme aplikaci ze stránek. 
+Stáhneme aplikaci z oficiálních stránek (http://pos.duong.cz/android) a aplikaci nainstalujeme. Před instalací je nutné povolit instalaci z neznámých zdrojů, v sekci `Nastavení > Zabezpečení > Nezmáné zdroje`. 
 
-Balíčky pro instalaci se nacházejí ve složce `android/build` 
-
-Jelikož není APK k dispozici na Play Store, musí se APK instalovat pomocí `sideloadingu`. APK se nakopíruje do zařízení a instalace je spuštěna otevřením APK ve správci souborů. Je možné, že bude nutné vypnout ověřování původu APK pro úspěšnou instalaci.
+Po instalaci a spuštění postupujte dle sekce `Instalace pro Windows, Mac, Linux`. 
 
 {Obrázek Zabezpečení}
 
+Po stiknutí tlačítka `Domů` se systém zeptá na výchozí spouštěč. Doporučujeme si nastavit `Pokladnu` jako výchozí spouštěč, aby se zabránilo nechtěnému zavření aplikace. 
+
+{Obrázek výchozího spouštěče / launcheru}
+
 ### 2. způsob: Rodič a potomek
+{Obrázek mapy}
 V případě, že si pořizujeme druhou pokladnu do prodejny, můžeme tyto pokladny navzájem propojit. Všechny údaje o skladě, produktech, tržbách se budou synchronizovat na obou zařízeních. Pro mateřské zařízení platí obdobné minimální požadavky na zařízení: Windows, Mac, Linux a Android. Pro zařízení připojené k matce se tyto požadavky rozšiřují na všechna zařízení s internetovým prohlížečem. 
 
 #### Instalace mateřského zařízení
 Obraťtse se na sekci "All-in-one", postupy jsou v tomto případě identické.
 
 #### Instalace klienta
+Před instalací se ujistěte, zda mateřské zařízení je zapnuté. Instalaci provedete obdobným způsobem, avšak na uvítací obrazovce klikněte na tlačítko `Mám vlastní server`. Aplikace bude vyhledáváat všechny mateřské pokladny na lokální síti, kliknutím na IP adresu se připojíte k zařízení.
+
+Po úspěšném připojení stačí kliknout na tlačítko `Přejít k aplikaci`. 
 
 ### 3. způsob: Server a klienti
+{Obrázek mapy}
 
-#### Instalace serveru
-##### Pro Raspberry Pi
-Pro Raspberry Pi je připravený instalační skript. Stačí nakopírovat všechny soubory ze složky `utils/` do kořenové složky SD karty operačního systému a doplnit promněné v souboru `utils/config.txt`.
+Pro větší počet pokladen je doporučováno provozovat headless server, na kterém se budou napojovat klientské pokladny. Z technického hlediska se jedná o stejný princip, jako u metody "Rodič a potomek." Budeme se tedy zabývat pouhou instalací serveru, pro instalaci klientských zařízení se obraťte na předchozí kapitolu.
 
-Po nabootování je pak třeba do konzole napsat:
+#### Server pro Raspberry Pi
+Pro malé a střední podniky jako server doporučujeme Raspberry Pi. S malou spotřebou a malými rozměry se server může vejít úplně všude. Na Raspberry Pi můžete napojit širokou škálu příslušenství, bez ohledu na schopnosti klientských zařízení. Instalace na Raspberry Pi je otázkou jednoho instalačního souboru. Stačí nakopírovat všechny soubory ze složky `utils/` do kořenové složky SD karty operačního systému a vyplnit nastavení v `utils/config.txt`.
+
+Po zapojení RPi do sítě je nutné pro spuštění instalace napsat: 
 `sudo /boot/install.sh`
 
-Aplikace se nainstaluje jako služba běžící na pozadí a po instalaci se počítač automaticky restartuje.
+Aplikace se nainstaluje jako služba běžící na pozadí a po instalaci se server automaticky restartuje. Nyní můžete na server napojit jednotlivé klientské zařízení, viz kapitola "Rodič a potomek."
 
 ##### Manuální instalace
-Pro instalaci aplikace je nutné nainstalovat následující závislosti. 
+Před instalací serverové aplikace je nutné nainstalovat a správně nakonfigurovat následující závislosti:
 
  - python2
  - python-pygame
  - node.js
 
-Předpokládá se, že jsou na systému již nainstalovány. Instalace serveru je pak dokončena zadáním příkazu ve složce `server/`
+Instalace serveru je pak dokončena zadáním příkazu do příkazového řádku:
 
-`nwpos/server/$ npm install --production`
+`npm install --production --prefix ./server`
 
-#### Instalace klienta
-Obraťtse se na sekci "Rodič a potomek", postupy jsou v tomto případě identické.
+Po instalaci je server nutné spustit příkazem:
+
+`node server`
+
+Na Linuxu lze spouštění po startu docílit instalací `forever` a `forever-service`, který se postará o všechny konfigurační soubory pro automatické spouštění.
+
+```bash
+sudo npm install -g forever forever-service
+sudo forever-service install nwpos --script ./server/index.js
+```
 
 ## Návod k použití
-Po spuštění budete přívítání touto obrazovkou:
+Po spuštění a nastavení budete přívítání touto obrazovkou:
 
 {Obrázek rozhraní}
-
-
-
 
 # Jak to funguje
 Celá aplikace byla napsána v JavaScriptu, přesněji ES2016. Díky JavaScriptu můžeme provozovat aplikaci na virtuálně všech platformách, aniž by bylo třeba napsat pro každou platformu nativní variantu. Jedním z požadavků bylo napsat aplikaci, která bude primárně běžet na prohlížeči, proto jsem vynechal velké all-in-one frameworky, které jsou přímo navržené pro tvorbu mobilních aplikací, jako Xamarin nebo Apache Cordova. Tyto frameworky buď vyžadují vlastní runtime pro běh aplikace (C# a CLR) nebo se odkazují na knihovny, které nejsou k dispozici v prohlížeči (Apache Cordova). JavaScript je ideálním (a jediným) jazykem pro psaní webových aplikací. 
