@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Hello World!</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<div id="setup">
+			
+			<div class="step intro">
+				<h1>Vítejte v Pokladně!</h1>
+				<h2>Než začneme pracovat, máme nějaký server?</h2>
+				<div class="image">
+					<svg viewBox="0 0 24 24">
+						<path d="M12,17L7,12H10V8H14V12H17L12,17M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5M12,4.15L5,8.09V15.91L12,19.85L19,15.91V8.09L12,4.15Z" />
+					</svg>
+				</div>
+				<div class="buttons">
+					<div class="button">Spustit bez serveru</div>
+					<div class="button">Najít běžící server</div>
+				</div>
+			</div>
+			<div class="step detect loading">
+				<h1>Hledání serverů</h1>
+				<h2>Zjišťuji servery běžící na lokální síti</h2>
+				<div class="image">
+					<svg class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+						<circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+					</svg>
+				</div>
+				<div class="list">
+					<div class="server">
+						<div class="ip">192.168.1.130</div>
+						<div class="port">Port: 80</div>
+					</div>
+				</div>
+			</div>
+			<div class="step install error">
+				<h1>Instalace serveru</h1>
+				<h1>Instalace selhala</h1>
+
+				<h2>Stahujeme a nastavujeme vše potřebné!</h2>
+				<h2>Došlo k chybě při instalaci, je internet k dispozici?</h2>
+
+				<div class="image">
+					<svg class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+						<circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+					</svg>
+					<svg viewBox="0 0 24 24">
+						<path d="M20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12M22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12M15.5,8C16.3,8 17,8.7 17,9.5C17,10.3 16.3,11 15.5,11C14.7,11 14,10.3 14,9.5C14,8.7 14.7,8 15.5,8M10,9.5C10,10.3 9.3,11 8.5,11C7.7,11 7,10.3 7,9.5C7,8.7 7.7,8 8.5,8C9.3,8 10,8.7 10,9.5M12,14C13.75,14 15.29,14.72 16.19,15.81L14.77,17.23C14.32,16.5 13.25,16 12,16C10.75,16 9.68,16.5 9.23,17.23L7.81,15.81C8.71,14.72 10.25,14 12,14Z" />
+					</svg>
+				</div>
+				<div class="buttons">
+					<div class="button">Zrušit instalaci</div>
+					<div class="button">Zkusit znova</div>
+				</div>
+			</div>
+			<div class="step done">
+				<h1>Instalace hotova</h1>
+				<h2>Už jen jeden krok k provozu!</h2>
+				<div class="image">
+					<svg viewBox="0 0 24 24">
+						<path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
+					</svg>
+				</div>
+				<div class="buttons">
+					<div class="button">Přejít k aplikaci</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+	<script>
+	const {ipcRenderer} = require("electron")
+
+	ipcRenderer.on("newservice", (event, data) => {
+		console.log(data)
+	})
+
+	ipcRenderer.on("jsaction", (event, data) => {
+
+	})
+	</script>
+</html>
