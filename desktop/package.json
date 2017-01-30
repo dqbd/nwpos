@@ -10,9 +10,19 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^1.4.15"
+    "babel-loader": "^6.2.10",
+    "babel-preset-latest": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
+    "electron": "^1.4.15",
+    "file-loader": "^0.10.0",
+    "style-loader": "^0.13.1",
+    "stylus": "^0.54.5",
+    "webpack": "^1.14.0",
+    "webpack-hot-middleware": "^2.16.1"
   },
   "dependencies": {
-    "bonjour": "github:resin-io/bonjour"
+    "bonjour": "github:resin-io/bonjour",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
   }
 }
