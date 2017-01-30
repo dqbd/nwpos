@@ -4,10 +4,10 @@ const formatter = require("./formatter")
 const os = require("os")
 
 let printer = null
-let seller = null
+let config = null
 
-module.exports.init = (graph) => {
-	seller = graph
+module.exports.init = (src) => {
+	config = src
 
 	if (os.platform() === "win32") {
 		printer = new native(`\\\\${os.hostname()}\\nwcashier-printer`, true)
@@ -30,9 +30,13 @@ module.exports.print = (customer) => {
 		date = new Date(Date.parse(customer.date))
 	}
 
-	let header = formatter.printHeader(seller.getSeller(total))
-	let cart = formatter.printCart(items, total, customer.paid, date)
-	return module.exports.printRaw(["$center", ...header, "$left", ...cart])
+	if (config.get().seller.length > 0) {
+		let header = formatter.printHeader(config.get().seller[0])
+		let cart = formatter.printCart(items, total, customer.paid, date)
+		return module.exports.printRaw(["$center", ...header, "$left", ...cart])
+	} else {
+		return Promise.reject("No seller info")
+	}
 }
 
 module.exports.printRaw = (lines) => new Promise((resolve, reject) => {

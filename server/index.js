@@ -1,4 +1,4 @@
-const config = require("./config.json")
+const config = require("./config")()
 
 const express = require("express")
 const bodyParser = require("body-parser")
@@ -21,7 +21,7 @@ if (process.argv[2] === "--dev") {
 	app.use("/", express.static(path.resolve(__dirname, "dist")))
 }
 
-bonjour.publish({ name: advert, type: "http", port: config.port })
+bonjour.publish({ name: advert, type: "http", port: config.get().port })
 
 app.use(bodyParser.json())
 app.use(function(req, res, next) {
@@ -42,9 +42,9 @@ for(let name of Object.getOwnPropertyNames(Object.getPrototypeOf(interface))) {
 	}
 }
 
-app.listen(config.port, (err, port) => {
+app.listen(config.get().port, (err, port) => {
 	if (!err) {
-		console.log("Listening on port", config.port)
+		console.log("Listening on port", config.get().port)
 	}
 })
 

@@ -1,14 +1,13 @@
 const database = require("./database") 
 const printer = require("./printer")
 const display = require("./customer")
-const graph = require("./graph")
 
 class Interface {
 	constructor(config) {
-		if (config.display) {
+		if (config.get().display) {
 			display.init()
 		}
-		printer.init(graph.load(config))
+		printer.init(config)
 	}
 
 	destroy() {
