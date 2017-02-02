@@ -39,9 +39,17 @@ let toggleNight = function(ignore = false) {
 	window.localStorage.setItem("dark", value)
 }
 
+let showConfig = function() {
+	let { pathname } = this.hashHistory.getCurrentLocation()
+	if (pathname !== "/config") {
+		this.hashHistory.push("/config")
+	}
+}
+
 let actions = [
 	{ func: "showClient", name: "Přejít k pokladně", impl: showClient },
 	{ func: "showStats", name: "Zobrazit statistiky", impl: showStats },
+	{ func: "showConfig", name: "Konfigurace serveru", impl: showConfig },
 	{ func: "toggleNight", name: "Přepnout tmavý režim", impl: toggleNight }
 ]
 
