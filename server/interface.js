@@ -4,6 +4,8 @@ const display = require("./customer")
 
 class Interface {
 	constructor(config) {
+		this.config = config
+
 		if (config.get().display) {
 			display.init()
 		}
@@ -66,6 +68,15 @@ class Interface {
 
 	POST_EET() {
 		return Promise.reject("Not implemented")
+	}
+
+	GET_CONFIG() {
+		return Promise.resolve({ config: this.config.get() })
+	}
+
+	POST_CONFIG({config}) {
+		this.config.set(config)
+		return Promise.resolve({ config: this.config.get() })
 	}
 
 	GET_BACKUP_PIPE() {

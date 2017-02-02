@@ -8,14 +8,13 @@ const interface = require("./interface")(config)
 
 const app = express()
 
-let advert = "nodecashier-services"
+let advert = "nodecashier-service"
 if (process.argv[2] === "--dev") {
 	const webpack = require("webpack")
 	let compiler = webpack(require("../webpack.dev.config.js"))
 	app.use("/", require("webpack-dev-middleware")(compiler, { noInfo: true, stats: { colors: true } }))
 	app.use("/", require("webpack-hot-middleware")(compiler))
 	advert += "-dev"
-
 } else {
 	const path = require("path")
 	app.use("/", express.static(path.resolve(__dirname, "dist")))

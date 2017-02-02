@@ -2,6 +2,8 @@ let seller = require("./seller")
 
 module.exports = seller
 
+module.exports.config = require("./config.js")
+
 module.exports.cart = require("./cart")
 module.exports.screen = require("./screen")
 module.exports.services = require("./services")

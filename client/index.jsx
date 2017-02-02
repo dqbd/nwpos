@@ -15,6 +15,7 @@ import { bindDisplayEvents } from "./utils/display.js"
 import { bindActions } from "./utils/actions.js"
 
 import Main from "./components/Main.jsx"
+import Config from "./components/Config.jsx"
 import Dashboard from "./containers/StatefulDashboard.jsx"
 
 history.getCurrentLocation = () => (history.location)
@@ -28,7 +29,7 @@ bindDisplayEvents(store)
 
 render(<Provider store={store}>
 	<Router history={hashHistory}>
-		<Route path="/" component={Main} />
+		<Route path="/" component={Config} />
 		<Route path="/stats" component={Dashboard} />
 	</Router>
 </Provider>, document.getElementById("root"))

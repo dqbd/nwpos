@@ -1,4 +1,4 @@
-file=./config.json
+file=./index.js
 if [ -e "$file" ]; then
     echo "File exists"
 else

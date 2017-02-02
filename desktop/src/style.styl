@@ -3,7 +3,7 @@ body
 *, *:before, *:after
 	box-sizing: border-box
 
-#root
+#root, .setup
 	background: #212121
 	
 	position: absolute
@@ -30,11 +30,7 @@ body
 	justify-content: center
 	
 	align-items: center
-	
-		
-	
-	&:not(.show)
-		display: none
+
 
 	h1
 		text-align: center
@@ -50,6 +46,7 @@ body
 		display: flex
 	
 	.buttons .button
+		cursor: pointer
 		background: white
 		padding: 1em 1.5em
 		text-transform: uppercase
@@ -67,6 +64,9 @@ body
 		
 		&:last-child
 			margin-right: 0
+			
+	.image
+		position: relative
 			
 	.image > *
 		width: 250px
@@ -110,54 +110,43 @@ body
 	.image > *
 		margin: 90px 0px
 		width: 70px
-		
-		&:first-child
-			display: block
-		&:last-child
-			display: none
-			
-	h1 + h1, h2 + h2, .buttons
-		display: none
+		display: block
 			
 	&.error 
-		h1, h2
-			display: none
-		h1 + h1, h2 + h2
-			display: block
 		.buttons
 			display: flex
 			
 		.image > *
 			margin: 10px
 			width: 250px
-			&:first-child
-				display: none
-			&:last-child
-				display: block
-	
-.spinner
-	animation: rotator 1.4s linear infinite
-	
 
-	
-@keyframes {rotator}
-	0%
-		transform: rotate(0deg)
-	100%
-		transform: rotate(270deg)
+.circular 
+	animation: rotate 2s linear infinite
+	height: 80px
+	transform-origin: center center
+	width: 80px
+	margin: auto
+
+
 .path
-	stroke-dasharray: 187
+	stroke-dasharray: 1, 200
 	stroke-dashoffset: 0
-	transform-origin: center
+	animation: dash 1.5s ease-in-out infinite
 	stroke: white
-	animation: dash 1.4s ease-in-out infinite
+	stroke-linecap: round 
 
-@keyframes {dash}
+
+@keyframes {rotate}
+	100% 
+		transform: rotate(360deg)
+		
+@keyframes {dash} 
 	0%
-		stroke-dashoffset: 188
+		stroke-dasharray: 1, 200
+		stroke-dashoffset: 0
 	50%
-		stroke-dashoffset: (188 / 4)
-		transform: rotate(135deg)
+		stroke-dasharray: 89, 200
+		stroke-dashoffset: -35px
 	100%
-		stroke-dashoffset: 188
-		transform: rotate(450deg)
+		stroke-dasharray: 89, 200
+		stroke-dashoffset: -124px

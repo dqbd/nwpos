@@ -4,12 +4,14 @@ const path = require("path")
 module.exports = {
 	context: path.resolve(__dirname),
 	entry: [
-		"./client/index.jsx",
- 		"./client/index.html"
+		"webpack-dev-server/client?http://localhost:8080",
+		"webpack/hot/dev-server",
+		"./src/index.jsx",
+ 		"./src/index.html"
 	],
 	output: {
 		filename: "app.js",
-		path: path.resolve(__dirname, "server", "dist")
+		path: path.resolve(__dirname, "dist")
 	},
 	module: {
 		loaders: [
@@ -32,14 +34,9 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.DefinePlugin({
-			'process.env': {
-				NODE_ENV: JSON.stringify('production'),
-				BROWSER: true
-			}
+			'process.env': { BROWSER: true }
 		}),
-		new webpack.optimize.UglifyJsPlugin({
-			compress: { warnings: false }
-		}),
-		new webpack.optimize.DedupePlugin()
+		new webpack.optimize.OccurenceOrderPlugin(),
+		new webpack.HotModuleReplacementPlugin()
 	]
 }

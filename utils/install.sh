@@ -36,6 +36,14 @@ while [ 1 ]; do
 	fi
 	sleep 1
 done
+
+while [ 1 ]; do
+	wget -q --spider http://archive.raspberrypi.org/
+	if [ $? -eq 0 ]; then
+		break
+	fi
+	sleep 1
+done
 echo "Connection detected"
 
 # enable ssh
@@ -49,44 +57,3 @@ sudo dpkg-reconfigure -f noninteractive tzdata
 sudo echo "net.ipv6.conf.all.disable_ipv6 = 1" | sudo tee /etc/sysctl.conf > /dev/null
 sudo sysctl -p
 sudo ifdown wlan0 && sudo ifup wlan0
-
-# install depedencies
-sudo apt-get install -y python-pygame build-essential git
-
-# install node
-git clone https://github.com/audstanley/NodeJs-Raspberry-Pi
-cd NodeJs-Raspberry-Pi
-chmod +x Install-Node.sh
-sudo ./Install-Node.sh
-cd .. && rm -rf NodeJs-Raspberry-Pi/
-
-# install yarn for faster installs
-curl -o- -L https://yarnpkg.com/install.sh | sudo bash
-
-# clone git repository
-git clone "https://$git_user:$git_psk@github.com/delold/nwpos" nwpos
-
-# fix permissions
-sudo chown pi "$INSTALL_PATH/nwpos" -R
-
-# install dependencies
-cd "$INSTALL_PATH/nwpos/server"
-~/.yarn/bin/yarn install --production
-
-# install forever / forever-service
-sudo ~/.yarn/bin/yarn global add forever forever-service --prefix /usr/local 
-
-# install server
-sudo forever-service install nwpos --script index.js
-
-# setup git repository for continuous deployment
-cd "$INSTALL_PATH/nwpos"
-git config receive.denyCurrentBranch ignore
-
-sudo mv "$SCRIPT_PATH/post-receive.sh" "$INSTALL_PATH/nwpos/.git/hooks/post-receive"
-sudo chown pi "$INSTALL_PATH/nwpos/.git/hooks/post-receive"
-sudo chmod +x "$INSTALL_PATH/nwpos/.git/hooks/post-receive"
-
-#remove sensitive data from config.txt
-sed "/#<--config-->/,/#<--end-->/d" "$SCRIPT_PATH/config.txt" | sudo tee "$SCRIPT_PATH/config.txt"
-sudo reboot
