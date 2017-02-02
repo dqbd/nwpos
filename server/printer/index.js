@@ -30,8 +30,8 @@ module.exports.print = (customer) => {
 		date = new Date(Date.parse(customer.date))
 	}
 
-	if (config.get().seller.length > 0) {
-		let header = formatter.printHeader(config.get().seller[0])
+	if (config.get().sellers.length > 0) {
+		let header = formatter.printHeader(config.get().sellers[0])
 		let cart = formatter.printCart(items, total, customer.paid, date)
 		return module.exports.printRaw(["$center", ...header, "$left", ...cart])
 	} else {
