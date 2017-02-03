@@ -74,11 +74,18 @@ module.exports.checkout = () => (dispatch, getState) => {
 }
 
 module.exports.pay = () => (dispatch, getState) => {
-	let { newCart, newScreen } = wrapState(getState())
+	let { newCart, newScreen, newStatus } = wrapState(getState())
+	let screenValue = screen.getValue(newScreen)
 
-	dispatch(screen.set(cart.getTotal(newCart) - newScreen))
-	dispatch({ type: types.SETPAID, paid: newScreen })
-	dispatch({ type: types.SETSTATUS, status: statusTypes.COMMIT_END })
+	if (screenValue === 0 || newStatus === statusTypes.STAGE_ADDED) {
+		dispatch(screen.set(cart.getTotal(newCart)))
+		dispatch({ type: types.SETPAID, paid: 0 })
+		dispatch({ type: types.SETSTATUS, status: statusTypes.COMMIT_BEGIN })
+	} else {
+		dispatch(screen.set(cart.getTotal(newCart) - newScreen))
+		dispatch({ type: types.SETPAID, paid: newScreen })
+		dispatch({ type: types.SETSTATUS, status: statusTypes.COMMIT_END })
+	}
 }
 
 module.exports.edit = () => (dispatch) => {

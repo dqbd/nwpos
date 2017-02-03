@@ -109,8 +109,6 @@ test("checkout payment", () => {
 test("payment finished", () => {
 	store.dispatch(customer.pay())
 
-	
-
 	expect(store.getState()).toEqual({
 		status: customer.types.STATUS_TYPES.COMMIT_END,
 		screen: -234,
@@ -385,6 +383,62 @@ test("add item with name", () => {
 				{ name: "Věc", price: 123, qty: 1 },
 				{ name: "Přepsáno", price: 256, qty: 2 },
 				{ name: "Přepsáno", price: 256, qty: 1 },
+			]
+		}
+	})
+})
+
+test("checkout instead payment when 0", () => {
+	store.dispatch(screen.clear())
+	store.dispatch(cart.clear())
+
+	store.dispatch(screen.set(123))
+	store.dispatch(customer.add())
+
+	store.dispatch(screen.set(0))
+	store.dispatch(customer.pay())
+
+	expect(store.getState()).toEqual({
+		status: customer.types.STATUS_TYPES.COMMIT_BEGIN,
+		screen: 123,
+		paid: 0,
+		services: {
+			print: false,
+			eet: false,
+			log: false
+		},
+		cart: {
+			selection: 0,
+			items: [
+				{ name: "", price: 123, qty: 1 }
+			]
+		}
+	})
+})
+
+test("checkout instead payment when added", () => {
+	store.dispatch(screen.clear())
+	store.dispatch(cart.clear())
+
+	store.dispatch(screen.set(123))
+	store.dispatch(customer.add()) //add twice
+	store.dispatch(customer.add())
+
+	store.dispatch(customer.pay())
+
+	expect(store.getState()).toEqual({
+		status: customer.types.STATUS_TYPES.COMMIT_BEGIN,
+		screen: 246,
+		paid: 0,
+		services: {
+			print: false,
+			eet: false,
+			log: false
+		},
+		cart: {
+			selection: 0,
+			items: [
+				{ name: "", price: 123, qty: 2 }
 			]
 		}
 	})
