@@ -4,6 +4,7 @@ import { customer } from "../../core"
 import SuggestionPanel from "../containers/StatefulSuggestionPanel.jsx"
 import TotalButton from "../containers/StatefulTotalButton.jsx"
 import CheckoutButton from "../containers/StatefulCheckoutButton.jsx"
+import DifferenceButton from "../containers/StatefulDifferenceButton.jsx"
 
 const types = customer.types.STATUS_TYPES
 
