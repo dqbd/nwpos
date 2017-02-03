@@ -4,6 +4,7 @@ import { customer } from "../../core"
 import SuggestionPanel from "../containers/StatefulSuggestionPanel.jsx"
 import TotalButton from "../containers/StatefulTotalButton.jsx"
 import DifferenceButton from "../containers/StatefulDifferenceButton.jsx"
+import CheckoutButton from "../containers/StatefulCheckoutButton.jsx"
 
 
 const types = customer.types.STATUS_TYPES
@@ -21,7 +22,7 @@ export default class Panel extends Component {
 				</a></span>,
 				<span key="qty" className="btn small qty"><a onTouchTap={onQtySet}>ks</a></span>,
 				<TotalButton key="total" onCheckout={onCheckout} />,
-				<span key="checkout" className="btn color checkout"><a onTouchTap={onCheckout}>Zaplatit</a></span>
+				<CheckoutButton key="diff" onCheckout={onCheckout} />
 			]
 		} else if ([types.COMMIT_BEGIN, types.COMMIT_TYPING].indexOf(status) >= 0) {
 			actions = [

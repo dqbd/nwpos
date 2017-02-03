@@ -2,8 +2,13 @@ import React from "react"
 
 import { capitalize, czechToEnglish } from "../utils"
 
-const Group = ({letter, items, onSuggestionEdit}) => (
-	<div className="group">
+const Group = ({letter, items, onSuggestionEdit}) => {
+
+	if (items === undefined) {
+		return null
+	}
+
+	return <div className="group">
 		<strong className="groupname">{letter}</strong>
 		<ul>
 			{items.map((item, index) => 
@@ -11,16 +16,24 @@ const Group = ({letter, items, onSuggestionEdit}) => (
 			)}
 		</ul>
 	</div>
-)
+}
 
 const SuggestionGroup = ({filter, suggestions, onSuggestionEdit}) => {
 	let data = {}
 	if (filter) {
+		let temp = {}
 		Object.keys(suggestions).forEach(a => {
 			let list = suggestions[a].filter(item => czechToEnglish(item.name).indexOf(czechToEnglish(filter)) >= 0) 
 			if (list.length > 0) {
-				data[a] = list
+				temp[a] = list
 			}
+		})
+
+		let keys = Object.keys(temp)
+		keys.unshift(keys.splice(keys.indexOf(filter.toLowerCase()[0]), 1))
+		
+		keys.forEach(letter => {
+			data[letter] = temp[letter]
 		})
 	} else {
 		data = suggestions
