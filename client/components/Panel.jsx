@@ -3,9 +3,7 @@ import { customer } from "../../core"
 
 import SuggestionPanel from "../containers/StatefulSuggestionPanel.jsx"
 import TotalButton from "../containers/StatefulTotalButton.jsx"
-import DifferenceButton from "../containers/StatefulDifferenceButton.jsx"
 import CheckoutButton from "../containers/StatefulCheckoutButton.jsx"
-
 
 const types = customer.types.STATUS_TYPES
 

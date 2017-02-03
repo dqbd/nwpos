@@ -70,12 +70,14 @@ module.exports.printCart = (items, total, paid, date, tax = 21) => {
 		(item.price * item.qty).toFixed(2)
 	]))
 	
-	// body.push(divider())
+	if (tax > 0) {
+		body.push(divider())
 
-	// let taxed = (total / (100 + tax) * 100).toFixed(2)
+		let taxed = (total / (100 + tax) * 100).toFixed(2)
 
-	// body.push(alignRight(`Základ ${tax}% DPH`, taxed))
-	// body.push(alignRight(`Daň`, (total - Number.parseFloat(taxed)).toFixed(2)))
+		body.push(alignRight(`Základ ${tax}% DPH`, taxed))
+		body.push(alignRight(`Daň`, (total - Number.parseFloat(taxed)).toFixed(2)))
+	}
 
 	body.push(divider("="))
 

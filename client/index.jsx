@@ -29,8 +29,8 @@ bindDisplayEvents(store)
 
 render(<Provider store={store}>
 	<Router history={hashHistory}>
-		<Route path="/" component={Main} />
-		<Route path="/config" component={Config} />
+		<Route path="/main" component={Main} />
+		<Route path="/" component={Config} />
 		<Route path="/stats" component={Dashboard} />
 	</Router>
 </Provider>, document.getElementById("root"))

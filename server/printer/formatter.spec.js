@@ -70,6 +70,29 @@ test("print existing info", () => {
 	])
 })
 
+test("print cart no tax", () => {
+	let date = new Date(Date.parse("2017-01-06T15:50:19.283Z"))
+
+	let lines = printer.printCart([
+		{ name: "Vejcovodovodní potrubí", price: 123, qty: 1 },
+		{ name: "", price: 3500, qty: 2 },
+		{ name: "Sleva", price: -350, qty: 2 },
+	], 6423, 8000, date, 0)
+
+	expect(lines).toEqual([
+		"Vejcovod   123.00  1 ks   123.00",
+		"Zboží     3500.00  2 ks  7000.00",
+		"Sleva     -350.00  2 ks  -700.00",
+		"================================",
+		"CELKEM                   6423.00",
+		"PLACENO                  8000.00",
+		"VRÁCENO                  1577.00",
+		"--------------------------------",
+		getDateString(date),
+		"DĚKUJEME ZA VÁŠ NÁKUP"
+	])
+})
+
 test("print seller info", () => {
 	let seller = {
 		name: "Obchod",
