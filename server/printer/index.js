@@ -7,11 +7,6 @@ let config = null
 module.exports.init = (src, args) => {
 	config = src
 	printer = new native(args.printer)
-
-	printer.init().catch(err => {
-		console.log("Printer not loaded: " + err)
-		printer = null
-	})
 }
 
 module.exports.print = (customer) => {
