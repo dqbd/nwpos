@@ -13,3 +13,15 @@ module.exports.set = (config) => {
 		body: JSON.stringify({ config: config })
 	}).then(a => a.json()).then(data => data.config)
 }	
+
+module.exports.validateKey = (buffer, pass) => {
+	let data = new FormData()
+	let blob = new Blob([buffer], { type: "application/x-pkcs12" })
+	data.append("p12", blob)
+	data.append("pass", pass)
+
+	return fetch(getUrl("/p12"), {
+		method: "POST",
+		body: data
+	}).then(a => a.json())
+}

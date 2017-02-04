@@ -4,16 +4,15 @@ import { randomString } from "../utils"
 
 class Seller extends Component {
 
-	onChange(e, prefix) {
-		let key = e.target.className
+	changeProps(key, value, prefix) {
 		let seller = this.props.seller
-		
+
 		if (seller[key] !== undefined && !prefix || seller[prefix][key] !== undefined) {
-			let payload = {[key]: this.getNewValue(e)}
+			let payload = {[key]: value}
 			if (prefix) {
 				payload = {
 					[prefix]: Object.assign({}, seller[prefix], {
-						[key]: this.getNewValue(e)
+						[key]: value
 					})
 				}
 			}
@@ -32,8 +31,34 @@ class Seller extends Component {
 		}
 	}
 
+	onChange(e, prefix) {
+		this.changeProps(e.target.className, this.getNewValue(e), prefix)
+	}
+
+	
+
 	onEetChange(e) {
-		this.onChange(e, "eet")
+		this.changeProps(e.target.className, this.getNewValue(e), "eet")
+
+		if (e.target.className === "pass") {
+			//validate when pass changes
+			this.onKeyChange({target: this.refs.uploader})
+		}
+	}
+
+	onKeyChange(e) {
+		if (e.target.files.length > 0) {
+			let file = e.target.files[0]
+			let reader = new FileReader()
+			reader.readAsArrayBuffer(file)
+			
+			reader.onload = (e) => {
+				config.validateKey(e.currentTarget.result, this.props.seller.eet.pass).then(res => {
+					console.log("ok", res.filename)
+					this.changeProps("file", res.filename, "eet")
+				})
+			}
+		}
 	}
 
 	render() {
@@ -56,7 +81,9 @@ class Seller extends Component {
 				<input className="enabled" type="checkbox" onChange={this.onEetChange.bind(this)} checked={seller.eet.enabled} />
 				<span>Odesílat účtenky na Finanční správu</span>
 			</label>
-			<input placeholder="Heslo klíče" className="pass" onChange={this.onEetChange.bind(this)} value={seller.eet.pass}></input>
+			<input type="file" ref="uploader" placeholder="Klíč .p12" onChange={this.onKeyChange.bind(this)} accept="application/x-pkcs12" />
+			<input placeholder="Název klíče" className="file" onChange={this.onEetChange.bind(this)} value={seller.eet.file}></input>
+			<input placeholder="Heslo klíče" className="pass" type="password" onChange={this.onEetChange.bind(this)} value={seller.eet.pass}></input>
 			<input placeholder="ID Provozovny" className="idProvoz" onChange={this.onEetChange.bind(this)} value={seller.eet.idProvoz}></input>
 		</div>
 	}

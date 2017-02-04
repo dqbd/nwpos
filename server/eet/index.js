@@ -14,8 +14,12 @@ const randomString = (length) => {
 	return payload
 }
 
-module.exports.retrieveCert = (filename, pass) => new Promise((resolve, reject) => {
-	let file = fs.readFileSync(path.resolve(__dirname, "..", "data", filename))
+const getCertFile = (filename) => {
+	return path.resolve(__dirname, "..", "data", filename)
+}
+
+const retrieveCert = (filename, pass) => new Promise((resolve, reject) => {
+	let file = fs.readFileSync(getCertFile(filename))
 
 	pem.readPkcs12(file, {p12Password: pass}, (err, result) => {
 		if (err) {
@@ -25,7 +29,18 @@ module.exports.retrieveCert = (filename, pass) => new Promise((resolve, reject) 
 	})
 })
 
-module.exports.upload = (options, total) => new Promise((resolve, reject) => {
+const validateCert = (filename, pass) => {
+	return retrieveCert(filename, pass).then(a => {
+		return {filename}
+	}).catch(err => {
+		//delete file
+		console.log("Cert not valid", err)
+		fs.unlinkSync(getCertFile(filename))
+		return Promise.reject(false)
+	})
+}
+
+const upload = (options, total) => new Promise((resolve, reject) => {
 	let { dic, idPokl, idProvoz } = options
 	let gen = {
 		poradCis: randomString(20),
@@ -48,24 +63,6 @@ module.exports.upload = (options, total) => new Promise((resolve, reject) => {
 	})
 })
 
-// module.exports.retrieveCert("CZ1212121218.p12", "eet")
-// .then(result => {
-// 	let options = {
-// 		privateKey: result.key,
-// 		certificate: result.cert,
-// 		dic: "CZ1212121218",
-// 		idPokl: randomString(20),
-// 		idProvoz: "273",
-// 		playground: true,
-// 		offline: true
-// 	}
-
-// 	return module.exports.upload(options, 3000)
-// }).then(response => {
-// 	console.log(response)
-// })
-
-
-module.exports.generateIdPokl = () => {
-	return randomString(20)
-}
+module.exports.retrieveCert = retrieveCert
+module.exports.validateCert = validateCert
+module.exports.upload = upload

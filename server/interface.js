@@ -1,6 +1,7 @@
 const database = require("./database") 
 const printer = require("./printer")
 const display = require("./customer")
+const eet = require("./eet")
 
 class Interface {
 	constructor(config, args) {
@@ -78,6 +79,10 @@ class Interface {
 	POST_CONFIG({config}) {
 		this.config.set(config)
 		return Promise.resolve({ config: this.config.get() })
+	}
+
+	POST_P12_FILE({file, pass}) {
+		return eet.validateCert(file.filename, pass)
 	}
 
 	GET_BACKUP_PIPE() {
