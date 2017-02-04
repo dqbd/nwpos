@@ -3,13 +3,14 @@ const printer = require("./printer")
 const display = require("./customer")
 
 class Interface {
-	constructor(config) {
+	constructor(config, args) {
 		this.config = config
+		this.args = args
 
-		if (config.get().display) {
+		if (args.display) {
 			display.init()
 		}
-		printer.init(config)
+		printer.init(config, args)
 	}
 
 	destroy() {
@@ -84,4 +85,4 @@ class Interface {
 	}
 }
 
-module.exports = (config) => new Interface(config)
+module.exports = (config, args) => new Interface(config, args)

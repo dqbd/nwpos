@@ -1,15 +1,26 @@
 const config = require("./config")()
+const os = require("os")
+
+const args = require('minimist')(process.argv.slice(2), { 
+	default: {
+		port: 80,
+		display: false,
+		dev: false,
+		printer: (os.platform() === "win32") ? `\\\\${os.hostname()}\\nwcashier-printer` : "/dev/usb/lp0"
+	},
+	boolean: ["display", "dev"]
+})
 
 const express = require("express")
 const bodyParser = require("body-parser")
 
 const bonjour = require('bonjour')()
-const interface = require("./interface")(config)
+const interface = require("./interface")(config, args)
 
 const app = express()
 
 let advert = "nodecashier-service"
-if (process.argv[2] === "--dev") {
+if (args.dev) {
 	const webpack = require("webpack")
 	let compiler = webpack(require("../webpack.dev.config.js"))
 	app.use("/", require("webpack-dev-middleware")(compiler, { noInfo: true, stats: { colors: true } }))
@@ -41,9 +52,9 @@ for(let name of Object.getOwnPropertyNames(Object.getPrototypeOf(interface))) {
 	}
 }
 
-app.listen(config.get().port, (err, port) => {
+app.listen(args.port, (err, port) => {
 	if (!err) {
-		console.log("Listening on port", config.get().port)
+		console.log("Listening on port", args.port)
 	}
 })
 

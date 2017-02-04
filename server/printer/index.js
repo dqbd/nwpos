@@ -1,22 +1,17 @@
 'use strict';
 const native = require('./native')
 const formatter = require("./formatter")
-const os = require("os")
+
 
 let printer = null
 let config = null
 
-module.exports.init = (src) => {
+module.exports.init = (src, args) => {
 	config = src
-
-	if (os.platform() === "win32") {
-		printer = new native(`\\\\${os.hostname()}\\nwcashier-printer`, true)
-	} else {
-		printer = new native("/dev/usb/lp0")
-	} 	
+	printer = new native(args.printer)
 
 	printer.init().catch(err => {
-		console.log(err)
+		console.log("Printer not loaded: " + err)
 		printer = null
 	})
 }

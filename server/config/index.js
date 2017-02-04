@@ -11,8 +11,6 @@ class Config {
 	load() {
 		let src = {}
 		let initial = {
-			"display": false,
-			"port": 80,
 			"sellers": []
 		}
 

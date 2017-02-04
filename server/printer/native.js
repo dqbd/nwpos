@@ -5,7 +5,7 @@ const fs = require("fs")
 const _ = require("./commands")
 
 class Printer {
-	constructor(target, autoclose = false) {
+	constructor(target, autoclose = true) {
 		this.target = target
 		this.autoclose = autoclose
 
