@@ -1,18 +1,42 @@
 #config
-	position: absolute
-	top: 0
-	left: 0
-	right: 0
-	bottom: 0
 	display: flex
 	flex-direction: column
 	align-items: stretch
+	background: #212121
+
 	textarea
 		flex-grow: 1
 		border: none
 		font-size: 1.5em
 		padding: 2em
-		
+
+	h2
+		font-weight: 400
+		font-size: 2em
+		margin: 40px auto 20px
+		position: relative
+
+		&:first-child
+			margin-top: 0
+		&:before, &:after
+			content: ""
+			display: block
+			width: 150px
+			height: 3px
+			background: rgba(0,0,0,.7)
+
+			position: absolute
+			top: 50%
+			margin-top: -1.5px
+
+		&:before
+			right: 100%
+			margin-right: 20px
+		&:after
+			left: 100%
+			margin-left: 20px
+
+
 	button
 		background: color-blue
 		border: none
@@ -25,7 +49,12 @@
 		background: color-red
 		opacity: 0.5
 
-	.seller, .basic
+	button:active
+		background: darken(color-blue, 10%)
+
+	.seller
+		background: white
+		
 		max-width: 50vw
 		min-width: 50vw
 		align-self: center
@@ -74,5 +103,5 @@
 			
 			opacity: 0.7
 			font-size: 1.6em
-			font-weight: 500
+			font-weight: 400
 			noselect()

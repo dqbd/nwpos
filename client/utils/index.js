@@ -31,3 +31,12 @@ module.exports.invokeFeedback = () => {
 module.exports.capitalize = (input) => {
 	return input.charAt(0).toUpperCase() + input.slice(1)
 }
+
+module.exports.randomString = (length) => {
+	let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,:;#-_/"
+	let payload = ""
+	for(let i = 0; i < length; i++) {
+		payload += letters.charAt(Math.floor(Math.random() * letters.length))
+	}
+	return payload
+}

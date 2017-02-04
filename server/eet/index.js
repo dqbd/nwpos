@@ -48,19 +48,24 @@ module.exports.upload = (options, total) => new Promise((resolve, reject) => {
 	})
 })
 
-module.exports.retrieveCert("CZ1212121218.p12", "eet")
-.then(result => {
-	let options = {
-		privateKey: result.key,
-		certificate: result.cert,
-		dic: "CZ1212121218",
-		idPokl: randomString(20),
-		idProvoz: "273",
-		playground: true,
-		offline: true
-	}
+// module.exports.retrieveCert("CZ1212121218.p12", "eet")
+// .then(result => {
+// 	let options = {
+// 		privateKey: result.key,
+// 		certificate: result.cert,
+// 		dic: "CZ1212121218",
+// 		idPokl: randomString(20),
+// 		idProvoz: "273",
+// 		playground: true,
+// 		offline: true
+// 	}
 
-	return module.exports.upload(options, 3000)
-}).then(response => {
-	console.log(response)
-})
+// 	return module.exports.upload(options, 3000)
+// }).then(response => {
+// 	console.log(response)
+// })
+
+
+module.exports.generateIdPokl = () => {
+	return randomString(20)
+}
