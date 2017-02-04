@@ -2,7 +2,6 @@ let actionTypes = require("./actionTypes")
 let wrapped = {}
 
 wrapped.addDigit = (digit) => {
-
 	if (typeof digit === "string") {
 		digit = Number.parseInt(digit)
 	}
@@ -40,11 +39,9 @@ Object.keys(wrapped).forEach(key => {
 	module.exports[key] = function () {
 		let args = arguments
 		return (dispatch, getState) => {
-
 			let state = getState()
 
 			if (typeof state === "object") {
-
 				if (state.customer !== undefined) {
 					state = state.customer
 				}

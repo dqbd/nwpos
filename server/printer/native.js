@@ -53,7 +53,7 @@ class Printer {
 	feed() {
 		this.cache.push(Buffer.from(new Array(3).fill(_.EOL).join("")))
 		
-		this.getStream().then(stream => {
+		return this.getStream().then(stream => {
 			stream.write(Buffer.concat(this.cache))
 
 			if (this.autoclose) {

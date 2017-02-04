@@ -25,7 +25,7 @@ test("print customer", () => {
 	let store = mockStore()
 	return store.dispatch(actions.printCart(customer)).then(() => {
 		expect(store.getActions()).toEqual([
-			{ type: actionTypes.PRINT }
+			{ type: actionTypes.PRINT, print: true }
 		])
 	})
 })

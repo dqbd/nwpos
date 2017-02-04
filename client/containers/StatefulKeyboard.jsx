@@ -20,10 +20,7 @@ const mapDispatchToProps = (dispatch) => {
 			dispatch(customer.add())
 			dispatch(customer.suggest())
 		},
-		onCustomerPay: () => {
-			dispatch(customer.pay())
-			dispatch(customer.log())
-		},
+		onCustomerPay: () => dispatch(customer.pay()),
 		onNumber: (digit) => {
 			dispatch(screen.addDigit(digit))
 			clearTimeout(throttle)

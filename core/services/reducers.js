@@ -10,7 +10,7 @@ module.exports = (state = initialState, action) => {
 	switch(action.type) {
 		case services.PRINT:
 			return Object.assign({}, state, {
-				print: true
+				print: action.print
 			})
 		case services.RESET:
 			return Object.assign({}, state, {

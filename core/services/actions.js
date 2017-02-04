@@ -8,13 +8,26 @@ module.exports.reset = () => {
 	return { type: types.RESET }
 }
 
+module.exports.sendEet = (customer) => (dispatch) => {
+	return fetch(getUrl("/eet"), {
+		method: "POST",
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ customer })
+	})
+	.then(a => {
+		if (a.ok) return Promise.reject(false)
+		return a.json()
+	})
+}
+
 module.exports.printCart = (customer) => (dispatch) => {
 	return fetch(getUrl(`/print`), {
 		method: "POST",
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ customer })
-	}).then(a => {
-		dispatch({ type: types.PRINT })
+	})
+	.then(res => {
+		dispatch({ type: types.PRINT, print: res.ok })
 	})
 }
 

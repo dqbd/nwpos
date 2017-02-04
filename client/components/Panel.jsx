@@ -10,7 +10,7 @@ const types = customer.types.STATUS_TYPES
 
 export default class Panel extends Component {
 	render() {
-		let {status, onCheckout, onEdit, onClear, onDiscount, onPay, onPrint, onQtySet} = this.props
+		let {status, onEdit, onClear, onDiscount, onPay, onPrint, onQtySet} = this.props
 		let actions = []
 
 		if ([types.STAGE_TYPING, types.STAGE_ADDED].indexOf(status) >= 0) {
@@ -20,8 +20,8 @@ export default class Panel extends Component {
 					<svg viewBox="0 0 24 24"><path d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M7,13H17V11H7" /></svg>
 				</a></span>,
 				<span key="qty" className="btn small qty"><a onTouchTap={onQtySet}>ks</a></span>,
-				<TotalButton key="total" onCheckout={onCheckout} />,
-				<CheckoutButton key="diff" onCheckout={onCheckout} />
+				<TotalButton key="total" onCheckout={onPay} />,
+				<CheckoutButton key="diff" onCheckout={onPay} />
 			]
 		} else if ([types.COMMIT_BEGIN, types.COMMIT_TYPING].indexOf(status) >= 0) {
 			actions = [

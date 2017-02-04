@@ -30,23 +30,20 @@ module.exports.print = (customer) => {
 }
 
 module.exports.printRaw = (lines) => new Promise((resolve, reject) => {
-	if (printer !== null) {
-		formatter.print(lines).forEach(line => {
+	formatter.print(lines).forEach(line => {
+		if (line.indexOf("$center") == 0) {
+			printer.align("CT")
+		} else if (line.indexOf("$left") == 0) {
+			printer.align("LT")
+		} else {
+			printer.text(line)
+		}
+	})
 
-			if (line.indexOf("$center") == 0) {
-				printer.align("CT")
-			} else if (line.indexOf("$left") == 0) {
-				printer.align("LT")
-			} else {
-				printer.text(line)
-			}
-
-		})
-
-		printer.feed()
+	printer.feed().then(a => {
 		resolve(true)
-	} else {
-		reject("Printer not ready")
-	}
+	}).catch(err => {
+		reject("Printer not ready: " + err)
+	})
 })
 

@@ -94,8 +94,20 @@ module.exports.edit = () => (dispatch) => {
 	dispatch({ type: types.SETSTATUS, status: statusTypes.STAGE_TYPING })
 }
 
+/** 
+ * Prints a customer
+ * 1) log in EET
+ * 2) print
+ * 3) log into our DB 
+**/
 module.exports.print = () => (dispatch, getState) => {
+	// TODO: eet
+	let { newServices } = wrapState(getState())
 	dispatch(services.printCart(getState().customer))
+
+	if (!newServices.log) {
+		dispatch(services.log(getState().customer))
+	}
 }
 
 module.exports.qty = () => (dispatch, getState) => {
@@ -113,10 +125,6 @@ module.exports.clear = () => (dispatch) => {
 	dispatch(suggestions.reset())
 	dispatch({ type: types.SETPAID, paid: 0 })
 	dispatch({ type: types.SETSTATUS, status: statusTypes.STAGE_TYPING })
-}
-
-module.exports.log = () => (dispatch, getState) => {
-	dispatch(services.log(getState().customer))
 }
 
 module.exports.suggest = () => (dispatch, getState) => {

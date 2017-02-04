@@ -6,7 +6,7 @@ let actionTypes = require("./actionTypes")
 let store = createStore(reducer)
 
 test("printing state", () => {
-	store.dispatch({ type: actionTypes.PRINT })
+	store.dispatch({ type: actionTypes.PRINT, print: true })
 
 	expect(store.getState()).toEqual({
 		print: true,
