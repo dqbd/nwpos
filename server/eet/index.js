@@ -20,11 +20,8 @@ const getCertFile = (filename) => {
 
 const retrieveCert = (filename, pass) => new Promise((resolve, reject) => {
 	let file = fs.readFileSync(getCertFile(filename))
-
 	pem.readPkcs12(file, {p12Password: pass}, (err, result) => {
-		if (err) {
-			return reject(err)
-		}
+		if (err) return reject(err)
 		resolve(result)
 	})
 })
@@ -40,7 +37,8 @@ const validateCert = (filename, pass) => {
 	})
 }
 
-const upload = (options, total) => new Promise((resolve, reject) => {
+const upload = (seller, total) => retrieveCert(seller.eet.file, seller.eet.pass).then(result => {
+	let options = Object.assign(seller.eet, { privateKey: result.key, certificate: result.cert, dic: seller.dic })
 	let { dic, idPokl, idProvoz } = options
 	let gen = {
 		poradCis: randomString(20),
@@ -56,12 +54,14 @@ const upload = (options, total) => new Promise((resolve, reject) => {
 		idProvoz: idProvoz
 	}
 
-	eet(options, items).then(response => {
-		resolve(Object.assign(response, gen))
+	return eet(options, items).then(response => {
+		return Object.assign(response, gen)
 	}, err => {
-		reject(err)
+		console.log(err)
+		return Promise.reject(err)
 	})
-})
+}) 
+
 
 module.exports.retrieveCert = retrieveCert
 module.exports.validateCert = validateCert

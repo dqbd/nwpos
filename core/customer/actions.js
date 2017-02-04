@@ -101,13 +101,18 @@ module.exports.edit = () => (dispatch) => {
  * 3) log into our DB 
 **/
 module.exports.print = () => (dispatch, getState) => {
-	// TODO: eet
-	let { newServices } = wrapState(getState())
-	dispatch(services.printCart(getState().customer))
+	// TODO: eet offline
+	let { newCart } = wrapState(getState())
 
-	if (!newServices.log) {
-		dispatch(services.log(getState().customer))
-	}
+	dispatch(services.eet(cart.getTotal(newCart))).catch(a => false)
+	.then(eet => dispatch(services.printCart(getState().customer)))
+	.then(print => {
+		let { newServices } = wrapState(getState())
+
+		if (!newServices.log) {
+			dispatch(services.log(getState().customer))
+		}
+	})
 }
 
 module.exports.qty = () => (dispatch, getState) => {

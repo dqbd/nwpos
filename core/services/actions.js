@@ -8,15 +8,17 @@ module.exports.reset = () => {
 	return { type: types.RESET }
 }
 
-module.exports.sendEet = (customer) => (dispatch) => {
+module.exports.eet = (total) => (dispatch) => {
 	return fetch(getUrl("/eet"), {
 		method: "POST",
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ customer })
+		body: JSON.stringify({ total })
 	})
 	.then(a => {
-		if (a.ok) return Promise.reject(false)
+		if (!a.ok) return Promise.reject("Failed sending EET")
 		return a.json()
+	}).then(eet => {
+		dispatch({ type: types.EET, eet })
 	})
 }
 

@@ -68,8 +68,10 @@ class Interface {
 		return database.logs().retrieveLog(day)
 	}
 
-	POST_EET() {
-		return Promise.reject("Not implemented")
+	POST_EET({total}) {
+		let sellers = this.config.get().sellers
+		if (sellers.length == 0) return Promise.reject("No seller")
+		return eet.upload(sellers[0], total)
 	}
 
 	GET_CONFIG() {

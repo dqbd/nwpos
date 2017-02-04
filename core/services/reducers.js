@@ -2,7 +2,7 @@ let services = require("./actionTypes")
 
 const initialState = {
 	print: false,
-	eet: false,
+	eet: null,
 	log: false,
 }
 
@@ -12,10 +12,14 @@ module.exports = (state = initialState, action) => {
 			return Object.assign({}, state, {
 				print: action.print
 			})
+		case services.EET:
+			return Object.assign({}, state, {
+				eet: action.eet
+			})
 		case services.RESET:
 			return Object.assign({}, state, {
 				print: false,
-				eet: false,
+				eet: null,
 				log: false
 			})
 		case services.LOG:
