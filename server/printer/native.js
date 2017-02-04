@@ -50,6 +50,17 @@ class Printer {
 		this.cache.push(Buffer.from(_.TEXT_FORMAT['TXT_ALIGN_' + align.toUpperCase()]))
 	}
 
+	drawer(pin = 2) {
+		return this.getStream().then(stream => {
+			stream.write(Buffer.from([_.CASH_DRAWER["CD_KICK_" + pin]]))
+
+			if (this.autoclose) {
+				this.closed = true
+				stream.end()
+			}
+		})
+	}
+
 	feed() {
 		this.cache.push(Buffer.from(new Array(3).fill(_.EOL).join("")))
 		
