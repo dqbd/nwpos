@@ -23,7 +23,7 @@ test("add item via keyboard", () => {
 		paid: 0,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -47,7 +47,7 @@ test("clear screen after adding", () => {
 		paid: 0,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -69,7 +69,7 @@ test("checkout begin", () => {
 		paid: 0,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -93,7 +93,7 @@ test("checkout payment", () => {
 		paid: 0,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -115,7 +115,7 @@ test("payment finished", () => {
 		paid: 358,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -136,7 +136,7 @@ test("new payment", () => {
 		paid: 0,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -164,7 +164,7 @@ test("direct payment", () => {
 		paid: 50,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -201,7 +201,7 @@ test("revert back to edit", () => {
 		paid: 0,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -229,7 +229,7 @@ test("quantity payment", () => {
 		paid: 1000,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -261,7 +261,7 @@ test("multiple adding", () => {
 		paid: 0,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -295,7 +295,7 @@ test("set qty", () => {
 		paid: 0,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -319,7 +319,7 @@ test("clears correctly", () => {
 		paid: 0,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -339,7 +339,7 @@ test("doesnt add on screen 0", () => {
 		paid: 0,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -373,7 +373,7 @@ test("add item with name", () => {
 		paid: 0,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -404,7 +404,7 @@ test("checkout instead payment when 0", () => {
 		paid: 0,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {
@@ -432,7 +432,7 @@ test("checkout instead payment when added", () => {
 		paid: 0,
 		services: {
 			print: false,
-			eet: false,
+			eet: null,
 			log: false
 		},
 		cart: {

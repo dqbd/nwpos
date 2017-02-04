@@ -14,6 +14,7 @@ const args = require('minimist')(process.argv.slice(2), {
 const express = require("express")
 const bodyParser = require("body-parser")
 const multer = require("multer")
+const path = require("path")
 
 const bonjour = require('bonjour')()
 const interface = require("./interface")(config, args)
@@ -62,7 +63,7 @@ for(let name of Object.getOwnPropertyNames(Object.getPrototypeOf(interface))) {
 			.catch(err => res.status(500).send(err))
 		}
 
-		app[method].apply(app, args === "file" ? ["/"+url, multer({dest: "./data"}).single(url), callback] : ["/"+url, callback])
+		app[method].apply(app, args === "file" ? ["/"+url, multer({dest: path.resolve(__dirname, "data")}).single(url), callback] : ["/"+url, callback])
 	}
 }
 

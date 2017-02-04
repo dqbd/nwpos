@@ -42,7 +42,7 @@ test("shop still working", () => {
 				]
 			},
 			services: {
-				eet: false,
+				eet: null,
 				log: false,
 				print: false
 			}

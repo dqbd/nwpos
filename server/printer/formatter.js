@@ -51,6 +51,14 @@ const table = (rows, spacing = 2) => {
 	})
 }
 
+const wrapLine = (line) => {
+	let lines = []
+	for(let i = 0; i < line.length; i += limit) {
+		lines.push(line.substring(i, Math.min(line.length, i + 32)).trim())
+	} 
+	return lines
+}
+
 module.exports.print = (lines) => {
 	return lines.map(line => line.substring(0, limit))
 }
@@ -91,6 +99,20 @@ module.exports.printCart = (items, total, paid, date, tax = 21) => {
 	body.push("DĚKUJEME ZA VÁŠ NÁKUP")
 
 	return body
+}
+
+module.exports.printEet = (eet) => {
+	if (eet === null || !eet.fik && !eet.pkp || !eet.bkp) return []
+	let result = (eet.fik) ? ["" ,...wrapLine("Tržba evidována v běžném režimu"), ""] : ["", ...wrapLine("Tržba evidována ve zjednodušeném režimu"), ""]
+
+	result = [...result, ...wrapLine("BKP: " + eet.bkp)]
+	if (eet.fik) {
+		result = [...result, ...wrapLine("FIK: " + eet.fik)]
+	} else if (eet.pkp) {
+		result = [...result, ...wrapLine("PKP: " + eet.pkp)]
+	} 
+
+	return result
 }
 
 module.exports.printHeader = (seller) => {
