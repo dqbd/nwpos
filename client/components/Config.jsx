@@ -3,7 +3,14 @@ import { config } from "../../core"
 import { randomString } from "../utils" 
 
 class Seller extends Component {
+	constructor(props) {
+		super(props)
+		this.state = {eetValid: this.props.seller.eet.file !== null}
+	}
 
+	componentWillReceiveProps(newProps) {
+		this.setState({eetValid: newProps.seller.eet.file !== null})
+	}
 	changeProps(key, value, prefix) {
 		let seller = this.props.seller
 
@@ -35,13 +42,11 @@ class Seller extends Component {
 		this.changeProps(e.target.className, this.getNewValue(e), prefix)
 	}
 
-	
-
 	onEetChange(e) {
 		this.changeProps(e.target.className, this.getNewValue(e), "eet")
 
+		//validate when pass changes
 		if (e.target.className === "pass") {
-			//validate when pass changes
 			this.onKeyChange({target: this.refs.uploader})
 		}
 	}
@@ -54,8 +59,9 @@ class Seller extends Component {
 			
 			reader.onload = (e) => {
 				config.validateKey(e.currentTarget.result, this.props.seller.eet.pass).then(res => {
-					console.log("ok", res.filename)
 					this.changeProps("file", res.filename, "eet")
+				}).catch(err => {
+					this.changeProps("file", null, "eet")
 				})
 			}
 		}
@@ -63,28 +69,40 @@ class Seller extends Component {
 
 	render() {
 		let {seller} = this.props
+		let safeOutput = (value) => (value === null || value === undefined) ? "" : value 
 		return <div className="seller">
 			<h2>Základní údaje</h2>
-			<input placeholder="IČ" className="ic" onChange={this.onChange.bind(this)} value={seller.ic}></input>
-			<input placeholder="DIČ" className="dic" onChange={this.onChange.bind(this)} value={seller.dic}></input>
-			<input placeholder="Název prodejny" className="name" onChange={this.onChange.bind(this)} value={seller.name}></input>
-			<input placeholder="Adresa" className="street" onChange={this.onChange.bind(this)} value={seller.street}></input>
-			<input placeholder="Město" className="city" onChange={this.onChange.bind(this)} value={seller.city}></input>
-			<input placeholder="PSČ" className="psc" onChange={this.onChange.bind(this)} value={seller.psc}></input>
+			<input placeholder="IČ" className="ic" type="number" onChange={this.onChange.bind(this)} value={safeOutput(seller.ic)}></input>
+			<input placeholder="DIČ" className="dic" onChange={this.onChange.bind(this)} value={safeOutput(seller.dic)}></input>
+			<input placeholder="Název prodejny" className="name" onChange={this.onChange.bind(this)} value={safeOutput(seller.name)}></input>
+			<input placeholder="Adresa" className="street" onChange={this.onChange.bind(this)} value={safeOutput(seller.street)}></input>
+			<input placeholder="Město" className="city" onChange={this.onChange.bind(this)} value={safeOutput(seller.city)}></input>
+			<input placeholder="PSČ" className="psc" onChange={this.onChange.bind(this)} value={safeOutput(seller.psc)}></input>
 			<label className="checkbox">
-				<input className="tax" type="checkbox" onChange={this.onChange.bind(this)} checked={seller.tax}/>
+				<input className="tax" type="checkbox" onChange={this.onChange.bind(this)} checked={safeOutput(seller.tax)}/>
 				<span>DPH</span>
 			</label>
 
 			<h2>EET</h2>
 			<label className="checkbox">
-				<input className="enabled" type="checkbox" onChange={this.onEetChange.bind(this)} checked={seller.eet.enabled} />
+				<input className="enabled" type="checkbox" onChange={this.onEetChange.bind(this)} checked={safeOutput(seller.eet.enabled)} />
 				<span>Odesílat účtenky na Finanční správu</span>
 			</label>
-			<input type="file" ref="uploader" placeholder="Klíč .p12" onChange={this.onKeyChange.bind(this)} accept="application/x-pkcs12" />
-			<input placeholder="Název klíče" className="file" onChange={this.onEetChange.bind(this)} value={seller.eet.file}></input>
-			<input placeholder="Heslo klíče" className="pass" type="password" onChange={this.onEetChange.bind(this)} value={seller.eet.pass}></input>
-			<input placeholder="ID Provozovny" className="idProvoz" onChange={this.onEetChange.bind(this)} value={seller.eet.idProvoz}></input>
+			<div className="eet">
+				<div className="login">
+					<input type="file" ref="uploader" placeholder="Klíč .p12" onChange={this.onKeyChange.bind(this)} accept="application/x-pkcs12" />
+					<input placeholder="Heslo klíče" className="pass" type="password" onChange={this.onEetChange.bind(this)} value={safeOutput(seller.eet.pass)}></input>
+				</div>
+				<div className={this.state.eetValid ? "status valid" : "status invalid"}>
+					<svg viewBox="0 0 24 24">
+						{this.state.eetValid ?
+							<path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" /> :
+							<path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+						}
+					</svg>
+				</div>
+			</div>
+			<input placeholder="ID Provozovny" type="number" className="idProvoz" onChange={this.onEetChange.bind(this)} value={safeOutput(seller.eet.idProvoz)}></input>
 		</div>
 	}
 }
@@ -92,7 +110,7 @@ class Seller extends Component {
 export default class Config extends Component {
 	constructor(props) {
 		super(props)
-		this.state = { config: {sellers: []}, valid: false }
+		this.state = { config: {sellers: [this.getSeller()]} }
 	}
 
 	getSeller(seller) {
@@ -107,8 +125,8 @@ export default class Config extends Component {
 			city: null,
 			eet: {
 				enabled: false,
-				file: "CZ1212121218.p12",
-				pass: "eet",
+				file: null,
+				pass: null,
 				idPokl: randomString(20),
 				idProvoz: null,
 				playground: true,
@@ -120,32 +138,24 @@ export default class Config extends Component {
 
 	componentDidMount() {
 		config.get().then(config => {
-			console.log(config)
-			this.setState({ config, valid: true })
+			if (config.sellers.length == 0) {
+				config.sellers.push(this.getSeller())
+			}
+			this.setState({ config })
 		})
 	}
 
-	onChange(e) {
-		try {
-			JSON.parse(e.target.value)
-			this.setState({ config: JSON.parse(e.target.value), valid: true })
-		} catch(err) {
-			this.setState({ config: e.target.value, valid: false })
-		}
+	onSaveClick() {
+		config.set(this.state.config)
 	}
 
-
-	onClick() {
-		if (this.state.valid) {
-			config.set(this.state.config)
-		}
+	onReturnClick() {
+		window.showClient()
 	}
 
 	onSellerChange(index, seller) {
 		let {config} = this.state
 		config.sellers[index] = seller
-
-		console.log(seller)
 		this.setState({ config })
 	}
 
@@ -162,10 +172,11 @@ export default class Config extends Component {
 		}
 
 		return <div id="config">
-			{/*<textarea onChange={e => this.onChange(e)} value={val} />*/}
-			<button className="add" onClick={this.onAddCustomer.bind(this)}>Přidat zákazníka</button>
 			{this.state.config.sellers.map((seller, index) => <Seller onChange={(seller) => this.onSellerChange(index, seller)} seller={this.getSeller(seller)} />)}
-			<button disabled={!this.state.valid} onClick={this.onClick.bind(this)}>Odeslat</button>
+			<div className="buttons">
+				<button className="return" onClick={this.onReturnClick.bind(this)}>Vrátit se</button>
+				<button className="save" onClick={this.onSaveClick.bind(this)}>Odeslat</button>
+			</div>
 		</div> 
 	}
 }

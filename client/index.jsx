@@ -10,7 +10,7 @@ import { render } from "react-dom"
 import { Router, Route, useRouterHistory } from "react-router"
 import { createHashHistory } from "history"
 
-import { reducer } from "../core"
+import { reducer, config } from "../core"
 import { bindDisplayEvents } from "./utils/display.js"
 import { bindActions } from "./utils/actions.js"
 
@@ -35,8 +35,17 @@ render(<Provider store={store}>
 	</Router>
 </Provider>, document.getElementById("root"))
 
-window.showClient()
 window.toggleNight(true)
+
+config.get().then(config => {
+	if (config.sellers.length > 0) {
+		window.showClient()
+	} else {
+		window.showConfig()
+	}
+}).catch(err => {
+	window.showClient()
+})
 
 if (window.android) {
 	console.log(JSON.stringify({ actions }))

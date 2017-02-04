@@ -23,5 +23,10 @@ module.exports.validateKey = (buffer, pass) => {
 	return fetch(getUrl("/p12"), {
 		method: "POST",
 		body: data
-	}).then(a => a.json())
+	}).then(a => a.json()).then(res => {
+		if (!res) {
+			return Promise.reject(res)
+		}
+		return res
+	})
 }

@@ -15,7 +15,6 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const multer = require("multer")
 
-
 const bonjour = require('bonjour')()
 const interface = require("./interface")(config, args)
 
@@ -32,7 +31,7 @@ if (args.dev) {
 	app.use("/", express.static(path.resolve(__dirname, "dist")))
 }
 
-bonjour.publish({ name: advert, type: "http", port: config.get().port })
+bonjour.publish({ name: advert, type: "http", port: args.port })
 
 //disable caching
 app.disable('etag')
