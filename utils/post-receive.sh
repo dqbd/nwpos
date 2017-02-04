@@ -16,5 +16,7 @@ do
     echo " | Tag name     : release_$NOW"
     echo " \=============================="
     echo " === Doing a reboot in 1 min ==="
+    cd "$working_tree/server"
+    npm install --production
     sudo shutdown -r 1 --no-wall
 done

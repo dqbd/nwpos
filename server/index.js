@@ -4,7 +4,7 @@ const os = require("os")
 const args = require('minimist')(process.argv.slice(2), { 
 	default: {
 		port: 80,
-		display: false,
+		display: true,
 		dev: false,
 		printer: (os.platform() === "win32") ? `\\\\${os.hostname()}\\nwcashier-printer` : "/dev/usb/lp0"
 	},
@@ -41,7 +41,6 @@ app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	next()
 })
-
 
 //apply functions
 for(let name of Object.getOwnPropertyNames(Object.getPrototypeOf(interface))) {
