@@ -102,7 +102,7 @@ module.exports.printCart = (items, total, paid, date, tax = 21) => {
 }
 
 module.exports.printEet = (eet) => {
-	if (eet === null || !eet.fik && !eet.pkp || !eet.bkp) return []
+	if (eet === null || eet === undefined || !eet.fik && !eet.pkp || !eet.bkp) return []
 	let result = (eet.fik) ? ["" ,...wrapLine("Tržba evidována v běžném režimu"), ""] : ["", ...wrapLine("Tržba evidována ve zjednodušeném režimu"), ""]
 
 	result = [...result, ...wrapLine("BKP: " + eet.bkp)]

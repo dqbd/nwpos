@@ -23,7 +23,9 @@ module.exports.print = (customer) => {
 
 		let header = formatter.printHeader(seller)
 		let cart = formatter.printCart(items, total, customer.paid, date, seller.tax ? 21 : 0)
-		return module.exports.printRaw(["$center", ...header, "$left", ...cart])
+		let eet = formatter.printEet(customer.services.eet)
+
+		return module.exports.printRaw(["$center", ...header, "$left", ...cart, ...eet])
 	} else {
 		return Promise.reject("No seller info")
 	}
