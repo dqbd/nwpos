@@ -1,8 +1,6 @@
 'use strict';
 const native = require('./native')
 const formatter = require("./formatter")
-
-
 let printer = null
 let config = null
 

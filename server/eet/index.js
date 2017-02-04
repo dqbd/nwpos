@@ -15,7 +15,7 @@ const randomString = (length) => {
 }
 
 module.exports.retrieveCert = (filename, pass) => new Promise((resolve, reject) => {
-	let file = fs.readFileSync(path.resolve(__dirname, "..", "data", "certs", filename))
+	let file = fs.readFileSync(path.resolve(__dirname, "..", "data", filename))
 
 	pem.readPkcs12(file, {p12Password: pass}, (err, result) => {
 		if (err) {
@@ -56,7 +56,8 @@ module.exports.retrieveCert("CZ1212121218.p12", "eet")
 		dic: "CZ1212121218",
 		idPokl: randomString(20),
 		idProvoz: "273",
-		playground: true
+		playground: true,
+		offline: true
 	}
 
 	return module.exports.upload(options, 3000)
