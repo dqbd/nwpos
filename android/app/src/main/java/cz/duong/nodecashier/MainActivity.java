@@ -83,8 +83,6 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
 
         setContentView(R.layout.activity_main);
 
-
-
         webView = (WebView) findViewById(R.id.webView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         errorView = findViewById(R.id.main_error);
@@ -121,8 +119,8 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
             }
         });
 
-
         showLoading();
+
         registerReceiver(powerReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
     }
 
@@ -179,6 +177,7 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
 
                 @Override
                 public void onReload() {
+                    showLoading();
                     if (webView != null) webView.reload();
                 }
 

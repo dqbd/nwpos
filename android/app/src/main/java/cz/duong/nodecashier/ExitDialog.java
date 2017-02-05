@@ -27,7 +27,7 @@ class ExitDialog extends Dialog {
     private ExitInterface callback;
 
     private static final String TO_RELOAD = "Znovu načíst";
-    private static final String TO_EXIT = "Odejít z aplikace";
+    private static final String TO_EXIT = "Vypnout";
 
     ExitDialog(Context context, ExitInterface callback) {
         super(context);
