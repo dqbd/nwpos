@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { config } from "../../core"
-import { defaultSeller } from "../../core/seller"
+import { defaultSeller } from "../../core/defaultSeller"
 import { randomString } from "../utils" 
 
 class Seller extends Component {
