@@ -5,6 +5,7 @@ import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -12,6 +13,7 @@ import java.util.Collections;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
+import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 
 /**
@@ -20,7 +22,7 @@ import javax.jmdns.ServiceListener;
 
 public class AppDiscoveryTask implements Runnable {
     private static final String SERVICE_TYPE = "_http._tcp.local.";
-    private static final String SERVICE_NAME = "nodecashier-services";
+    private static final String SERVICE_NAME = "nodecashier-service";
 
     private static final String DNS_LOCK = "cz.duong.nodecashier.lock";
 
@@ -69,8 +71,12 @@ public class AppDiscoveryTask implements Runnable {
     private ServiceListener listener = new ServiceListener() {
         @Override
         public void serviceAdded(ServiceEvent event) {
-            Log.d("APP-DISCOVERY", event.getName());
-            jmdns.requestServiceInfo(event.getType(), event.getName(), 1);
+            Log.d("APP-DISCOVERY", "added: " + event.getName() + " : " + event.getType());
+//            ServiceInfo info = jmdns.getServiceInfo(event.getType(), event.getName(), 30000);
+//            Log.d("APP-DISCOVERY", "info: " + info);
+
+            jmdns.requestServiceInfo(event.getType(), event.getName(), 30000);
+
         }
 
         @Override
@@ -81,7 +87,10 @@ public class AppDiscoveryTask implements Runnable {
         @Override
         public void serviceResolved(ServiceEvent event) {
             Log.d("APP-DISCOVER", "RESOLVED: " + event.getName());
-            if (event.getName().equals(SERVICE_NAME) && event.getInfo().getURLs().length > 0 && event.getInfo().getInet4Addresses().length > 0) {
+            String[] urls = event.getInfo().getURLs();
+            Inet4Address[] addresses = event.getInfo().getInet4Addresses();
+            Boolean isOurService = event.getName().contains(SERVICE_NAME);
+            if (isOurService && urls.length > 0 && addresses.length > 0) {
                 urlDiscovered(event.getInfo().getURLs()[0]);
             }
         }
