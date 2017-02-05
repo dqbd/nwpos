@@ -25,7 +25,7 @@ class CartItem extends Component {
 		let { index, price, qty, name, selected, onSelect, onRename, onAddQty, onDelete } = this.props
 		
 		return (<li onTouchTap={() => onSelect(index)} className={selected ? "item selected" : "item"}>
-				{this.state.showEditName ? <RenamePopup current={name} onEdit={(e) => this.onFormRename(e)} onClose={() => this.onFormClose()} /> : null}
+				{this.state.showEditName ? <RenamePopup price={price} current={name} onEdit={(e) => this.onFormRename(e)} onClose={() => this.onFormClose()} /> : null}
 				<span className="digit inline-btn" onTouchTap={() => onDelete(index)}></span>
 				<span className="name" onTouchTap={() => this.onFormOpen()}>{name}</span>
 				<span className="price">{price}</span>

@@ -39,7 +39,7 @@ class RenamePopup extends React.Component {
 	}
 
 	render() {
-		let { index, onEdit, onClose } = this.props
+		let { index, price, onEdit, onClose } = this.props
 
 		let filter = (this.state.typed) ? this.state.input.toLowerCase().split("").filter(a => czechAlphabet.indexOf(a) >= 0).join("") : null
 
@@ -53,6 +53,7 @@ class RenamePopup extends React.Component {
 								<input ref="input" className="edit" placeholder="název" value={this.state.input} onChange={(e) => this.onInputChange(e)}></input>
 							</div>
 						</div>
+						<div className="pricetag">{price} Kč</div>
 						<div className="buttons">
 							<button type="submit" className="ok">
 								<svg viewBox="0 0 24 24">
