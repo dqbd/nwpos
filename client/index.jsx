@@ -33,7 +33,11 @@ render(<Provider store={store}>
 		<Route path="/config" component={Config} />
 		<Route path="/stats" component={Dashboard} />
 	</Router>
-</Provider>, document.getElementById("root"))
+</Provider>, document.getElementById("root"), (callback) => {
+	if (window.android) {
+		setTimeout(() => window.android.loadFinished(JSON.stringify({ actions })), 500)
+	}
+})
 
 window.toggleNight(true)
 
@@ -46,8 +50,3 @@ config.get().then(config => {
 }).catch(err => {
 	window.showClient()
 })
-
-if (window.android) {
-	console.log(JSON.stringify({ actions }))
-	window.android.loadFinished(JSON.stringify({ actions }))
-}
