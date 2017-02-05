@@ -37,7 +37,20 @@ module.exports.log = (customer) => (dispatch) => {
 	let payload = {
 		returned: customer.screen,
 		paid: customer.paid,
-		cart: customer.cart
+		cart: customer.cart,
+		services: customer.services
+	}
+
+	if (payload.services.eet !== null) {
+		if (payload.services.eet.datTrzby) {
+			payload.date = new Date(Date.parse(payload.services.eet.datTrzby))
+		} else if (payload.services.eet.date) {
+			payload.date = new Date(Date.parse(payload.services.eet.date))
+		} 
+	} 
+
+	if (!payload.date) {
+		payload.date = new Date()
 	}
 
 	return fetch(getUrl(`/store`), {

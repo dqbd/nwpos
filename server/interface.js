@@ -45,7 +45,9 @@ class Interface {
 		}
 
 		let items = customer.cart.items
-		customer.date = new Date()
+
+		let date = Date.parse(customer.date)
+		customer.date = Number.isNaN(date) ? new Date() : new Date(date)
 
 		return database.logs().logCustomer(customer)
 			.then(a => Promise.all(items.map(item => database.suggestion().updateSuggestion(item["name"], item["price"]))))
