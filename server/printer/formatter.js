@@ -116,12 +116,17 @@ module.exports.printEet = (eet) => {
 }
 
 module.exports.printHeader = (seller) => {
-	return [
+	let result = [
 		seller.name,
 		seller.street,
 		`${seller.psc} ${seller.city.toUpperCase()}`,
 		`IČ: ${seller.ic}`,
-		// `DIČ: ${seller.dic}`,
-		divider()
 	]
+
+	if (seller.dic) {
+		result.push(`DIČ: ${seller.dic}`)
+	}
+
+	result.push(divider())
+	return result
 } 

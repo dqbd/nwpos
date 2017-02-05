@@ -19,7 +19,6 @@ const wrapState = (state) => {
 	return wrapped
 }
 
-
 module.exports.add = (name) => (dispatch, getState) => {
 	let { newCart, newScreen, newStatus } = wrapState(getState())
 
@@ -68,23 +67,27 @@ module.exports.rename = (name) => (dispatch, getState) => {
 module.exports.checkout = () => (dispatch, getState) => {
 	let { newCart } = wrapState(getState())
 
-	dispatch(screen.set(cart.getTotal(newCart)))
-	dispatch({ type: types.SETPAID, paid: 0 })
-	dispatch({ type: types.SETSTATUS, status: statusTypes.COMMIT_BEGIN })
+	if (cart.getTotal(newCart) !== 0) {
+		dispatch(screen.set(cart.getTotal(newCart)))
+		dispatch({ type: types.SETPAID, paid: 0 })
+		dispatch({ type: types.SETSTATUS, status: statusTypes.COMMIT_BEGIN })
+	}
 }
 
 module.exports.pay = () => (dispatch, getState) => {
 	let { newCart, newScreen, newStatus } = wrapState(getState())
 	let screenValue = screen.getValue(newScreen)
 
-	if (screenValue === 0 || newStatus === statusTypes.STAGE_ADDED) {
-		dispatch(screen.set(cart.getTotal(newCart)))
-		dispatch({ type: types.SETPAID, paid: 0 })
-		dispatch({ type: types.SETSTATUS, status: statusTypes.COMMIT_BEGIN })
-	} else {
-		dispatch(screen.set(cart.getTotal(newCart) - newScreen))
-		dispatch({ type: types.SETPAID, paid: newScreen })
-		dispatch({ type: types.SETSTATUS, status: statusTypes.COMMIT_END })
+	if (cart.getTotal(newCart) !== 0) {
+		if (screenValue === 0 || newStatus === statusTypes.STAGE_ADDED) {
+			dispatch(screen.set(cart.getTotal(newCart)))
+			dispatch({ type: types.SETPAID, paid: 0 })
+			dispatch({ type: types.SETSTATUS, status: statusTypes.COMMIT_BEGIN })
+		} else {
+			dispatch(screen.set(cart.getTotal(newCart) - newScreen))
+			dispatch({ type: types.SETPAID, paid: newScreen })
+			dispatch({ type: types.SETSTATUS, status: statusTypes.COMMIT_END })
+		}
 	}
 }
 
@@ -102,17 +105,23 @@ module.exports.edit = () => (dispatch) => {
 **/
 module.exports.print = () => (dispatch, getState) => {
 	// TODO: eet offline
-	let { newCart } = wrapState(getState())
+	let { newServices, newCart } = wrapState(getState())
 
-	dispatch(services.eet(cart.getTotal(newCart))).catch(a => false)
-	.then(eet => dispatch(services.printCart(getState().customer)))
-	.then(print => {
-		let { newServices } = wrapState(getState())
+	Promise.resolve(newServices.eet)
+		.then(eet => {
+			//prevent resending
+			// TODO: eet offline
+			if (!eet) return dispatch(services.eet(cart.getTotal(newCart))).catch(a => false)
+			return eet 
+		})
+		.then(eet => dispatch(services.printCart(getState().customer)))
+		.then(print => {
+			let { newServices } = wrapState(getState())
 
-		if (!newServices.log) {
-			dispatch(services.log(getState().customer))
-		}
-	})
+			if (!newServices.log) {
+				dispatch(services.log(getState().customer))
+			}
+		})
 }
 
 module.exports.qty = () => (dispatch, getState) => {

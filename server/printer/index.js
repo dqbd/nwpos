@@ -32,7 +32,10 @@ module.exports.print = (customer) => {
 }
 
 module.exports.printRaw = (lines) => new Promise((resolve, reject) => {
+
 	formatter.print(lines).forEach(line => {
+		console.log(line)
+		
 		if (line.indexOf("$center") == 0) {
 			printer.align("CT")
 		} else if (line.indexOf("$left") == 0) {

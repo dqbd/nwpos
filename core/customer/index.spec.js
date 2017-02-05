@@ -331,7 +331,6 @@ test("clears correctly", () => {
 
 test("doesnt add on screen 0", () => {
 	store.dispatch(customer.clear())
-	store.dispatch(customer.add())
 
 	expect(store.getState()).toEqual({
 		status: customer.types.STATUS_TYPES.STAGE_TYPING,
@@ -350,8 +349,7 @@ test("doesnt add on screen 0", () => {
 })
 
 test("add item with name", () => {
-	store.dispatch(screen.clear())
-	store.dispatch(cart.clear())
+	store.dispatch(customer.clear())
 
 	store.dispatch(screen.set(123))
 	store.dispatch(customer.add())
@@ -389,8 +387,7 @@ test("add item with name", () => {
 })
 
 test("checkout instead payment when 0", () => {
-	store.dispatch(screen.clear())
-	store.dispatch(cart.clear())
+	store.dispatch(customer.clear())
 
 	store.dispatch(screen.set(123))
 	store.dispatch(customer.add())
@@ -417,8 +414,7 @@ test("checkout instead payment when 0", () => {
 })
 
 test("checkout instead payment when added", () => {
-	store.dispatch(screen.clear())
-	store.dispatch(cart.clear())
+	store.dispatch(customer.clear())
 
 	store.dispatch(screen.set(123))
 	store.dispatch(customer.add()) //add twice
@@ -440,6 +436,28 @@ test("checkout instead payment when added", () => {
 			items: [
 				{ name: "", price: 123, qty: 2 }
 			]
+		}
+	})
+})
+
+test("prevent payment when 0", () => {
+	store.dispatch(customer.clear())
+
+	store.dispatch(customer.checkout())
+	store.dispatch(customer.pay())
+
+	expect(store.getState()).toEqual({
+		status: customer.types.STATUS_TYPES.STAGE_TYPING,
+		screen: 0,
+		paid: 0,
+		services: {
+			print: false,
+			eet: null,
+			log: false
+		},
+		cart: {
+			selection: 0,
+			items: []
 		}
 	})
 })
