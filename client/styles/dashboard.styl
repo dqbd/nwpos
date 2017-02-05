@@ -77,6 +77,9 @@
 		a
 			justify-content: flex-end
 			padding-right: button-size * 0.3
+
+		a.tapped
+			background: darken(color-gray, 10%)
 		
 	.customer .items
 		noselect()
@@ -116,8 +119,6 @@
 		li .total
 			width: 20%
 			text-align: right
-			
-
 	
 #dashboard .days
 	width: 300px
@@ -129,7 +130,6 @@
 	box-shadow: -1px 0px 0px rgba(0,0,0,0.1) 
 	
 	.day
-		
 		noselect()
 		cursor: pointer
 		height: button-size * 0.8
