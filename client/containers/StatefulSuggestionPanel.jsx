@@ -6,7 +6,7 @@ import { hapticFeedback, capitalize } from "../utils"
 
 const mapStateToProps = (state) => {
 	return {
-		suggestions: state.suggestions.contextual
+		suggestions: state.customer.screen === 0 ? [] : state.suggestions.contextual.slice(0,10).map(item => item.name)
 	}
 }
 
