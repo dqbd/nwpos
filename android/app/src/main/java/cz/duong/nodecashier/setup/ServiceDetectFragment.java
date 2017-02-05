@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 import cz.duong.nodecashier.R;
+import cz.duong.nodecashier.ServiceDialog;
 import cz.duong.nodecashier.utils.AppDiscoveryTask;
 import cz.duong.nodecashier.utils.UrlChecker;
 
@@ -57,6 +59,25 @@ public class ServiceDetectFragment extends Fragment implements UrlChecker.CheckL
         serviceView = view.findViewById(R.id.service_view);
         progressView = view.findViewById(R.id.progressBar);
 
+        Button manualBtn = (Button) view.findViewById(R.id.manual_button);
+        manualBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ServiceDialog dialog = new ServiceDialog(getContext(), new ServiceDialog.ServiceSetListener() {
+                    @Override
+                    public void onManualService(String host, String port) {
+                        String url = "http://" + host + ":" + port;
+                        new UrlChecker(ServiceDetectFragment.this).execute(url);
+
+                        serviceView.setVisibility(View.GONE);
+                        progressView.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                dialog.show();
+            }
+        });
+
         ListView listView = (ListView) view.findViewById(R.id.service_list);
         listView.setAdapter(adapter);
 
@@ -80,8 +101,6 @@ public class ServiceDetectFragment extends Fragment implements UrlChecker.CheckL
 
         bgThread = new HandlerThread("AppDiscovery");
         bgThread.start();
-
-
 
         handler = new Handler(bgThread.getLooper());
         uiHandler = new Handler(Looper.getMainLooper());
