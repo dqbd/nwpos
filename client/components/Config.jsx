@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { config } from "../../core"
+import { defaultSeller } from "../../core/seller"
 import { randomString } from "../utils" 
 
 class Seller extends Component {
@@ -116,24 +117,10 @@ export default class Config extends Component {
 	getSeller(seller) {
 		if (!seller) seller = {}
 
-		return Object.assign({
-			name: null,
-			ic: null,
-			street: null,
-			psc: null,
-			dic: null,
-			city: null,
-			eet: {
-				enabled: false,
-				file: null,
-				pass: null,
-				idPokl: randomString(20),
-				idProvoz: null,
-				playground: true,
-				offline: true
-			},
-			tax: false
-		}, seller)
+		let def = Object.assign({}, defaultSeller)
+		def.eet.idPokl = randomString(20)
+
+		return Object.assign(def, seller)
 	}
 
 	componentDidMount() {

@@ -1,6 +1,8 @@
 const fs = require("fs")
 const path = require("path")
 
+const { defaultSeller } = require("../../core/seller")
+
 class Config {
 	constructor(base) {
 		this.src = path.resolve(base, "config.json")
@@ -21,7 +23,13 @@ class Config {
 			}
 		} catch (e) {}
 
-		this.state = Object.assign(initial, src)
+		src = Object.assign(initial, src)
+
+		// attempt fixing sellers
+		src.sellers = src.sellers.map(seller => Object.assign(defaultSeller, seller))
+		
+		this.state = src
+		this.save()
 	}
 
 	save() {
