@@ -150,7 +150,8 @@ function createTapEventPlugin() {
 			if (topLevelType === "topTouchStart") {
 				isCancelled = false
 
-				clearTimeout(longTouchTimeout)
+				nativeEventTarget.classList.add("tapped")
+				
 				longTouchTimeout = setTimeout(() => {
 					let event = new TouchEvent("touchcancel", {
 						touches: nativeEvent.touches,
@@ -165,10 +166,15 @@ function createTapEventPlugin() {
 
 			if (topLevelType === "topTouchCancel") {
 				isCancelled = true
+
+				nativeEventTarget.classList.remove("tapped")
 			}
 
 			if (topLevelType === "topTouchEnd") {
 				clearTimeout(longTouchTimeout)
+
+				nativeEventTarget.classList.remove("tapped")
+				
 				if (isCancelled) {
 					return null
 				} 

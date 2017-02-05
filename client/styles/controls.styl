@@ -56,15 +56,15 @@
 	flex-wrap: wrap
 	min-height: button-size * 4
 	
-	.btn:not(.add):active
+	.btn a.tapped
 		background: rgba(150,150,150,0.1)
 	
 	.btn.add
 		background: color-gray
 		color: #ffffff
 		
-		&:active
-			background: darken(@background, 5%)
+		a.tapped
+			background: darken(color-gray, 5%)
 
 		a
 			font-size: 4.2em
