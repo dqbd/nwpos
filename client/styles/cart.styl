@@ -47,12 +47,12 @@
 		align-items: center
 		
 		.inline-btn
-			&:active
+			&:active, &.tapped
 				color: #ffffff
 				
-			&:first-child:active
+			&:first-child.tapped, &:first-child:active
 				background: color-red
-			&:last-child:active
+			&:last-child.tapped, &:last-child:active
 				background: color-green
 
 		.value
@@ -96,10 +96,10 @@
 		&:before
 			content: counter(cart)	
 
-		&:active
+		&.tapped, &:active
 			background: color-red
 			
-		&:active:before
+		&.tapped:before, &:active:before
 			transform: translateY(-3px)
 			color: #ffffff
 			font-size: 2em
