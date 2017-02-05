@@ -32,7 +32,7 @@ if (args.dev) {
 	app.use("/", express.static(path.resolve(__dirname, "dist")))
 }
 
-// bonjour.publish({ name: advert, type: "http", port: args.port })
+bonjour.publish({ name: advert, type: "http", port: args.port })
 
 //disable caching
 app.disable('etag')
