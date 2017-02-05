@@ -159,7 +159,7 @@ export default class Config extends Component {
 		}
 
 		return <div id="config">
-			{this.state.config.sellers.map((seller, index) => <Seller onChange={(seller) => this.onSellerChange(index, seller)} seller={this.getSeller(seller)} />)}
+			{this.state.config.sellers.map((seller, index) => <Seller key={index} onChange={(seller) => this.onSellerChange(index, seller)} seller={this.getSeller(seller)} />)}
 			<div className="buttons">
 				<button className="return" onClick={this.onReturnClick.bind(this)}>Vrátit se</button>
 				<button className="save" onClick={this.onSaveClick.bind(this)}>Odeslat</button>
