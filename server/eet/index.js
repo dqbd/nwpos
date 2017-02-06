@@ -5,12 +5,22 @@ const eet = require("eet")
 const pem = require("pem")
 const uuid = require("node-uuid")
 
-const randomString = (length) => {
-	let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,:;#-_/"
-	let payload = ""
-	for(let i = 0; i < length; i++) {
-		payload += letters.charAt(Math.floor(Math.random() * letters.length))
+const generatePoradCislo = () => {
+	let date = new Date()
+	let payload = [
+		date.getDate(),
+		date.getMonth()+1,
+		date.getFullYear(),
+		date.getHours(),
+		date.getMinutes(),
+		date.getSeconds(),
+		date.getMilliseconds()
+	].join("")
+
+	while (payload.length < 17) {
+		payload = "0" + payload
 	}
+		
 	return payload
 }
 
@@ -41,7 +51,7 @@ const upload = (seller, total) => retrieveCert(seller.eet.file, seller.eet.pass)
 	let options = Object.assign(seller.eet, { privateKey: result.key, certificate: result.cert, dic: seller.dic })
 	let { dic, idPokl, idProvoz } = options
 	let gen = {
-		poradCis: randomString(20),
+		poradCis: generatePoradCislo(),
 		datTrzby: new Date()
 	}
 

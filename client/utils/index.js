@@ -33,7 +33,7 @@ module.exports.capitalize = (input) => {
 }
 
 module.exports.randomString = (length) => {
-	let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,:;#-_/"
+	let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 	let payload = ""
 	for(let i = 0; i < length; i++) {
 		payload += letters.charAt(Math.floor(Math.random() * letters.length))
