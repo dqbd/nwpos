@@ -101,11 +101,19 @@ module.exports.printCart = (items, total, paid, date, tax = 21) => {
 	return body
 }
 
-module.exports.printEet = (eet) => {
+module.exports.printEet = (eet, seller) => {
 	if (eet === null || eet === undefined || !eet.fik && !eet.pkp || !eet.bkp) return []
 	let result = (eet.fik) ? ["" ,...wrapLine("Tržba evidována v běžném režimu"), ""] : ["", ...wrapLine("Tržba evidována ve zjednodušeném režimu"), ""]
+	
+	if (seller.eet !== null && seller.eet.idProvoz) {
+		result.push("Provozovna: " + seller.eet.idProvoz)
+	}
 
-	result = [...result, ...wrapLine("BKP: " + eet.bkp)]
+	if (seller.eet !== null && seller.eet.idProvoz) {
+		result.push("Pokladna: " + seller.eet.idPokl)
+	}
+
+	result = [...result, "", ...wrapLine("Číslo účtenky: " + eet.poradCis), "", ...wrapLine("BKP: " + eet.bkp)]
 	if (eet.fik) {
 		result = [...result, ...wrapLine("FIK: " + eet.fik)]
 	} else if (eet.pkp) {
@@ -126,6 +134,8 @@ module.exports.printHeader = (seller) => {
 	if (seller.dic) {
 		result.push(`DIČ: ${seller.dic}`)
 	}
+
+	
 
 	result.push(divider())
 	return result

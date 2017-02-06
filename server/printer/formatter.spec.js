@@ -1,5 +1,6 @@
 const printer = require("./formatter")
 
+
 const getDateString = (date) => {
 	let dateString = "Datum: "
 	dateString += ["Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"][date.getDay()] + " "
@@ -43,15 +44,39 @@ test("print info", () => {
 		"DĚKUJEME ZA VÁŠ NÁKUP"
 	])
 })
+const seller = {
+	"name": "Obchod",
+	"ic": "123456789",
+	"street": "Ostravská 136/6",
+	"psc": "748 01",
+	"dic": "CZ123456789",
+	"city": "Hlučín",
+	"eet": {
+		"enabled": true,
+		"file": "",
+		"pass": "",
+		"idPokl": "n/n_vT:GOJP,KuDVZPGX",
+		"idProvoz": "123",
+		"playground": true,
+		"offline": true
+	},
+	"tax": false
+}
 
 test("print eet online", () => {
 	let eet = {"uuid":"f8567ec6-5e5c-4547-9e97-84a0dceedf5a","bkp":"0F2F1F2B-BF3B6315-FEE010E8-9C111F54-967A23F4","date":"2017-02-04T20:15:21.000Z","test":true,"fik":"7fe51d30-c1f0-4d07-8b6d-0c946ea4769c-ff","warnings":[],"poradCis":"UrwfWNbQ#u92#/dtVyeg","datTrzby":"2017-02-04T20:15:19.802Z"}
 
-	let lines = printer.printEet(eet)
+	let lines = printer.printEet(eet, seller)
 	expect(lines).toEqual([
 		"",
 		"Tržba evidována v běžném režimu",
 		"",
+		"Provozovna: 123",
+   		"Pokladna: n/n_vT:GOJP,KuDVZPGX",
+   		"",
+   		"Číslo účtenky: UrwfWNbQ#u92#/dtV",
+		"yeg",
+   		"",
 		"BKP: 0F2F1F2B-BF3B6315-FEE010E8-",
 		"9C111F54-967A23F4",
 		"FIK: 7fe51d30-c1f0-4d07-8b6d-0c9",
@@ -61,19 +86,25 @@ test("print eet online", () => {
 
 test("print eet null or invalid", () => {
 	let eet = {"uuid":"f8567ec6-5e5c-4547-9e97-84a0dceedf5a"}
-	let lines = printer.printEet(eet)
+	let lines = printer.printEet(eet, seller)
 	expect(lines).toEqual([])
 })
 
 test("print eet offline", () => {
 	let eet = {"pkp":"D95b3JlYyVkP3kNEbb+jpvWqnSF3f5+7C5mW1Pf/xoJl3Mns1dIePNvRFmR9Pdtp8coVescPEjOYDy2binzk4vmkSazl8HZOOp1GEWrzb4vj5539OBp16TiIGTpI9jgEgtCW/ANNlSxNgCD2Zg/YL43I54zGvdOZuZRvFsdtTdn7wT2Hanlvn5ZIJmSYNDJen04uP+7Hlu5XKblc1Uzxi2HmPOD4/PWIKiU9dupSWIBLGny2ZzCHyt0NncSxOIPYLs7mCcFDk8qdmqbq8mv9oaV+l7z002UczAeZh058w9AX6CClxr7LMc4pPTQIhHL8AkX3Tm98LzrLWq9JS2vnYw==","bkp":"F923B375-DAE2ACFD-B67B9F5B-575A3292-5D7041A4","err":{"code":"ENOTFOUND","errno":"ENOTFOUND","syscall":"getaddrinfo","hostname":"pg.eet.cz","host":"pg.eet.cz","port":"443"},"poradCis":"3jY.S#7tqEFcCsW28cx3","datTrzby":"2017-02-04T20:45:45.696Z"}
 
-	let lines = printer.printEet(eet)
+	let lines = printer.printEet(eet, seller)
 	expect(lines).toEqual([
 		"",
 		"Tržba evidována ve zjednodušeném",
 		"režimu",
 		"",
+		"Provozovna: 123",
+   		"Pokladna: n/n_vT:GOJP,KuDVZPGX",
+   		"",
+   		"Číslo účtenky: 3jY.S#7tqEFcCsW28",
+   		"cx3",
+   		"",
 		"BKP: F923B375-DAE2ACFD-B67B9F5B-",
 		"575A3292-5D7041A4",
 		"PKP: D95b3JlYyVkP3kNEbb+jpvWqnSF",
