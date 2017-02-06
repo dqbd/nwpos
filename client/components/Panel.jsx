@@ -10,7 +10,7 @@ const types = customer.types.STATUS_TYPES
 
 export default class Panel extends Component {
 	render() {
-		let {status, onEdit, onClear, onDiscount, onPay, onPrint, onQtySet} = this.props
+		let {status, onEdit, onClear, onDrawer, onDiscount, onPay, onPrint, onQtySet} = this.props
 		let actions = []
 
 		if ([types.STAGE_TYPING, types.STAGE_ADDED].indexOf(status) >= 0) {
@@ -38,7 +38,13 @@ export default class Panel extends Component {
 
 		return (
 			<div className="panel">
-				{[types.STAGE_TYPING, types.STAGE_ADDED].indexOf(status) >= 0 ? <SuggestionPanel /> : null}
+				{[types.STAGE_TYPING, types.STAGE_ADDED].indexOf(status) >= 0 ? 
+				<div className="second-panel">
+					<span className="btn small drawer"><a onTouchTap={onDrawer}>
+						<svg viewBox="0 0 24 24"><path d="M16,10H14V7H10V10H8L12,14M19,15H15A3,3 0 0,1 12,18A3,3 0 0,1 9,15H5V5H19M19,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3Z" /></svg>
+					</a></span>
+					<SuggestionPanel />
+				</div> : null}
 				<div className="actions">{actions}</div>
 			</div>
 		)

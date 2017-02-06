@@ -22,7 +22,6 @@ module.exports.suggest = (price) => (dispatch, getState) => {
 }
 
 module.exports.listSuggestions = () => (dispatch) => {
-
 	return fetch(getUrl("/suggest"), { method: "GET" })
 	.then(a => a.json())
 	.then(a => {

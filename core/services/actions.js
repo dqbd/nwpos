@@ -22,6 +22,14 @@ module.exports.eet = (total) => (dispatch) => {
 	})
 }
 
+module.exports.drawer = () => (dispatch) => {
+	return fetch(getUrl("/drawer"))
+	.then(a => {
+		if (!a.ok) return Promise.reject("Failed opening drawer")
+		return a.json()
+	})
+}
+
 module.exports.printCart = (customer) => (dispatch) => {
 	return fetch(getUrl(`/print`), {
 		method: "POST",

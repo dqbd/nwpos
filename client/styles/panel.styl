@@ -4,19 +4,42 @@
 	// min-height: button-size * 2
 	// flex-basis: button-size * 2
 
+.second-panel
+	height: button-size	
+	display: flex
+	background: rgba(0,0,0,0.01)
+	border-top: 1px solid rgba(0,0,0,0.1)
+	
+	
+	.drawer
+		font-size: 0.5em
+		color: #ffffff
+		background: color-lightgray
+		position: relative
+
+		width: button-size
+		max-width: button-size
+		min-width: button-size
+		flex-basis: button-size
+
+		a 
+			width: button-size
+		
+		svg
+			width: 1.2em
+			height: 1.2em
+			
+		svg path
+			fill: #ffffff
+
 .names
 	height: button-size	
 	display: flex
 	
 	overflow-x: auto
 	overflow-y: hidden
-	
-	
+
 	align-items: center
-	
-	
-	background: rgba(0,0,0,0.01)
-	border-top: 1px solid rgba(0,0,0,0.1)
 	
 	padding-left: (button-size / 2) - (button-size / 4) + (5px / 2)
 	

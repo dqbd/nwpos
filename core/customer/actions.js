@@ -74,6 +74,10 @@ module.exports.checkout = () => (dispatch, getState) => {
 	}
 }
 
+/**
+ * Customer has paid
+ * Open drawer when ready
+ */
 module.exports.pay = () => (dispatch, getState) => {
 	let { newCart, newScreen, newStatus } = wrapState(getState())
 	let screenValue = screen.getValue(newScreen)
@@ -84,6 +88,8 @@ module.exports.pay = () => (dispatch, getState) => {
 			dispatch({ type: types.SETPAID, paid: 0 })
 			dispatch({ type: types.SETSTATUS, status: statusTypes.COMMIT_BEGIN })
 		} else {
+			// open drawer
+			dispatch(services.drawer())
 			dispatch(screen.set(cart.getTotal(newCart) - newScreen))
 			dispatch({ type: types.SETPAID, paid: newScreen })
 			dispatch({ type: types.SETSTATUS, status: statusTypes.COMMIT_END })

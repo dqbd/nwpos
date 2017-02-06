@@ -16,6 +16,7 @@ const mapDispatchToProps = (dispatch) => hapticFeedback({
 	onPrint: () => dispatch(customer.print()),
 	onQtySet: () => dispatch(customer.qty()),
 	onClear: () => dispatch(customer.clear()),
+	onDrawer: () => dispatch(services.drawer()),
 	onDiscount: () => {
 		dispatch(screen.toggleNegative())
 		dispatch(customer.add())

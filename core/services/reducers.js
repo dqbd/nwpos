@@ -3,7 +3,7 @@ let services = require("./actionTypes")
 const initialState = {
 	print: false,
 	eet: null,
-	log: false,
+	log: false
 }
 
 module.exports = (state = initialState, action) => {
