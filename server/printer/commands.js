@@ -36,8 +36,8 @@ _.LINE_SPACING = {
  * @type {Object}
  */
 _.CASH_DRAWER = {
-  CD_KICK_2 : '\x1b\x70\x00'      , // Sends a pulse to pin 2 []
-  CD_KICK_5 : '\x1b\x70\x01'      , // Sends a pulse to pin 5 []
+  CD_KICK_2 : '\x1b\x70\x00\x36\x36'      , // Sends a pulse to pin 2 []
+  CD_KICK_5 : '\x1b\x70\x01\x36\x36'      , // Sends a pulse to pin 5 []
 };
 
 /**

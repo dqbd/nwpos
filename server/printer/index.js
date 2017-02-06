@@ -23,7 +23,7 @@ module.exports.print = (customer) => {
 
 		let header = formatter.printHeader(seller)
 		let cart = formatter.printCart(items, total, customer.paid, date, seller.tax ? 21 : 0)
-		let eet = formatter.printEet(customer.services.eet)
+		let eet = formatter.printEet(customer.services.eet, seller)
 
 		return module.exports.printRaw(["$center", ...header, "$left", ...cart, ...eet])
 	} else {
@@ -31,8 +31,10 @@ module.exports.print = (customer) => {
 	}
 }
 
-module.exports.printRaw = (lines) => new Promise((resolve, reject) => {
+module.exports.drawer = (pin = 2) => printer.drawer(pin)
 
+module.exports.printRaw = (lines) => new Promise((resolve, reject) => {
+	console.log(lines)
 	formatter.print(lines).forEach(line => {
 		if (line.indexOf("$center") == 0) {
 			printer.align("CT")

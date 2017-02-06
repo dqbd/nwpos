@@ -62,6 +62,10 @@ class Interface {
 		return printer.print(customer)
 	}
 
+	GET_DRAWER({pin}) {
+		return printer.drawer(pin)
+	}
+
 	GET_LOGLIST() {
 		return database.logs().getLogList()
 	}

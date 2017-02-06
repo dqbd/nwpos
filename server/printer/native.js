@@ -51,7 +51,9 @@ class Printer {
 	}
 
 	drawer(pin = 2) {
+		console.log("pin: "+pin, _.CASH_DRAWER["CD_KICK_" + pin])
 		return this.getStream().then(stream => {
+
 			stream.write(Buffer.from([_.CASH_DRAWER["CD_KICK_" + pin]]))
 
 			if (this.autoclose) {
