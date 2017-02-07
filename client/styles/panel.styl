@@ -8,13 +8,11 @@
 	height: button-size	
 	display: flex
 	background: rgba(0,0,0,0.01)
-	border-top: 1px solid rgba(0,0,0,0.1)
-	
+	box-shadow: inset 0px 1px 0px rgba(0,0,0,0.1)
 	
 	.drawer
 		font-size: 0.5em
 		color: #ffffff
-		background: color-lightgray
 		position: relative
 
 		width: button-size
@@ -24,6 +22,10 @@
 
 		a 
 			width: button-size
+			background: color-lightgray
+			
+			&.tapped
+				background: darken(color-lightgray, 10%)
 		
 		svg
 			width: 1.2em
