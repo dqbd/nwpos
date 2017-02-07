@@ -7,6 +7,13 @@ const { createStore, applyMiddleware } = require("redux")
 
 let store = createStore(customer.reducer, applyMiddleware(thunk))
 
+const nock = require("nock")
+beforeEach(() => {
+	nock("http://localhost")
+		.get("/drawer")
+		.reply(200, "{}")
+})
+
 test("add item via keyboard", () => {
 	store.dispatch(screen.addDigit(1))
 	store.dispatch(screen.addDigit(2))
