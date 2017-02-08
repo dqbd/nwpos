@@ -9,7 +9,7 @@ const args = require('minimist')(process.argv.slice(2), {
 		dev: false,
 		printer: (os.platform() === "win32") ? `\\\\${os.hostname()}\\nwcashier-printer` : "/dev/usb/lp0"
 	},
-	boolean: ["display", "dev"]
+	boolean: ["display", "dev", "bonjour"]
 })
 
 const express = require("express")
