@@ -6,6 +6,22 @@ class Timer {
         this.seller = seller
     }
 
+    enqueue() {
+        let now = new Date()
+        let future = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0, 0)
+
+        console.log("enqueing", now, future, future.getTime() - now.getTime() + 60 * 60 * 1000)
+
+        setTimeout(() => {
+            this.runTask().then(result => {
+                console.log("task fiinished", result)
+            }, (err) => {
+                console.log("Task failed", err)
+                return Promise.resolve(err)
+            }).then(result => this.enqueue())
+        }, future.getTime() - now.getTime() + 60 * 60 * 1000)
+    }
+
     runTask() {
         if (!this.logs) return Promise.reject("no db for timer")
 
@@ -15,7 +31,7 @@ class Timer {
                 let promise = Promise.resolve([])
 
                 dates.forEach(date => {
-                    promise = promise.then(result => runTaskForDay(date))
+                    promise = promise.then(result => this.runTaskForDay(date))
                 })
 
                 return promise
@@ -57,6 +73,6 @@ class Timer {
     }
 }
 
-module.exports = (logs) => {
-    return new Timer(logs)
+module.exports = (seller, logs) => {
+    return new Timer(seller, logs)
 }
