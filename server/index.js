@@ -5,6 +5,7 @@ const args = require('minimist')(process.argv.slice(2), {
 	default: {
 		port: 80,
 		display: true,
+		bonjour: true,
 		dev: false,
 		printer: (os.platform() === "win32") ? `\\\\${os.hostname()}\\nwcashier-printer` : "/dev/usb/lp0"
 	},
@@ -32,7 +33,9 @@ if (args.dev) {
 	app.use("/", express.static(path.resolve(__dirname, "dist")))
 }
 
-bonjour.publish({ name: advert, type: "http", port: args.port })
+if (args.bonjour) {
+	bonjour.publish({ name: advert, type: "http", port: args.port })
+}
 
 //disable caching
 app.disable('etag')
