@@ -47,37 +47,29 @@ const validateCert = (filename, pass) => {
 	})
 }
 
-const upload = (seller, total) => retrieveCert(seller.eet.file, seller.eet.pass).then(result => {
+const upload = (seller, total, poradCis, datTrzby) => retrieveCert(seller.eet.file, seller.eet.pass).then(result => {
 	let options = Object.assign(seller.eet, { privateKey: result.key, certificate: result.cert, dic: seller.dic })
 	let { dic, idPokl, idProvoz } = options
-	let gen = {
-		poradCis: generatePoradCislo(),
-		datTrzby: new Date()
-	}
+
+	poradCis = (poradCis) ? poradCis : generatePoradCislo
+	datTrzby = (datTrzby) ? datTrzby : new Date()
 
 	const items = {
 		dicPopl: dic,
 		idPokl: idPokl,
-		poradCis: gen.poradCis,
-		datTrzby: gen.datTrzby,
+		poradCis: poradCis,
+		datTrzby: datTrzby,
 		celkTrzba: total,
 		idProvoz: idProvoz
 	}
 
 	return eet(options, items).then(response => {
-		return Object.assign(response, gen)
+		return Object.assign(response, {poradCis, datTrzby})
 	}, err => {
 		console.log(err)
 		return Promise.reject(err)
 	})
 }) 
-
-const reupload = (seller, customer) => retrieveCert(seller.eet.file, seller.eet.pass).then(result => {
-	let options = Object.assign(seller.eet, { privateKey: result.key, certificate: result.cert, dic: seller.dic })
-	let { dic, idPokl, idProvoz } = options
-
-	// TODO: map correctly
-})
 
 module.exports.retrieveCert = retrieveCert
 module.exports.validateCert = validateCert

@@ -1,8 +1,9 @@
 const eet = require("./index.js")
 
 class Timer {
-    constructor(logs) {
+    constructor(seller, logs) {
         this.logs = logs
+        this.seller = seller
     }
 
     runTask() {
@@ -30,15 +31,29 @@ class Timer {
             }))
             .then(logs => {
                 let promise = Promise.resolve([])
-
                 logs.forEach(log => {
-                    promise = promise.then(result => new Promise((resolve, reject) => {
-
-                    }))
+                    promise = promise.then(result => {
+                        let total = log.items.reduce((memo, item, index) => memo + item.price * item.qty, 0)
+                        return eet.upload(this.seller, total, log.services.eet.poradCislo, log.services.eet.datTrzby).then(res => {
+                            result.push(Object.assign({}, log, { eet: res }))
+                            return result
+                        }).catch(err => {
+                            console.log(err)
+                            return Promise.resolve(result)
+                        })
+                    })
                 })
-            })
-            
 
+                return promise
+            })
+            .then(updated => {
+                let promise = Promise.resolve([])
+                updated.forEach(log => {
+                    promise = promise.then(result => this.logs.updateLog(log._id, log))
+                })
+
+                return promise
+            })
     }
 }
 
