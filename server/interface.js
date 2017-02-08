@@ -3,14 +3,19 @@ const printer = require("./printer")
 const display = require("./customer")
 const eet = require("./eet")
 
+const timer = require("./eet/timer")
+
 class Interface {
 	constructor(config, args) {
 		this.config = config
 		this.args = args
+		this.timer = timer.init(config, database)
 
 		if (args.display) {
 			display.init()
 		}
+
+		this.timer.enqueue()
 		printer.init(config, args)
 	}
 

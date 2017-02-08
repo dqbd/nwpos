@@ -69,13 +69,13 @@ class Logs extends Database {
 		}))
 	}
 
-	updateLog(id, data) {
-		return new Promise((resolve, reject) => {
+	updateLog(date, id, data) {
+		return this.getDb(date).then(db => new Promise((resolve, reject) => {
 			db.update({ _id: id }, data, (err, updated) => {
 				if (err) return reject(err)
 				resolve(updated)
 			})	
-		})
+		}))
 	}
 
 	logCustomer(customer) {

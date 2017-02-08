@@ -10,16 +10,17 @@ class Timer {
         let now = new Date()
         let future = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0, 0)
 
-        console.log("enqueing", now, future, future.getTime() - now.getTime() + 60 * 60 * 1000)
-
-        setTimeout(() => {
-            this.runTask().then(result => {
-                console.log("task fiinished", result)
-            }, (err) => {
-                console.log("Task failed", err)
-                return Promise.resolve(err)
-            }).then(result => this.enqueue())
-        }, future.getTime() - now.getTime() + 60 * 60 * 1000)
+        try {
+            console.log("enqueing", now, future, future.getTime() - now.getTime() + 60 * 60 * 1000)
+            setTimeout(() => {
+                this.runTask().then(result => {
+                    console.log("task fiinished", result)
+                }, (err) => {
+                    console.log("Task failed", err)
+                    return Promise.resolve(err)
+                }).then(result => this.enqueue())
+            }, future.getTime() - now.getTime() + 60 * 60 * 1000)
+        } catch (err) { console.log(err) }
     }
 
     runTask() {
@@ -42,21 +43,29 @@ class Timer {
         if (!this.logs) return Promise.reject("no db for timer")
 
         return this.logs.retrieveLog(day)
-            .then(logs => logs.filter(log => {
-                return log.services && log.services.eet && !log.services.eet.fik && log.services.eet.pkp
-            }))
+            .then(logs => {
+                return logs.customers.filter(log => {
+                    return log.services && log.services.eet && !log.services.eet.fik && log.services.eet.pkp
+                })
+            })
             .then(logs => {
                 let promise = Promise.resolve([])
                 logs.forEach(log => {
                     promise = promise.then(result => {
-                        let total = log.items.reduce((memo, item, index) => memo + item.price * item.qty, 0)
-                        return eet.upload(this.seller, total, log.services.eet.poradCislo, log.services.eet.datTrzby).then(res => {
-                            result.push(Object.assign({}, log, { eet: res }))
+                        console.log("Sending: " + log._id)
+                        let total = log.cart.items.reduce((memo, item, index) => memo + item.price * item.qty, 0)
+                        let datTrzby = new Date(Date.parse(log.services.eet.datTrzby))
+                        let poradCislo = log.services.eet.poradCis
+
+                        return eet.upload(this.seller, total, poradCislo, datTrzby).then(res => {
+                            let newCustomer = Object.assign({}, log)
+                            newCustomer.services.eet = res
+                            result.push(newCustomer)
                             return result
-                        }).catch(err => {
+                        }, (err) => {
                             console.log(err)
                             return Promise.resolve(result)
-                        })
+                        }).then(list => new Promise(resolve => setTimeout(() => resolve(list), 1000)))
                     })
                 })
 
@@ -65,14 +74,13 @@ class Timer {
             .then(updated => {
                 let promise = Promise.resolve([])
                 updated.forEach(log => {
-                    promise = promise.then(result => this.logs.updateLog(log._id, log))
+                    promise = promise.then(result => this.logs.updateLog(day, log._id, log))
                 })
-
                 return promise
             })
     }
 }
 
-module.exports = (seller, logs) => {
-    return new Timer(seller, logs)
+module.exports.init = (config, database) => {
+    return new Timer(config.get().sellers[0], database.logs())
 }

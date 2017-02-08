@@ -51,8 +51,8 @@ const upload = (seller, total, poradCis, datTrzby) => retrieveCert(seller.eet.fi
 	let options = Object.assign(seller.eet, { privateKey: result.key, certificate: result.cert, dic: seller.dic })
 	let { dic, idPokl, idProvoz } = options
 
-	poradCis = (poradCis) ? poradCis : generatePoradCislo
-	datTrzby = (datTrzby) ? datTrzby : new Date()
+	poradCis = (poradCis !== undefined) ? poradCis : generatePoradCislo()
+	datTrzby = (datTrzby !== undefined) ? datTrzby : new Date()
 
 	const items = {
 		dicPopl: dic,
