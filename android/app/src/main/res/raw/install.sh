@@ -1,15 +1,10 @@
 git_user="$1"
 git_psk="$2"
 
-rm -rf ./*
-
 apt-get update
-apt-get install nodejs git jq -y
+apt-get install nodejs git openssl openssl-tool -y
 git clone "https://$git_user:$git_psk@github.com/delold/nwpos"
 
-cp -a nwpos/server/* .
-rm -rf nwpos
-
+ls -l
+cd ./nwpos/server
 npm install --production
-
-jq -c ".port = 8080" config.json > tmp.$$.json && mv tmp.$$.json config.json

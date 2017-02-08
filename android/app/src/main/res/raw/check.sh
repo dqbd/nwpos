@@ -1,4 +1,4 @@
-file=./index.js
+file=./nwpos/server/index.js
 if [ -e "$file" ]; then
     echo "File exists"
 else

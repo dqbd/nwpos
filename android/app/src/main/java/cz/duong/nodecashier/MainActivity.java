@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -18,6 +19,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -39,6 +42,9 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
     private final static int MAX_ATTEMPTS = 3;
     private final static int DELAY_FACTOR = 3000;
 
+    public static final int INPUT_FILE_REQUEST_CODE = 1;
+    public static final String KEY_MIMETYPE = "application/x-pkcs12";
+
     private WebView webView;
     private View errorView;
     private ProgressBar progressBar;
@@ -49,6 +55,7 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
 
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private TermuxService termuxService;
+    private ValueCallback<Uri[]> mFilePathCallback;
 
     private boolean isClosing = false;
     private int attempts = 0;
@@ -101,6 +108,27 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
         });
         webView.setHapticFeedbackEnabled(false);
         WebView.setWebContentsDebuggingEnabled(true);
+
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+                if(mFilePathCallback != null) {
+                    mFilePathCallback.onReceiveValue(null);
+                }
+                mFilePathCallback = filePathCallback;
+
+                Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                contentSelectionIntent.setType(KEY_MIMETYPE);
+
+                Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+                chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+                chooserIntent.putExtra(Intent.EXTRA_TITLE, "EET klíč");
+
+                startActivityForResult(chooserIntent, INPUT_FILE_REQUEST_CODE);
+                return true;
+            }
+        });
 
         Button reloadButton = (Button) findViewById(R.id.retry_btn);
         reloadButton.setOnClickListener(new View.OnClickListener() {
@@ -209,11 +237,34 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
         super.onPause();
 
         if (!isClosing) {
-            ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-            am.moveTaskToFront(getTaskId(), 0);
+//            ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+//            am.moveTaskToFront(getTaskId(), 0);
         } else {
             stopServer();
         }
+    }
+
+    @Override
+    public void onActivityResult (int requestCode, int resultCode, Intent data) {
+        if(requestCode != INPUT_FILE_REQUEST_CODE || mFilePathCallback == null) {
+            super.onActivityResult(requestCode, resultCode, data);
+            return;
+        }
+
+        Uri[] results = null;
+
+        // Check that the response is a good one
+        if(resultCode == Activity.RESULT_OK) {
+            if(data != null) {
+                String dataString = data.getDataString();
+                if (dataString != null) {
+                    results = new Uri[]{Uri.parse(dataString)};
+                }
+            }
+        }
+
+        mFilePathCallback.onReceiveValue(results);
+        mFilePathCallback = null;
     }
 
     @Override

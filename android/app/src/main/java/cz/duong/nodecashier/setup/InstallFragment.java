@@ -40,7 +40,7 @@ public class InstallFragment extends Fragment implements ServiceConnection {
     final TermuxInstaller.InstallListener mInstallListener = new TermuxInstaller.InstallListener() {
         @Override
         public void onSuccess() {
-            runScript(Task.CHECK);
+            runScript(Task.CLEAR);
         }
 
         @Override
@@ -75,7 +75,7 @@ public class InstallFragment extends Fragment implements ServiceConnection {
         public void onStopped(String name, final int exitCode) {
             if (!mIsVisible) return;
             Task task = Task.fromName(name);
-            if (task == Task.INSTALL) {
+            if (task == Task.INSTALL || task == Task.CLEAR) {
                 runScript(Task.CHECK);
             } else if (task == Task.CHECK) {
 

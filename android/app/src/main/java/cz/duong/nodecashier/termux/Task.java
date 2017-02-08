@@ -9,7 +9,8 @@ import cz.duong.nodecashier.R;
 public enum Task {
     INSTALL(R.raw.install, new String[]{}),
     RUN(R.raw.run, null),
-    CHECK(R.raw.check, null);
+    CHECK(R.raw.check, null),
+    CLEAR(R.raw.clear, null);
 
     public int rid;
     public String[] args;
