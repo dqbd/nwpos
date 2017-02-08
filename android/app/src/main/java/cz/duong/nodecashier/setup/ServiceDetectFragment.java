@@ -141,6 +141,7 @@ public class ServiceDetectFragment extends Fragment implements UrlChecker.CheckL
             serviceView.setVisibility(View.VISIBLE);
             progressView.setVisibility(View.GONE);
 
+
             Toast.makeText(getActivity(), "Nemohu se připojit k: " + url, Toast.LENGTH_LONG).show();
         }
 

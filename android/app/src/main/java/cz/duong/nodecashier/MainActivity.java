@@ -125,6 +125,7 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
                 chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
                 chooserIntent.putExtra(Intent.EXTRA_TITLE, "EET klíč");
 
+                isClosing = true;
                 startActivityForResult(chooserIntent, INPUT_FILE_REQUEST_CODE);
                 return true;
             }
@@ -237,9 +238,9 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
         super.onPause();
 
         if (!isClosing) {
-//            ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-//            am.moveTaskToFront(getTaskId(), 0);
-        } else {
+            ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+            am.moveTaskToFront(getTaskId(), 0);
+        } else if (mFilePathCallback == null) {
             stopServer();
         }
     }
@@ -263,6 +264,7 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
             }
         }
 
+        isClosing = false;
         mFilePathCallback.onReceiveValue(results);
         mFilePathCallback = null;
     }
