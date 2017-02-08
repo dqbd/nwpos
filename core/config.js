@@ -24,9 +24,7 @@ module.exports.validateKey = (buffer, pass) => {
 		method: "POST",
 		body: data
 	}).then(a => a.json()).then(res => {
-		if (!res) {
-			return Promise.reject(res)
-		}
+		if (!res) return Promise.reject(res)
 		return res
 	})
 }

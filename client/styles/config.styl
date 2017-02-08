@@ -119,12 +119,19 @@
 		max-width: 50vw
 		min-width: 800px
 		align-self: center
-		margin-bottom: 20px
+		margin-bottom: 150px
 		display: flex
 
 		noselect()
 		button
 			flex-grow: 1
+			outline: none
+
+	.buttons .save.done
+		background: color-green
+		cursor: default
+		&:active
+			background: color-green
 
 	.buttons .return
 		background: color-orange

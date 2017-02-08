@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { config } from "../../core"
 import { defaultSeller } from "../../core/defaultSeller"
-import { randomString } from "../utils" 
+import { randomString, invokeFeedback } from "../utils" 
 
 class Seller extends Component {
 	constructor(props) {
@@ -111,7 +111,7 @@ class Seller extends Component {
 export default class Config extends Component {
 	constructor(props) {
 		super(props)
-		this.state = { config: {sellers: [this.getSeller()]} }
+		this.state = { config: {sellers: [this.getSeller()]}, done: false }
 	}
 
 	getSeller(seller) {
@@ -133,10 +133,15 @@ export default class Config extends Component {
 	}
 
 	onSaveClick() {
-		config.set(this.state.config)
+		invokeFeedback()
+		config.set(this.state.config).then(config => {
+			this.setState({ done: true })
+			setTimeout(() => this.setState({ done: false }), 1500)
+		})
 	}
 
 	onReturnClick() {
+		invokeFeedback()
 		window.showClient()
 	}
 
@@ -162,7 +167,8 @@ export default class Config extends Component {
 			{this.state.config.sellers.map((seller, index) => <Seller key={index} onChange={(seller) => this.onSellerChange(index, seller)} seller={this.getSeller(seller)} />)}
 			<div className="buttons">
 				<button className="return" onClick={this.onReturnClick.bind(this)}>Vrátit se</button>
-				<button className="save" onClick={this.onSaveClick.bind(this)}>Odeslat</button>
+				{!this.state.done ? <button className="save" onClick={this.onSaveClick.bind(this)}>Odeslat</button> : <button className="save done">Odesláno</button>}
+				
 			</div>
 		</div> 
 	}
