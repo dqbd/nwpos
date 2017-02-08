@@ -1,9 +1,9 @@
 const eet = require("./index.js")
 
 class Timer {
-    constructor(seller, logs) {
+    constructor(config, logs) {
         this.logs = logs
-        this.seller = seller
+        this.config = config
     }
 
     enqueue() {
@@ -57,7 +57,7 @@ class Timer {
                         let datTrzby = new Date(Date.parse(log.services.eet.datTrzby))
                         let poradCislo = log.services.eet.poradCis
 
-                        return eet.upload(this.seller, total, poradCislo, datTrzby).then(res => {
+                        return eet.upload(this.config.get().sellers[0], total, poradCislo, datTrzby).then(res => {
                             let newCustomer = Object.assign({}, log)
                             newCustomer.services.eet = res
                             result.push(newCustomer)
@@ -82,5 +82,5 @@ class Timer {
 }
 
 module.exports.init = (config, database) => {
-    return new Timer(config.get().sellers[0], database.logs())
+    return new Timer(config, database.logs())
 }
