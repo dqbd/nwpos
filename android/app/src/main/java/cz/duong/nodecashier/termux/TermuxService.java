@@ -99,6 +99,8 @@ public final class TermuxService extends Service {
             }
         } else if (action != null) {
             Log.e(EmulatorDebug.LOG_TAG, "Unknown TermuxService action: '" + action + "'");
+        } else {
+            updateNotification();
         }
 
         return Service.START_NOT_STICKY;

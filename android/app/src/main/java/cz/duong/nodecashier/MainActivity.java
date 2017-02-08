@@ -334,15 +334,13 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
     }
 
     void startServer() {
-        if (AppPreferences.shouldRunServer(this)) {
-            Intent serviceIntent = new Intent(this, TermuxService.class);
+        Intent serviceIntent = new Intent(this, TermuxService.class);
 
-            startService(serviceIntent);
-            if (!bindService(serviceIntent, this, 0))
-                throw new RuntimeException("bindService() failed");
-        } else {
-            loadPage();
-        }
+        startService(serviceIntent);
+        if (!bindService(serviceIntent, this, 0))
+            throw new RuntimeException("bindService() failed");
+
+
     }
 
     void stopServer() {
@@ -374,7 +372,11 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
             }
         };
 
-        TermuxService.runScript(Task.RUN, this, this);
+        if (AppPreferences.shouldRunServer(this)) {
+            TermuxService.runScript(Task.RUN, this, this);
+        } else {
+            loadPage();
+        }
     }
 
     @Override
