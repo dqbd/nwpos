@@ -1,7 +1,7 @@
 const fs = require("fs")
 const path = require("path")
 
-const { defaultSeller } = require("../../core/defaultSeller")
+const { defaultSeller } = require("./defaultSeller")
 
 class Config {
 	constructor(base) {

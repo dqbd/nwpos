@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { config } from "../../core"
-import { defaultSeller } from "../../core/defaultSeller"
+import { defaultSeller } from "../../server/config/defaultSeller"
 import { randomString, invokeFeedback } from "../utils" 
 
 class Seller extends Component {
