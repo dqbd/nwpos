@@ -7,6 +7,8 @@ Pro srovnání jsme hledali pokladní systémy, které v době psaní této prá
 
 O2 eKasa je v tuto chvíli nejprodávanější registrační pokladnou na trhu, s více než 10 000 zákazníky ve dne oficálního spuštění EET (https://www.o2.cz/spolecnost/tiskove-centrum/513034-eKasa_vstoupila_do_ostreho_provozu_EET_v_roli_lidra_trhu.html). Jedná se v základě o balíček Android tabletu s tiskárnou a platebním terminálem a pronajímaným softwarem. Počáteční pořizovací náklady se pohybují od 6 000 Kč s DPH do 20 000 Kč s DPH, v závislosti na příslušenství. Měsíční poplatek za software je stanoven na 500 Kč, kde O2 nabízí nabídku ve formě snížení měsíčního poplatku až na nulu, v závislosti na výši třžby provedené přes jejich platební terminál.
 
+![o2 eKasa](o2_ekasa.jpg)
+
 Původně jsme uvažovali právě nad tuto pokladnou, díky její jednoduchosti a možné podpory ze strany O2. Po bližším prozkoumání se však ukázalo, že její náklady na provoz jsou po přepočtu vyšší než u konkurence. Když si propočítáme jejich nabídku snížení měsíčního poplatku, zjistíme, že po přičtení 0.99% procentuální sazby při platbou kartou můžeme platit více než původních 500 Kč. 
 
 Pro srovnání jsme přidali graf výdajů při prostou platbou kartou bez měsíčních poplatků za terminál. Díky vyhláškám Evropské Unie byla stanovena horní hranice procentuální sazby na 0.2% u debetních karet a na 0.3% u kreditních karet. (http://www.mfcr.cz/cs/aktualne/tiskove-zpravy/2015/zmeny-mezibankovnich-poplatku-za-platebn-21456). Pro úplnost jsme také přidali graf simulující procentuální sazbu 0.99%. 
@@ -17,58 +19,53 @@ Problémovým se také ukazuje nedostupnost API pro vývojáře, kde vešekrá d
 
 Dotykačka je další z plejády poskytovatelů EET služeb, který má výrazný podíl na trhu (v první fázi EET zakoupilo systém přes 5 000 zákazníků). Oproti O2 eKase nezahrnuje balíček platební terminál a má vlastní API, na který se může napojit vývojář. Stále ale platíme měsíční poplatek v rozmezí od 289 Kč do 590 Kč, v závislosti na počtu funkcí, což nás odradilo od koupi.
 
+![Dotykačka](dotykacka.png)
+
 # Návod k použití
 Pro uživatele nabízíme 3 způsoby, jak tuto aplikaci provozovat. Díky tomu můžeme úspěšně říci, že naše aplikace běží na všech možných myslitelných platformách. Nejedná se o nic převrátného, jelikož v jádru aplikace se skrývá prostá webová aplikace. Byla však navržena tak, aby podávala stejný výkon jako klasická nativní aplikace. Strukturu projektu si rozebereme v další kapitole. Tento návod se bude v jistých částech opakovat, chceme napsat návod, který by chápal i běžný uživatel. 
 
 ## Instalace
 ### 1. způsob: All-in-one 
-{Obrázek mapy}
-
 Z pohledu uživatele nejjednodušší způsob, jak aplikaci nainstalovat. Stačí zapojit veškeré příslušenství a nainstalovat aplikaci na zařízení. Není vyžadováno žádné složité nastavení. Tento způsob je podporován na těchto platformách: Windows, Mac, Linux a Android. Pro iOS zařízení je v tuto chvíli k dispozici pouze 3. způsob, jelikož nemáme k dispozici dostatečně vybavené zařízení pro vývoj iOS aplikací. 
 
 #### Instalace pro Windows, Mac, Linux
-Ujistěte se, zda je počítač připojen po celou dobu instalace připojen k internetu, aplikace bude před spuštěním stahovat dodatečné soubory. Zároveň si připravte přihlašovací údaje, které jste obdrželi při pořízení aplikace.
+Ujistěte se, zda je počítač připojen po celou dobu instalace připojen k internetu; aplikace bude během instalace stahovat dodatečné soubory. Zároveň si připravte přihlašovací údaje, které jste obdrželi při pořízení aplikace.
 
 Stáhneme si instalační soubor z oficiální stránky aplikace: http://pos.duong.cz a dvojitým kliknutím na soubor spustíme instalaci.
 
 Po inicializaci klikneme na tlačítko `Spustit bez serveru`, která připraví aplikaci pro provoz. 
 
-{Obrázek intro setup}
-
-Je možné, že během instalace budete vyžádáni o přihlašovací údaje. V tom případě zadejte údaje, které jste obdrželi při pořizování. V případě, že žádné údaje jste neobdrželi, kontaktujte nás emailem na `david@duong.cz`. 
-
-{Obrázek loginu}
+![Úvodní obrazovka](navod_intro.png)
 
 Instalaci aplikace dokončíte kliknutím na `Přejít k aplikaci`. 
 
-{Obrázek finish}
+![Dokončení instalace](navod_finish.png)
 
 #### Instalace pro Android zařízení
 Stáhneme aplikaci z oficiálních stránek (http://pos.duong.cz/android) a aplikaci nainstalujeme. Před instalací je nutné povolit instalaci z neznámých zdrojů, v sekci `Nastavení > Zabezpečení > Nezmáné zdroje`. 
 
+![Neznámé zdroje](navod_unknown_sources.png)
+
 Po instalaci a spuštění postupujte dle sekce `Instalace pro Windows, Mac, Linux`. 
 
-{Obrázek Zabezpečení}
+Po stiknutí tlačítka `Domů` se systém zeptá na výchozí spouštěč. Doporučujeme si nastavit `Pokladna` jako výchozí spouštěč, aby se zabránilo nechtěnému zavření aplikace. 
 
-Po stiknutí tlačítka `Domů` se systém zeptá na výchozí spouštěč. Doporučujeme si nastavit `Pokladnu` jako výchozí spouštěč, aby se zabránilo nechtěnému zavření aplikace. 
-
-{Obrázek výchozího spouštěče / launcheru}
+![Výchození spouštěč](ui_launcher.png)
 
 ### 2. způsob: Rodič a potomek
-{Obrázek mapy}
 V případě, že si pořizujeme druhou pokladnu do prodejny, můžeme tyto pokladny navzájem propojit. Všechny údaje o skladě, produktech, tržbách se budou synchronizovat na obou zařízeních. Pro mateřské zařízení platí obdobné minimální požadavky na zařízení: Windows, Mac, Linux a Android. Pro zařízení připojené k matce se tyto požadavky rozšiřují na všechna zařízení s internetovým prohlížečem. 
 
 #### Instalace mateřského zařízení
 Obraťtse se na sekci "All-in-one", postupy jsou v tomto případě identické.
 
 #### Instalace klienta
-Před instalací se ujistěte, zda mateřské zařízení je zapnuté. Instalaci provedete obdobným způsobem, avšak na uvítací obrazovce klikněte na tlačítko `Mám vlastní server`. Aplikace bude vyhledáváat všechny mateřské pokladny na lokální síti, kliknutím na IP adresu se připojíte k zařízení.
+Před instalací se ujistěte, zda mateřské zařízení je zapnuté. Instalaci provedete obdobným způsobem, avšak na uvítací obrazovce klikněte na tlačítko `Mám vlastní server`. Aplikace bude vyhledávat všechny mateřské pokladny na lokální síti, kliknutím na IP adresu se připojíte k zařízení. Můžete také přímo zadat IP adresu serveru. 
+
+![Zadávání IP adresy serveru](navod_detect.png)
 
 Po úspěšném připojení stačí kliknout na tlačítko `Přejít k aplikaci`. 
 
 ### 3. způsob: Server a klienti
-{Obrázek mapy}
-
 Pro větší počet pokladen je doporučováno provozovat headless server, na kterém se budou napojovat klientské pokladny. Z technického hlediska se jedná o stejný princip, jako u metody "Rodič a potomek." Budeme se tedy zabývat pouhou instalací serveru, pro instalaci klientských zařízení se obraťte na předchozí kapitolu.
 
 #### Server pro Raspberry Pi
@@ -102,11 +99,19 @@ sudo forever-service install nwpos --script ./server/index.js
 ```
 
 ## Návod k použití
-Po spuštění a nastavení budete přívítání touto obrazovkou:
+Po prvním spuštění se aplikace zeptá na údaje provozovny. Po vyplnění a nahrání se aplikace sama přepne do režimu pokladny.
 
-{Obrázek rozhraní}
+![Konfigurace prodejny](navod_config.png)
 
-A jděte do kurvy
+Základní struktura aplikace:
+
+![Rozhraní pokladny](ui_pokladna.png)
+
+Kliknutím na ozubené kolečko zobrazíte další možnosti aplikace. Výpisy tržeb si můžete najít kliknutím na `Zobrazit statistiky`.
+
+![Nastavení](ui_config.png)
+
+![Statistiky](ui_stats.png)
 
 # Jak to funguje
 Celá aplikace byla napsána v JavaScriptu, přesněji ES2016. Díky JavaScriptu můžeme provozovat aplikaci na virtuálně všech platformách, aniž by bylo třeba napsat pro každou platformu nativní variantu. Jedním z požadavků bylo napsat aplikaci, která bude primárně běžet na prohlížeči, proto jsem vynechal velké all-in-one frameworky, které jsou přímo navržené pro tvorbu mobilních aplikací, jako Xamarin nebo Apache Cordova. Tyto frameworky buď vyžadují vlastní runtime pro běh aplikace (C# a CLR) nebo se odkazují na knihovny, které nejsou k dispozici v prohlížeči (Apache Cordova). JavaScript je ideálním (a jediným) jazykem pro psaní webových aplikací. 
