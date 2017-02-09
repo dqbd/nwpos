@@ -48,7 +48,7 @@ module.exports.printRaw = (lines) => new Promise((resolve, reject) => {
 	printer.feed().then(a => {
 		resolve(true)
 	}).catch(err => {
-		reject("Printer not ready: " + err)
+		reject({ err, lines })
 	})
 })
 

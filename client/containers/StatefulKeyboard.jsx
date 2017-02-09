@@ -23,14 +23,12 @@ const mapDispatchToProps = (dispatch) => {
 		onCustomerPay: () => dispatch(customer.pay()),
 		onNumber: (digit) => {
 			dispatch(screen.addDigit(digit))
-			clearTimeout(throttle)
-			throttle = setTimeout(() => dispatch(customer.suggest()), 300)
+			dispatch(customer.suggest())
 		},
 		onLetterBackspace: () => dispatch(cart.removeLetter()),
 		onNumberBackspace: () => {
 			dispatch(screen.removeDigit())
-			clearTimeout(throttle)
-			throttle = setTimeout(() => dispatch(customer.suggest()), 300)
+			dispatch(customer.suggest())
 		},
 		onMoveSelection: (diff) => dispatch(cart.moveSelection(diff)),
 		onAddQty: (diff) => dispatch(cart.addQty(diff)),
