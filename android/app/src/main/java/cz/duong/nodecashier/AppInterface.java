@@ -68,6 +68,11 @@ class AppInterface {
         }
     }
 
+    @JavascriptInterface
+    public void printOnDevice(String[] lines) {
+
+    }
+
     interface AppLoadListener {
         void onAppLoaded(Map<String, String> actions);
     }

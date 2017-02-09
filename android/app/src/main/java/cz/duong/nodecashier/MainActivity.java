@@ -150,7 +150,7 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
 
         showLoading();
 
-        registerReceiver(powerReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+//        registerReceiver(powerReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
     }
 
     @Override
