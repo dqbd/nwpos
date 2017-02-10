@@ -1,16 +1,25 @@
 const config = require("./config")()
 const os = require("os")
+const minimist = require('minimist')
 
-const args = require('minimist')(process.argv.slice(2), { 
-	default: {
-		port: 80,
-		display: true,
-		bonjour: true,
-		dev: false,
-		printer: (os.platform() === "win32") ? `\\\\${os.hostname()}\\nwcashier-printer` : "/dev/usb/lp0"
-	},
-	boolean: ["display", "dev", "bonjour"]
-})
+let args = {
+	port: 80,
+	display: true,
+	bonjour: true,
+	dev: false,
+	printer: (os.platform() === "win32") ? `\\\\${os.hostname()}\\nwcashier-printer` : "/dev/usb/lp0"
+}
+
+let boolean = ["display", "dev", "bonjour"]
+
+Object.keys(process.env)
+	.filter(i => Object.keys(args).indexOf(i.toLowerCase().replace("nwpos_", "")) >= 0)
+	.forEach((key) => {
+		let param = key.toLowerCase().replace("nwpos_", "") 
+		args[param] = boolean.indexOf(param) >= 0 ? process.env[key] == "true" : process.env[key]
+	})
+
+args = Object.assign(args, minimist(process.argv.slice(2), {boolean}))
 
 const express = require("express")
 const bodyParser = require("body-parser")
