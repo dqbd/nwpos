@@ -1,4 +1,4 @@
-module.exports = {
+{
     apps: [{
         name: "SERVER",
         script: "index.js",
@@ -15,7 +15,7 @@ module.exports = {
         }
     }],
     deploy: {
-        rpi: {
+        production: {
             "user": "pi",
             "repo": "git@github.com:delold/nwpos.git",
             "path": "/home/pi/nwpos",
