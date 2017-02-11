@@ -36,17 +36,36 @@ sudo cd .. && rm -rf NodeJs-Raspberry-Pi/
 curl -o- -L https://yarnpkg.com/install.sh | sudo bash
 
 # clone git repository
-git clone "https://$git_user:$git_psk@github.com/delold/nwpos" nwpos
+
+ssh-keygen -F github.com 2>/dev/null 1>/dev/null
+if ! [ $? -eq 0 ]; then
+    ssh-keyscan -t rsa github.com > "$INSTALL_PATH/github.pub"
+    if ! ssh-keygen -lf "$INSTALL_PATH/github.pub" | grep -q "16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48"; then
+        rm "$INSTALL_PATH/github.pub"
+        echo "Fingerprint mismatching"
+        exit 2
+    fi
+
+    cat "$INSTALL_PATH/github.pub" >> "$INSTALL_PATH/.ssh/known_hosts"
+    ssh-keygen -Hf "$INSTALL_PATH/.ssh/known_hosts"
+    
+    rm "$INSTALL_PATH/github.pub"
+fi
+
+chmod 500 "$SCRIPT_PATH/deploy_rsa"
+ssh-agent bash -c "ssh-add $SCRIPT_PATH/deploy_rsa; git clone git@github.com:delold/nwpos $INSTALL_PATH/nwpos"
 
 # fix permissions
 sudo chown pi "$INSTALL_PATH/nwpos" -R
 
 # install dependencies
 cd "$INSTALL_PATH/nwpos/server"
-~/.yarn/bin/yarn install --production
+
+# install depedencies
+eval "$INSTALL_PATH/.yarn/bin/yarn install --production"
 
 # install forever / forever-service
-sudo ~/.yarn/bin/yarn global add forever forever-service --prefix /usr/local 
+eval "$INSTALL_PATH/.yarn/bin/yarn global add forever forever-service --prefix /usr/local"
 
 # install server
 sudo forever-service install nwpos --script index.js
