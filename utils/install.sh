@@ -1,32 +1,24 @@
 #!/bin/bash
 INSTALL_PATH="/home/pi"
+
+HOME="/home/$SUDO_USER"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 WPA_SUPPLICANT=/etc/wpa_supplicant/wpa_supplicant.conf
 
-pushd . > /dev/null
-SCRIPT_PATH="${BASH_SOURCE[0]}";
-while([ -h "${SCRIPT_PATH}" ]); do
-	cd "`dirname "${SCRIPT_PATH}"`"
-	SCRIPT_PATH="$(readlink "`basename "${SCRIPT_PATH}"`")";
-done
-cd "`dirname "${SCRIPT_PATH}"`" > /dev/null
-SCRIPT_PATH="`pwd`";
-popd > /dev/null
-
-#home directory
-cd $INSTALL_PATH
-source "$SCRIPT_PATH/config.txt"
-
-if [ "$EUID" -ne 0 ]
-	then echo "Please run as root"
+if [ "$EUID" -ne 0 ]; then 
+	echo "Please run as root"
 	exit
 fi
 
+source "$DIR/config.txt"
+cd $HOME
+
 # change password
-sudo echo "pi:$user_psk" | sudo chpasswd
+echo "pi:$user_psk" | chpasswd
 
 # Setup WiFi
-sudo wpa_passphrase "$wifi_ssid" "$wifi_psk" | sudo tee $WPA_SUPPLICANT > /dev/null
-sudo ifdown wlan0 && sudo ifup wlan0
+wpa_passphrase "$wifi_ssid" "$wifi_psk" | tee $WPA_SUPPLICANT > /dev/null
+ifdown wlan0 && ifup wlan0
 
 echo "Waiting for connection"
 while [ 1 ]; do
@@ -47,13 +39,22 @@ done
 echo "Connection detected"
 
 # enable ssh
-sudo update-rc.d ssh enable && sudo invoke-rc.d ssh start
+update-rc.d ssh enable && invoke-rc.d ssh start
 
 # change timezone
-sudo echo "Europe/Prague" | sudo tee /etc/timezone > /dev/null 
-sudo dpkg-reconfigure -f noninteractive tzdata
+echo "Europe/Prague" | tee /etc/timezone > /dev/null 
+dpkg-reconfigure -f noninteractive tzdata
 
 # disable ipv6 for mdns
-sudo echo "net.ipv6.conf.all.disable_ipv6 = 1" | sudo tee /etc/sysctl.conf > /dev/null
-sudo sysctl -p
-sudo ifdown wlan0 && sudo ifup wlan0
+echo "net.ipv6.conf.all.disable_ipv6 = 1" | tee /etc/sysctl.conf > /dev/null
+sysctl -p
+ifdown wlan0 && ifup wlan0
+
+# add to group to print
+gpasswd -a pi lp
+
+# remove configuration settings
+sed "/#<--config-->/,/#<--end-->/d" "$SCRIPT_PATH/config.txt" | tee "$SCRIPT_PATH/config.txt"
+
+# reboot device
+# reboot

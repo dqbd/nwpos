@@ -1,83 +1,72 @@
 #!/bin/bash
-INSTALL_PATH="/home/pi"
-WPA_SUPPLICANT=/etc/wpa_supplicant/wpa_supplicant.conf
+TOKEN="0b10415689d248e8059c327ccd0eec10add5990a"
+HOME="/home/$SUDO_USER"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-pushd . > /dev/null
-SCRIPT_PATH="${BASH_SOURCE[0]}";
-while([ -h "${SCRIPT_PATH}" ]); do
-	cd "`dirname "${SCRIPT_PATH}"`"
-	SCRIPT_PATH="$(readlink "`basename "${SCRIPT_PATH}"`")";
-done
-cd "`dirname "${SCRIPT_PATH}"`" > /dev/null
-SCRIPT_PATH="`pwd`";
-popd > /dev/null
+NWPOS_DIR="$HOME/nwpos"
+SERVER_DIR="$NWPOS_DIR/server"
 
-#home directory
-cd $INSTALL_PATH
-source "$SCRIPT_PATH/config.txt"
+cd $HOME
 
-if [ "$EUID" -ne 0 ]
-	then echo "Please run as root"
-	exit
-fi
-
-# install depedencies
-sudo apt-get update
-sudo apt-get install -y python-pygame build-essential git
-
-# install node
-sudo git clone https://github.com/audstanley/NodeJs-Raspberry-Pi
-sudo cd NodeJs-Raspberry-Pi
-sudo chmod +x Install-Node.sh
-sudo ./Install-Node.sh
-sudo cd .. && rm -rf NodeJs-Raspberry-Pi/
+# install server depedencies
+apt-get update
+apt-get install -y python-pygame git
 
 # install yarn for faster installs
-curl -o- -L https://yarnpkg.com/install.sh | sudo bash
+curl -o- -L https://yarnpkg.com/install.sh | bash
+
+# reload PATH
+export PATH="$HOME/.yarn/bin:$PATH"
+
+# configure yarn
+mkdir -p .yarn-global/bin
+yarn config set prefix "$HOME/.yarn-global"
 
 # clone git repository
-
-ssh-keygen -F github.com 2>/dev/null 1>/dev/null
-if ! [ $? -eq 0 ]; then
-    ssh-keyscan -t rsa github.com > "$INSTALL_PATH/github.pub"
-    if ! ssh-keygen -lf "$INSTALL_PATH/github.pub" | grep -q "16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48"; then
-        rm "$INSTALL_PATH/github.pub"
-        echo "Fingerprint mismatching"
-        exit 2
-    fi
-
-    cat "$INSTALL_PATH/github.pub" >> "$INSTALL_PATH/.ssh/known_hosts"
-    ssh-keygen -Hf "$INSTALL_PATH/.ssh/known_hosts"
-    
-    rm "$INSTALL_PATH/github.pub"
-fi
-
-chmod 500 "$SCRIPT_PATH/deploy_rsa"
-ssh-agent bash -c "ssh-add $SCRIPT_PATH/deploy_rsa; git clone git@github.com:delold/nwpos $INSTALL_PATH/nwpos"
-
-# fix permissions
-sudo chown pi "$INSTALL_PATH/nwpos" -R
-
-# install dependencies
-cd "$INSTALL_PATH/nwpos/server"
+git clone "https://$TOKEN@github.com/delold/nwpos" "$NWPOS_DIR"
 
 # install depedencies
-eval "$INSTALL_PATH/.yarn/bin/yarn install --production"
+cd "$SERVER_DIR"
 
 # install forever / forever-service
-eval "$INSTALL_PATH/.yarn/bin/yarn global add forever forever-service --prefix /usr/local"
+yarn install --production
+yarn global add pm2 --prefix "$HOME/.yarn-global"
 
-# install server
-sudo forever-service install nwpos --script index.js
+# fix yarn permissions
+chmod a+r -R /usr/local/share/.config/yarn/global/
 
-# setup git repository for continuous deployment
-cd "$INSTALL_PATH/nwpos"
+# # reload PATH
+export PATH="$HOME/.yarn-global/bin:$PATH"
+EXPORT_BASHRC="export PATH=\"\$HOME/.yarn-global/bin:\$PATH\"" "$HOME/.bashrc"
+
+if grep -Fxq "$EXPORT_BASHRC"; then
+    echo "Path already set"
+else
+    echo "$EXPORT_BASHRC" >> "$HOME/.bashrc"
+fi
+
+# install service
+pm2 startup systemd -u pi --hp "$HOME"
+
+# setup git repository
+cd "$NWPOS_DIR"
 git config receive.denyCurrentBranch ignore
 
-sudo mv "$SCRIPT_PATH/post-receive.sh" "$INSTALL_PATH/nwpos/.git/hooks/post-receive"
-sudo chown pi "$INSTALL_PATH/nwpos/.git/hooks/post-receive"
-sudo chmod +x "$INSTALL_PATH/nwpos/.git/hooks/post-receive"
+cp "$DIR/post-receive.sh" "$NWPOS_DIR/.git/hooks/post-receive"
+chmod +x "$NWPOS_DIR/.git/hooks/post-receive"
 
-#remove sensitive data from config.txt
-sed "/#<--config-->/,/#<--end-->/d" "$SCRIPT_PATH/config.txt" | sudo tee "$SCRIPT_PATH/config.txt"
-# sudo reboot
+# fix permissions
+chown -R pi:pi "$NWPOS_DIR"
+
+# start the service
+cd "$SERVER_DIR"
+PM2_HOME="$HOME/.pm2"
+
+# start server & save its' state
+sudo -u "$SUDO_USER" -E printenv PATH | pm2 start ecosystem.json
+sudo -u "$SUDO_USER" -E printenv PATH | pm2 save
+
+# fix pm2 permissions
+chown -R pi:pi "$PM2_HOME"
+
+echo "Install finished"

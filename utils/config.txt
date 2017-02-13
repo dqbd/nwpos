@@ -7,6 +7,4 @@ dtparam=audio=on
 user_psk=""
 wifi_ssid=""
 wifi_psk=""
-git_user=""
-git_psk=""
 #<--end-->

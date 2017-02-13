@@ -14,9 +14,9 @@ do
     echo " | Target branch: $target_branch"
     echo " | Target folder: $working_tree"
     echo " | Tag name     : release_$NOW"
-    echo " \=============================="
-    echo " === Doing a reboot in 1 min ==="
+    echo " |=== Installing missing deps ==="
     cd "$working_tree/server"
-    npm install --production
-    sudo shutdown -r 1 --no-wall
+    yarn install --production
+    echo " \======= Restarting task ======="
+    pm2 startOrRestart ecosystem.json    
 done
