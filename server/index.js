@@ -19,7 +19,7 @@ Object.keys(process.env)
 		args[param] = boolean.indexOf(param) >= 0 ? process.env[key] == "true" : process.env[key]
 	})
 
-args = Object.assign(args, minimist(process.argv.slice(2), {boolean}))
+args = Object.assign(args, minimist(process.argv.slice(2), {boolean, default: args}))
 
 const express = require("express")
 const bodyParser = require("body-parser")
