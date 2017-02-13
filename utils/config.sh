@@ -12,6 +12,13 @@ cd $HOME
 apt-get update
 apt-get install -y python-pygame git
 
+# install node
+git clone https://github.com/delold/NodeJs-Raspberry-Pi
+cd NodeJs-Raspberry-Pi
+chmod +x Install-Node.sh
+./Install-Node.sh
+cd .. && rm -rf NodeJs-Raspberry-Pi/
+
 # install yarn for faster installs
 curl -o- -L https://yarnpkg.com/install.sh | bash
 
