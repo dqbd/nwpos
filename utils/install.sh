@@ -53,8 +53,12 @@ ifdown wlan0 && ifup wlan0
 # add to group to print
 gpasswd -a pi lp
 
+# disable screen timeout
+echo "BLANK_TIME=0" | tee /etc/kbd/config
+echo "POWERDOWN_TIME=0" | tee -a /etc/kbd/config
+
 # remove configuration settings
-sed "/#<--config-->/,/#<--end-->/d" "$SCRIPT_PATH/config.txt" | tee "$SCRIPT_PATH/config.txt"
+# sed "/#<--config-->/,/#<--end-->/d" "$SCRIPT_PATH/config.txt" | tee "$SCRIPT_PATH/config.txt"
 
 # reboot device
 # reboot
