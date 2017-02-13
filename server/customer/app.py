@@ -3,6 +3,10 @@ import sys, os, json, pygame
 from threading import Thread
 from Queue import Queue, Empty
 
+os.putenv('SDL_FBDEV', '/dev/fb0')
+os.putenv('SDL_VIDEODRIVER', 'fbcon')
+os.putenv('SDL_NOMOUSE', '1')
+
 size = width, height = 1280, 1024
 
 def enqueue_output(stdin, queue):
