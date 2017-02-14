@@ -19,7 +19,11 @@ module.exports.print = (customer) => {
 	}
 
 	if (config.get().sellers.length > 0) {
-		let seller = config.get().sellers[0]
+		let seller = config.get().sellers.find((seller) => seller.ic === customer.seller)
+
+		if (!seller) {
+			seller = config.get().sellers[0]
+		}
 
 		let header = formatter.printHeader(seller)
 		let cart = formatter.printCart(items, total, customer.paid, date, seller.tax ? 21 : 0)
@@ -48,7 +52,7 @@ module.exports.printRaw = (lines) => new Promise((resolve, reject) => {
 	printer.feed().then(a => {
 		resolve(true)
 	}).catch(err => {
-		reject({ err, lines })
+		reject({ err: err.err, buffer: err.buffer, lines })
 	})
 })
 

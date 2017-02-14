@@ -26,7 +26,7 @@ class Config {
 		src = Object.assign(initial, src)
 
 		// attempt fixing sellers
-		src.sellers = src.sellers.map(seller => Object.assign(defaultSeller, seller))
+		src.sellers = src.sellers.map(seller => Object.assign({}, defaultSeller, seller))
 		
 		this.state = src
 		this.save()
