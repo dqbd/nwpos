@@ -8,3 +8,4 @@ module.exports.STATUS_TYPES = {
 
 module.exports.SETSTATUS = "CUSTOMER_STATUS"
 module.exports.SETPAID = "CUSTOMER_PAID"
+module.exports.SETSELLER = "CUSTOMER_SELLER"

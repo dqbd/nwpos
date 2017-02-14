@@ -46,6 +46,7 @@ module.exports.log = (customer) => (dispatch) => {
 		returned: customer.screen,
 		paid: customer.paid,
 		cart: customer.cart,
+		seller: customer.seller,
 		services: customer.services
 	}
 

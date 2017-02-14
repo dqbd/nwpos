@@ -5,23 +5,22 @@ const stats = require("../stats")
 let seller = require("./actionTypes")
 
 const initialState = {
-	info: undefined,
-	eet: undefined,
+	sellers: [],
 	customer: undefined,
 	suggestions: undefined,
 	stats: undefined
 }
 
-const info = (state = "", action) => {
-	if (action.type === seller.SETINFO) {
-		return action.info
+const sellers = (state = [], action) => {
+	if (action.type === seller.SETSELLERS) {
+		return action.sellers
 	}
 	return state
 }
 
 module.exports = (state = initialState, action) => {
 	return {
-		info: info(state.info, action),
+		sellers: sellers(state.sellers, action),
 		customer: customer.reducer(state.customer, action),
 		suggestions: suggestions.reducer(state.suggestions, action),
 		stats: stats.reducer(state.stats, action)

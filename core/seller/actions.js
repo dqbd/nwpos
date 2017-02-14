@@ -1,10 +1,12 @@
 let actionTypes = require("./actionTypes")
 
-module.exports.setInfo = (info) => {
-	return { type: actionTypes.SETINFO, info }
-}
+const fetch = require("isomorphic-fetch")
+const { getUrl } = require("../utils")
 
-module.exports.setEet = (eet) => {
-	return { type: actionTypes.SETEET, eet }
+module.exports.retrieveSellers = () => (dispatch) => {
+	return fetch(getUrl("/sellers"))
+		.then(data => data.json())
+		.then(data => {
+			dispatch({ type: actionTypes.SETSELLERS, sellers: data.sellers })
+		})
 }
-

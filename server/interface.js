@@ -86,6 +86,14 @@ class Interface {
 		return eet.upload(sellers[0], total)
 	}
 
+	GET_SELLERS() {
+		return Promise.resolve({ 
+			sellers: this.config.get().sellers.map(seller => {
+				return { name: seller.name, ic: seller.ic }
+			}) 
+		})
+	}
+
 	GET_CONFIG() {
 		return Promise.resolve({ config: this.config.get() })
 	}

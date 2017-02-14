@@ -1,0 +1,39 @@
+.sellers-panel 
+    display: flex
+    flex-direction: column
+
+    background: color-red
+    min-height: button-size	* 0.8
+    max-height: button-size	* 0.8
+    overflow: hidden
+
+
+    .seller
+        padding-left: button-size * 0.2
+        height: button-size	* 0.8
+        min-height: button-size	* 0.8
+        display: flex
+        flex-direction: column
+        justify-content: center
+        cursor: pointer
+
+        &:nth-child(2n+1)
+            background: color-green
+
+            &.tapped
+                background: darken(@background, 10%)
+
+        &:nth-child(2n)
+            background: color-blue
+
+            &.tapped
+                background: darken(@background, 10%)
+
+        &.active
+            order: -1
+
+        noselect()
+         
+    .seller .ic
+        font-size: 0.8em
+        opacity: 0.5

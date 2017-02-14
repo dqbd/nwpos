@@ -63,9 +63,10 @@ class Printer {
 
 	feed() {
 		this.cache.push(Buffer.from(new Array(3).fill(_.EOL).join("")))
-		
+		let out = Buffer.concat(this.cache)
+
 		return this.getStream().then(stream => {
-			stream.write(Buffer.concat(this.cache))
+			stream.write(out)
 
 			if (this.autoclose) {
 				this.closed = true
@@ -73,6 +74,8 @@ class Printer {
 			}
 
 			this.cache.length = 0
+		}).catch(err => {
+			return Promise.reject({ err, buffer: out })
 		})
 	}
 }

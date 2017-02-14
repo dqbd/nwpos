@@ -7,6 +7,7 @@ const statusTypes = customer.STATUS_TYPES
 
 let initialState = {
 	status: statusTypes.STAGE_TYPING,
+	seller: null,
 	paid: 0,
 	cart: undefined,
 	screen: undefined,
@@ -27,10 +28,18 @@ const paid = (state = 0, action) => {
 	return state
 }
 
+const seller = (state = null, action) =>{
+	if (action.type === customer.SETSELLER) {
+		return action.ic
+	}
+	return state
+}
+
 module.exports = (state = initialState, action) => {
 	return {
 		status: status(state.status, action),
 		paid: paid(state.paid, action),
+		seller: seller(state.seller, action),
 		cart: cart.reducer(state.cart, action),
 		screen: screen.reducer(state.screen, action),
 		services: services.reducer(state.services, action)

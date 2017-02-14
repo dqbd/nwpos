@@ -154,3 +154,7 @@ module.exports.suggest = () => (dispatch, getState) => {
 		dispatch(suggestions.suggest(screen.getValue(newScreen)))
 	}
 }
+
+module.exports.seller = (ic) => {
+	return { type: types.SETSELLER, ic }
+}

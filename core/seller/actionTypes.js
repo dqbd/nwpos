@@ -1,1 +1,1 @@
-module.exports.SETINFO = "SELLER_SETINFO"
+module.exports.SETSELLERS = "SELLER_SETSELLERS"
