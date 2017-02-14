@@ -58,7 +58,7 @@ echo "BLANK_TIME=0" | tee /etc/kbd/config
 echo "POWERDOWN_TIME=0" | tee -a /etc/kbd/config
 
 # remove configuration settings
-# sed "/#<--config-->/,/#<--end-->/d" "$SCRIPT_PATH/config.txt" | tee "$SCRIPT_PATH/config.txt"
+sed "/#<--config-->/,/#<--end-->/d" "$DIR/config.txt" | sudo tee "$DIR/config.txt"
 
 # reboot device
-# reboot
+reboot
