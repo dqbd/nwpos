@@ -48,6 +48,8 @@ const validateCert = (filename, pass) => {
 }
 
 const upload = (seller, total, poradCis, datTrzby) => retrieveCert(seller.eet.file, seller.eet.pass).then(result => {
+	console.log("sending eet", total, seller.ic)
+
 	let options = Object.assign(seller.eet, { privateKey: result.key, certificate: result.cert, dic: seller.dic })
 	let { dic, idPokl, idProvoz } = options
 

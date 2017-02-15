@@ -117,7 +117,9 @@ module.exports.print = () => (dispatch, getState) => {
 		.then(eet => {
 			//prevent resending
 			let total = cart.getTotal(newCart)
-			let ic = getState().customer.ic
+			let ic = getState().customer.seller
+
+			console.log("sending eet", total, ic)
 			if (!eet) return dispatch(services.eet(total, ic)).catch(a => false)
 			return eet 
 		})
