@@ -14,6 +14,7 @@ test("print customer", () => {
 	let customer = {
 		status: "STAGE_TYPING",
 		screen: 0, paid: 0,
+		seller: "123456789",
 		services: { print: false, eet: false, log: false },
 		cart: { selection: 0, items: [] }
 	}
@@ -36,6 +37,7 @@ test("log customer", () => {
 		status: "COMMIT_END",
 		screen: -234,
 		paid: 358,
+		seller: "123456789",
 		services: {
 			print: false,
 			eet: false,
@@ -54,6 +56,7 @@ test("log customer", () => {
 		customer: {
 			returned: -234,
 			paid: 358,
+			seller: "123456789",
 			cart: {
 				selection: 1,
 				items: [

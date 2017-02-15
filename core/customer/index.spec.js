@@ -28,6 +28,7 @@ test("add item via keyboard", () => {
 		status: customer.types.STATUS_TYPES.STAGE_ADDED,
 		screen: 1,
 		paid: 0,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -52,6 +53,7 @@ test("clear screen after adding", () => {
 		status: customer.types.STATUS_TYPES.STAGE_TYPING,
 		screen: -0.502,
 		paid: 0,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -74,6 +76,7 @@ test("checkout begin", () => {
 		status: customer.types.STATUS_TYPES.COMMIT_BEGIN,
 		screen: 124,
 		paid: 0,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -98,6 +101,7 @@ test("checkout payment", () => {
 		status: customer.types.STATUS_TYPES.COMMIT_TYPING,
 		screen: 358,
 		paid: 0,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -120,6 +124,7 @@ test("payment finished", () => {
 		status: customer.types.STATUS_TYPES.COMMIT_END,
 		screen: -234,
 		paid: 358,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -141,6 +146,7 @@ test("new payment", () => {
 		status: customer.types.STATUS_TYPES.STAGE_TYPING,
 		screen: 1,
 		paid: 0,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -169,6 +175,7 @@ test("direct payment", () => {
 		status: customer.types.STATUS_TYPES.COMMIT_END,
 		screen: -17,
 		paid: 50,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -206,6 +213,7 @@ test("revert back to edit", () => {
 		status: customer.types.STATUS_TYPES.STAGE_ADDED,
 		screen: 15,
 		paid: 0,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -234,6 +242,7 @@ test("quantity payment", () => {
 		status: customer.types.STATUS_TYPES.COMMIT_END,
 		screen: -893,
 		paid: 1000,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -266,6 +275,7 @@ test("multiple adding", () => {
 		status: customer.types.STATUS_TYPES.STAGE_ADDED,
 		screen: 123,
 		paid: 0,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -300,6 +310,7 @@ test("set qty", () => {
 		status: customer.types.STATUS_TYPES.STAGE_ADDED,
 		screen: 123,
 		paid: 0,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -324,6 +335,7 @@ test("clears correctly", () => {
 		status: customer.types.STATUS_TYPES.STAGE_TYPING,
 		screen: 0,
 		paid: 0,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -343,6 +355,7 @@ test("doesnt add on screen 0", () => {
 		status: customer.types.STATUS_TYPES.STAGE_TYPING,
 		screen: 0,
 		paid: 0,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -376,6 +389,7 @@ test("add item with name", () => {
 		status: customer.types.STATUS_TYPES.STAGE_ADDED,
 		screen: 256,
 		paid: 0,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -406,6 +420,7 @@ test("checkout instead payment when 0", () => {
 		status: customer.types.STATUS_TYPES.COMMIT_BEGIN,
 		screen: 123,
 		paid: 0,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -433,6 +448,7 @@ test("checkout instead payment when added", () => {
 		status: customer.types.STATUS_TYPES.COMMIT_BEGIN,
 		screen: 246,
 		paid: 0,
+		seller: null,
 		services: {
 			print: false,
 			eet: null,
@@ -457,6 +473,28 @@ test("prevent payment when 0", () => {
 		status: customer.types.STATUS_TYPES.STAGE_TYPING,
 		screen: 0,
 		paid: 0,
+		seller: null,
+		services: {
+			print: false,
+			eet: null,
+			log: false
+		},
+		cart: {
+			selection: 0,
+			items: []
+		}
+	})
+})
+
+test("set seller", () => {
+	store.dispatch(customer.clear())
+	store.dispatch(customer.seller("123456789"))
+	
+	expect(store.getState()).toEqual({
+		status: customer.types.STATUS_TYPES.STAGE_TYPING,
+		screen: 0,
+		paid: 0,
+		seller: "123456789",
 		services: {
 			print: false,
 			eet: null,
