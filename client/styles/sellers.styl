@@ -2,11 +2,12 @@
     display: flex
     flex-direction: column
 
-    background: color-red
     min-height: button-size	* 0.8
     max-height: button-size	* 0.8
     overflow: hidden
 
+    background: rgba(0,0,0,0.05)
+    box-shadow: 0px 1px 0px rgba(0,0,0,0.3)
 
     .seller
         padding-left: button-size * 0.2
@@ -18,22 +19,18 @@
         cursor: pointer
 
         &:nth-child(2n+1)
-            background: color-green
-
-            &.tapped
-                background: darken(@background, 10%)
+            color: color-green
 
         &:nth-child(2n)
-            background: color-blue
-
-            &.tapped
-                background: darken(@background, 10%)
+            color: color-blue
 
         &.active
             order: -1
 
+        &.tapped
+             background: rgba(0,0,0,0.15)
+
         noselect()
          
     .seller .ic
-        font-size: 0.8em
-        opacity: 0.5
+        font-size: 0.7em

@@ -14,22 +14,7 @@
 	display: flex
 	flex-direction: column
 	
-	.dayinfo
-		min-height: button-size * 0.8
-		flex-basis: button-size * 0.8
-		box-shadow: inset 0px -1px 0px rgba(0,0,0,0.1) 
-		display: flex
 
-		align-items: center
-		font-size: 2em
-		padding: button-size * 0.2
-		
-		background: color-blue
-		color: white
-
-		.label
-			flex-grow: 1
-			
 	.customers
 		flex-grow: 1
 			
@@ -120,6 +105,34 @@
 			width: 20%
 			text-align: right
 	
+#dashboard .day .dayinfo
+	min-height: button-size * 0.8
+	flex-basis: button-size * 0.8
+	box-shadow: inset 0px -1px 0px rgba(0,0,0,0.1) 
+	display: flex
+
+	align-items: center
+	font-size: 2em
+	padding: button-size * 0.2
+	
+	background: color-blue
+	color: white
+
+	.label
+		flex-grow: 1
+		
+	.seller-total
+		display: flex
+
+		.seller
+			display: flex
+			flex-direction: column
+			align-items: flex-end
+
+			margin-left: button-size * 0.4
+
+		.seller-info
+			font-size: 0.5em
 #dashboard .days
 	width: 300px
 	max-height: 100vh

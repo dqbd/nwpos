@@ -92,9 +92,40 @@ export default class Dashboard extends Component {
 		let day = this.props.day
 
 		if (day !== undefined) {
+
+			let sellers = []
+
+			if (this.props.sellers.length > 1) {
+				sellers = this.props.sellers.map((seller, index) => {
+					seller.sum = day.customers.reduce((sum, customer) => {
+						if (!customer.seller && index == 0 || customer.seller && customer.seller == seller.ic) {
+							sum += customer.cart.items.reduce((memo, item) => memo + item.qty * item.price, 0)
+						}
+						return sum
+					}, 0)
+
+					return seller
+				}).map(seller => 
+					<div className="seller" key={seller.ic}>
+						<div className="seller-info">
+							<span className="name">{seller.name}</span> <span className="ic">({seller.ic})</span>
+						</div>
+						<span className="sum">{seller.sum} Kč</span>
+					</div>
+				)
+			}
+
 			return <div className="dayinfo">
 				<span className="label">{day.date.split(".").join(". ")}</span>
-				<span className="total">{day.total} Kč</span>
+				<div className="seller-total">
+					{sellers}
+					<div className="seller">
+						<div className="seller-info">
+							<span className="name">Celkem</span>
+						</div>
+						<span className="sum">{day.total} Kč</span>
+					</div>
+				</div>
 			</div>
 		}
 	}

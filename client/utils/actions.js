@@ -15,6 +15,7 @@ let showStats = function() {
 	if (pathname !== "/stats") {
 		this.hashHistory.push("/stats")
 	}
+	this.store.dispatch(seller.retrieveSellers())
 	this.store.dispatch(stats.retrieve())
 }
 

@@ -7,7 +7,8 @@ import Dashboard from "../components/Dashboard.jsx"
 const mapStateToProps = (state) => {
 	return {
 		list: state.stats.list,
-		day: state.stats.day
+		day: state.stats.day,
+		sellers: state.sellers
 	}
 }
 
