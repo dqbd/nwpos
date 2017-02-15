@@ -79,11 +79,17 @@ class Interface {
 		return database.logs().retrieveLog(day)
 	}
 
-	POST_EET({total}) {
+	POST_EET({total, ic}) {
 		let sellers = this.config.get().sellers
 		if (sellers.length == 0) return Promise.reject("No seller")
-		if (!sellers[0].eet.enabled) return Promise.reject("EET disabled")
-		return eet.upload(sellers[0], total)
+
+		let seller = sellers.find((seller) => seller.ic === ic)
+		if (!seller) {
+			seller = sellers[0]
+		}
+
+		if (!seller.eet.enabled) return Promise.reject("EET disabled")
+		return eet.upload(seller, total)
 	}
 
 	GET_SELLERS() {

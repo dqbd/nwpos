@@ -8,11 +8,11 @@ module.exports.reset = () => {
 	return { type: types.RESET }
 }
 
-module.exports.eet = (total) => (dispatch) => {
+module.exports.eet = (total, ic) => (dispatch) => {
 	return fetch(getUrl("/eet"), {
 		method: "POST",
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ total })
+		body: JSON.stringify({ total, ic })
 	})
 	.then(a => {
 		if (!a.ok) return Promise.reject("Failed sending EET")

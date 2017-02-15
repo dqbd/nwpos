@@ -23,13 +23,17 @@ class Timer {
         } catch (err) { console.log(err) }
     }
 
-    getSeller() {
-        return this.config.get().sellers[0]
+    getSeller(ic) {
+		let seller = this.config.get().sellers.find((seller) => seller.ic === ic)
+		if (!seller) {
+			seller = this.config.get().sellers[0]
+		}
+
+        return seller
     }
 
     runTask() {
         if (!this.logs) return Promise.reject("no db for timer")
-        if (!this.getSeller().eet.enabled) return Promise.reject("eet not enabled")
 
         return this.logs.getLogList()
             .then(files => files.slice(0, 2))
@@ -62,7 +66,7 @@ class Timer {
                         let datTrzby = new Date(Date.parse(log.services.eet.datTrzby))
                         let poradCislo = log.services.eet.poradCis
 
-                        return eet.upload(this.getSeller(), total, poradCislo, datTrzby).then(res => {
+                        return eet.upload(this.getSeller(log.seller), total, poradCislo, datTrzby).then(res => {
                             let newCustomer = Object.assign({}, log)
                             newCustomer.services.eet = res
                             result.push(newCustomer)

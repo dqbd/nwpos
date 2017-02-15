@@ -31,6 +31,14 @@ class Seller extends Component {
 		}
 	}
 
+	onReset() {
+		this.props.onChange(Object.assign({}, defaultSeller))
+	}
+
+	onDelete() {
+		this.props.onDelete()
+	}
+
 	getNewValue(e) {
 		if (e.target.type.toLowerCase() === "checkbox") {
 			return e.target.checked
@@ -104,6 +112,11 @@ class Seller extends Component {
 				</div>
 			</div>
 			<input placeholder="ID Provozovny" type="number" className="idProvoz" onChange={this.onEetChange.bind(this)} value={safeOutput(seller.eet.idProvoz)}></input>
+			<h2>Akce</h2>
+			<div className="actions">
+				<a className="btn reset" onTouchTap={this.onReset.bind(this)}>Resetovat</a>
+				<a className="btn delete" onTouchTap={this.onDelete.bind(this)}>Smazat</a>
+			</div>
 		</div>
 	}
 }
@@ -151,6 +164,17 @@ export default class Config extends Component {
 		this.setState({ config })
 	}
 
+	onSellerDelete(index) {
+		let {config} = this.state
+		if (config.sellers.length > 1) {
+			config.sellers.splice(index, 1)
+		} else {
+			config.sellers[index] = Object.assign({}, defaultSeller)
+		}
+
+		this.setState({ config })
+	}
+
 	onAddCustomer() {
 		let {config} = this.state
 		config.sellers.push(this.getSeller())
@@ -164,7 +188,13 @@ export default class Config extends Component {
 		}
 
 		return <div id="config">
-			{this.state.config.sellers.map((seller, index) => <Seller key={index} onChange={(seller) => this.onSellerChange(index, seller)} seller={this.getSeller(seller)} />)}
+			{this.state.config.sellers.map((seller, index) => 
+				<Seller 
+					key={index} 
+					seller={this.getSeller(seller)}
+					onDelete={this.onSellerDelete.bind(this, index)}
+					onChange={(seller) => this.onSellerChange(index, seller)} />
+			)}
 			<a className="add" onTouchTap={this.onAddCustomer.bind(this)}>
 				<svg viewBox="0 0 24 24"><path d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M13,7H11V11H7V13H11V17H13V13H17V11H13V7Z" /></svg>
 				<span>Přidat prodejnu</span>
@@ -172,7 +202,6 @@ export default class Config extends Component {
 			<div className="buttons">
 				<button className="return" onTouchTap={this.onReturnClick.bind(this)}>Vrátit se</button>
 				{!this.state.done ? <button className="save" onTouchTap={this.onSaveClick.bind(this)}>Odeslat</button> : <button className="save done">Odesláno</button>}
-				
 			</div>
 		</div> 
 	}

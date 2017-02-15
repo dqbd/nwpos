@@ -111,13 +111,14 @@ module.exports.edit = () => (dispatch) => {
 **/
 module.exports.print = () => (dispatch, getState) => {
 	// TODO: eet offline
-	let { newServices, newCart } = wrapState(getState())
+	let { newServices, newCart, newCustomer } = wrapState(getState())
 
 	Promise.resolve(newServices.eet)
 		.then(eet => {
 			//prevent resending
-			// TODO: eet offline
-			if (!eet) return dispatch(services.eet(cart.getTotal(newCart))).catch(a => false)
+			let total = cart.getTotal(newCart)
+			let ic = getState().customer.ic
+			if (!eet) return dispatch(services.eet(total, ic)).catch(a => false)
 			return eet 
 		})
 		.then(eet => dispatch(services.printCart(getState().customer)))
