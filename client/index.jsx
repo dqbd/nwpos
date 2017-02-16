@@ -11,6 +11,7 @@ import { Router, Route, useRouterHistory } from "react-router"
 import { createHashHistory } from "history"
 
 import { reducer, config } from "../core"
+import { capitalize } from "./utils"
 import { bindDisplayEvents } from "./utils/display.js"
 import { bindActions } from "./utils/actions.js"
 
@@ -26,6 +27,14 @@ let actions = bindActions(store, hashHistory)
 
 injectTapEventPlugin()
 bindDisplayEvents(store)
+
+hashHistory.listen((data) => {
+	let path = data.pathname.replace("/", "")
+	if (path.trim().length == 0) path = "client"
+
+	let func = window["show"+capitalize(path)]
+	if (func) func()
+})
 
 render(<Provider store={store}>
 	<Router history={hashHistory}>
