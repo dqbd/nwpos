@@ -1,6 +1,13 @@
+# Prohlášení
+Prohlašuji, že jsem svou práci vypracoval samostatně, použil jsem pouze podklady (literatura, SW atd.) uvedené v přiloženém seznamu a postup při zpracování a dalším nakládání je v souladu se zákonem č. 121/2000 Sb., o právu autorském, o právech souvisejících s právem autorským a o změně některých zákonů (autorský zákon) v platném znění.
+
 # Úvod
 ## Motivace
-Dnem 13. 04. 2016 (https://www.zakonyprolidi.cz/cs/2016-112) vešel v platnost zákon o elektronické evidenci třžeb, zkráceně EET. Naskytla se tak ojedinělá příležitost pro podnikání, kdy se čista z jasna otevřel lukrativní trh s elektronickými pokladnami. Od začátku bylo jasné, že tento trh může obnášet příjmy v řádech několika miliónů, proto není ani divu, že se této příležitosti chytly velké korporace, jako jsou telekomunikační firmy, které v zásadě si pouze rožšíří svoje existující portfólio internetových služeb. Zároveň se na trhu vyrojilo mnoho startupů, bojující o podíl na trhu s agresivními reklamami a billboardy. Tento zákon se nás obzvlášť týkal, jelikož provozujeme maloobchod s oblečením a používáme staré klasické pokladny, stejně jako většina prodejen před EET. Jelikož jsme chtěli mít rozhraní pokladny plně pod kontrolu, obzvlášt pro vietnamské obchodníky, rozhodli jsme se napsat svoji vlastní aplikaci, která dokáže odesílat účtenku na Finanční správu. 
+Dnem 13. dubna 2016 (https://www.zakonyprolidi.cz/cs/2016-112) vešel v platnost zákon o elektronické evidenci tržeb, zkráceně EET. Veškeré údaje o transakci podnikatele jsou online posílány na Finanční správu. Cílem bylo omezit systematické krácení daňové povinnosti a zjednodušit daňové kontroly. Finanční správa si tímto zákonem slibuje více peněz do státního rozpočtu a vyrovnání podmínek na trhu. Podnikatelé jsou ale nuceni si obstarat pokladnu, která by uměla komunikovat s Finanční správu. Větina podnikatelů si totiž dosud vystačili s pouhou "hloupou" kalkulačkou. 
+
+Není třeba podotknout, že se z čista jasna otevřel lukrativní trh s pokladnami. Od začátku bylo jasné, že tento trh může obnášet příjmy v řádech několika miliónů, proto není ani divu, že se této příležitosti chytly velké korporace, jako jsou telekomunikační firmy, které v zásadě si pouze rožšíří svoje existující portfólio internetových služeb. 
+
+Zároveň se na trhu vyrojilo mnoho startupů, bojující o podíl na trhu s agresivními reklamami a billboardy. Tento zákon se nás obzvlášť týkal, jelikož provozujeme maloobchod s oblečením a používáme staré klasické pokladny, stejně jako většina prodejen před EET. Jelikož jsme chtěli mít rozhraní pokladny plně pod kontrolu, obzvlášt pro vietnamské obchodníky, rozhodli jsme se napsat svoji vlastní aplikaci, která dokáže odesílat účtenku na Finanční správu. 
 
 ## Srovnání s konkurenčními řešeními 
 Pro srovnání jsme hledali pokladní systémy, které v době psaní této práce na trhu existovaly. Finanční strop jsme si stanovili na 5 000 Kč a jako jediný požadavek jsme měli podporu vietnamštiny. Finanční strop jsme vybrali z důvodu možné daňové úlevy, kdy můžeme uvést veškeré náklady plynoucí z nákupu EET přístrojů do výdajů. Nalezli jsme pouze 2 řešení, které na stránkách uvádějí podporu češtiny: O2 eKasa a Dotykačka. 
@@ -116,17 +123,17 @@ Kliknutím na ozubené kolečko zobrazíte další možnosti aplikace. Výpisy t
 # Jak to funguje
 Celá aplikace byla napsána v JavaScriptu, přesněji ES2016. Díky JavaScriptu můžeme provozovat aplikaci na virtuálně všech platformách, aniž by bylo třeba napsat pro každou platformu nativní variantu. Jedním z požadavků bylo napsat aplikaci, která bude primárně běžet na prohlížeči, proto jsem vynechal velké all-in-one frameworky, které jsou přímo navržené pro tvorbu mobilních aplikací, jako Xamarin nebo Apache Cordova. Tyto frameworky buď vyžadují vlastní runtime pro běh aplikace (C# a CLR) nebo se odkazují na knihovny, které nejsou k dispozici v prohlížeči (Apache Cordova). JavaScript je ideálním (a jediným) jazykem pro psaní webových aplikací. 
 
-# Frontend
+## Frontend
 Psát aplikace v čistém JavaScriptu se v dlouhodobém horizontu nevyplatí, kód se časem hromadí a jeho správa je s časem čím dál tím více náročnější. Rozhodl jsem se použít nějaký framework, který by usnadnil strukturu projektu a tvorbu UI.
 
-## ECMAScript 2016, Babel a Webpack
+### ECMAScript 2016, Babel a Webpack
 ECMAScript 6, dále jen ES6, je nová verze JavaScriptu, následovník verze ECMAScript 5. Přináší do jazyka upravený syntax a nové metody u primitivních typů, polí a objektů. Specifikace ES6 se průběžně mění a implementuje v moderních prohlížečích. Celou specifikaci a jejich stav implementace můžeme najít na stránce http://kangax.github.io. 
 
 Jelikož je podpora ES6 (aspoň v roce 2016-17) stále kolísává, rozhodl jsem se použít Babel. Jedná se o transpiler, který převádí nový syntax ES6 do starších verzí ECMAScriptu pro větší podporu. 
 
 Spolu s Babelem ještě používám Webpack, který usnadňuje kompilaci a vývoj javascriptových aplikací. Tento nástroj můžeme chápat jako MSBUILD pro C# nebo jako Gradle pro Android / Java aplikace. Spolu s ostatními moduly nám Webpack umožňuje live-reload (automatické obnovení při změnách), hot-reload (výměna částí kódů za běhu) a minifikace kódu. 
 
-## Redux
+### Redux
 Redux je knihovna, která byla použita pro psaní business logic, čili části kódu, které se nestarají o vykreslení rozhraní. Sama o sobě se jedná o minimální knihovnu, jde spíše o strukturu business logiky. 
 
 Na stránkách můžeme najít, že se jedná o "kontejner stavů." Musíme si nejprve vysvětlit, co vlastně stav aplikace je. Stav aplikace je podoba aplikace se všemi změnami v určitém čase. Zahrnuje, CSS třídy, HTML, ale i globální proměnné apod. V běžné JavaScriptové aplikaci tento "aplikační stav" měníme několika způsoby:
@@ -227,7 +234,7 @@ store.dispatch(add(1))
 store.dispatch(set(5))
 ```
 
-## React
+### React
 React je knihovna pro vytváření webových komponenent, vyvíjena Facebookem. Spolu s AngularJS se jednají o 2 nejpopularnější frameworky pro vývoj UI. Oproti AngularJS má React plytší křivku učení, nemusíme se učit speciální syntax jako u AngularJS, jedná se o čistý JavaScript. Navíc vzhledem k tomu, že jsme použili pro naši business logiku Redux, která byla pro React přimo vyšitá, dává smysl, abychom použili React pro vývoj rozhraní. React by se dala považovat jako View součást v MVC architektuře, jako je Latte v Nette. 
 
 Klíčovou myšlenkou Reactu je jednosměrnost dat. Místo toho, abychom psali kód, který volá příkazy a vykonává změny, píšeme kód, který pouze vykresluje aktuální stav aplikace. Popisujeme, jak má výsledná stránka na základě příchozích dat vypadat. Jestliže chceme provést nějakou změnu v aplikaci, musíme ji provést příkazem, čili akcí. Je zde vidět jasné podobenství s knihovnou Redux. 
@@ -241,7 +248,7 @@ Typický zdrojový kód Reactu může vypadat takto:
 ```javascript
 import React from "react" //musíme nejprve importovat knihovnu React
 
-class Ahoj extens React.Component {
+class Ahoj extends React.Component {
 	render() {
 		return <div className="hello">Ahoj světe</div>
 	}
@@ -350,10 +357,10 @@ class Pocitadlo extends React.Component {
 
 Propojení s Reduxem je zajištěno knihovnou `react-redux`, která se stará o převádění dat ze store a akcí na `props` pro komponenty. Příklady implementace si můžete prohlédnout ve složce `client/containers`. 
 
-# Backend
+## Backend
 Server, čili backend, byl navržen v tomto projektu tak, aby sloužil jako substituent pro nedostupnou funkcionalitu v prohlížeči nebo pro funkce, které se budou pravidelně obměňovat (správa dat, konektivita s EET). Pro EET jsme použili open-source knihovnu `JakubMrozek/eet` a pro databázi jsme použili `louischatriot/nedb`.
 
-## mDNS 
+### mDNS 
 mDNS, neboli multicast DNA, je technologie, která umožňuje najít servery a jejich IP adresy na lokální síti, aniž by na lokální síti běžel plnohodnotný DNS server. Pro provoz není třeba žádná konfigurace ze strany správce sítě. Stačí službu jenom spustit a klienti budou schopni automaticky objevit server a adresu serveru. Tato technologije je známá taky jako Apple Bonjour, nebo Network Service Discovery.
 
 Serverová implementaci mDNS je vyřešena importem knihovny `bonjour`, psána čistě v JavaScriptu. Vyhneme se instalaci Avahi daemonu a kompilaci nativních knihoven. Navíc funguje na všech platformách stejně. Před použitím bylo třeba použít fork `resin-io/bonjour`, který doimplementoval zbytek mDNS specifikace pro objevitelnost na Androidu. 
@@ -366,7 +373,7 @@ Pro Android je zde zásadní omezení ve formě IPv6, kde Chrome pro Android st�
 net.ipv6.conf.all.disable_ipv6 = 1
 ```
 
-## ESC/POS tiskárny
+### ESC/POS tiskárny
 Většina termálních tiskáren do pokladen využívá protok ESC/POS, vyvinutý firmou EPSON. Jedná se o sadu příkazů, které se do tiskárny posílají. Veškeré příkazy lze najít v souboru `/server/printer/constants.js`. Všechny příkazy začínají znakem ESC (v ASCII = 27), kromě příkazu pro posun papíru LF (ASCII = 10) a pro seříznutí papíru GS (ASCII = 29). 
 
 Pro podporu češtiny je UTF-8 text překódován do kódování Windows-1250/CP1250, jelikož většina tiskáren UTF-8 přímo nepodporuje. Samotné posílání příkazu je řešeno otevření file descriptoru (FD) tiskárny, čili otevřením a zapisováním souboru reprezentující tiskárnu. Na Linuxu a dalších Unix-based OS se FD otevře ve složce /dev/usb/lp[0-9]. Na Windowsu je nutné nejprve tiskárnu sdílet na síti, posléze je k dispozici na `\\localhost\[název tiskárny]`.
@@ -375,12 +382,12 @@ Původně jsem s tiskárnou přímo komunikoval za pomocí knihovny na úrovni o
 
 Jako testovací tiskárnu jsem použil ZJ-5890K dovozem z Číny. Tato tiskárna je identická s tiskárnou O2 Kasy, čimž je zaručena kompabalita s tablety O2 kasy. Vesměs jsou podporovány všechny tiskárny, které umí protokol ESC/POS, což je na trhu většina.
 
-## Termux a emulace NodeJS v Androidu
+### Termux a emulace NodeJS v Androidu
 Aplikace byla na začátku koncipována tak, aby se skládala z klientské a serverové části. Tato architektura přináší výhody, které jsme si již zmínili. Dokážeme si ale představit, že instalace a údržba jak klientu, tak serveru by byla časově a v krajních případech i finančně náročná. Bylo by tedy ideální, kdyby šla zabalit funkcionalita serveru do klientské aplikace. Klasickým způsobem integrace by bylo oddělení business logic serveru (databáze, eet) od čistě serverové logiky (http server, mdns), což je dle našeho názoru neefektivní a přináší mnoho problému ve formě výkonu a chyb, které mohou nastat při takovém oddělení. 
 
 Naštěstí na pomoc přichází Termux. Termux je open-source emulátor terminálu pro Android. Spolu s výborným rozhraním terminálu obsahuje aplikace předkompilované Unix balíčky a svůj vlastní systém. Díky této aplikace máme k dispozici většinu Linuxových aplikací, včetně `bash`, `apt-get`, `sed` a hlavně `nodejs`, který potřebujeme pro server. Rozhodli jsme se forknout projekt a integrovat Termux přímo do naší aplikace. 
 
-### Struktura projektu
+#### Struktura projektu
 Nejprve se stáhnou a rozbalí základní systémové balíčky a knihovny, jako je `bash`, `sh` a `busybox` do interní složky aplikace. Tato interní složka je automaticky přiřazována Androidem (viz `Context.getFilesDir()`) na základě `applicationId` v `app/build.gradle`. Bohužel většina binárek hledá závislosti a knihovny nebo přímo ukládá do `/data/data/com.termux`, bez ohledu na `applicationId`. Tento problém se v ideálním případě dá vyřešit rekompilací a provozováním vlastního apt serveru, což je vzhledem k povaze projektu časově a finančně náročné. Proto jsme se rozhodli nastavit `applicationId` na `com.termux`. Po nastavení jsou binárky spustitelné a plně funkční, aniž bychom museli binárky před spouštěním upravovat. Nevýhodou je však nepublikovatelnost na Google Play Store, který vyžaduje pro každou aplikaci unikátní `applicationId`. 
 
 Po rozbalení musíme ještě nastavit všechny symlinky v souboru `SYMLINKS.txt`, aby všechny aplikace vyžadující knihovny fungovaly správně. Celá instalace terminálu se provede voláním `TermuxService.`. 
@@ -388,3 +395,7 @@ Po rozbalení musíme ještě nastavit všechny symlinky v souboru `SYMLINKS.txt
 Po instalaci terminálu můžeme používat balíčky, na které jsme zvykli z klasických linuxových distribucí, jako je například Ubuntu, Debian apod. Inicializace samotného serveru se skládá ze 3 Bash skript, které jsou rozbaleny přímo z APK do kořenové složky terminál, kde jsou spuštěny. Nejprve se spuští `CHECK.sh`, který ověří, zda je server již nainstalovaný. Pokud je server již nainstalovaný, spustí se `RUN.sh`, který spustí server. v opačném případě se spustí `INSTALL.sh`, který nainstaluje všechny závislosti, stáhne a nainstaluje server. 
 
 # Závěr
+
+Vyvinuli jsme pokladní systém pro maloobchodní podniky. Do budoucna bychom chtěli rozšířit aplikaci o správu zboží, skladu a čtečku čárových kódů. Dále by bylo dobré přemigrovat zdrojové kódy a deploy servery na vlastní VPS, abychom nebyli závislí na infrastruktůře GitHubu.
+ 
+Toť je vše, čau.
