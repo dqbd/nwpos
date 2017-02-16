@@ -1,4 +1,7 @@
 #!/bin/bash
+# export PATH="/home/$SUDO_USER/.yarn-global/bin:$PATH"
+# yarn install --production
+# pm2 startOrRestart ecosystem.json 
 
 target_branch="master"
 working_tree="/home/pi/nwpos"
