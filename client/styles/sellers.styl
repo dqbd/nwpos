@@ -6,8 +6,8 @@
     max-height: button-size	* 0.8
     overflow: hidden
 
-    background: rgba(0,0,0,0.05)
-    box-shadow: 0px 1px 0px rgba(0,0,0,0.15)
+    background: rgba(0,0,0,0.01)
+    box-shadow: 0px 1px 0px rgba(0,0,0,0.1), 0px 2px 10px rgba(0,0,0,0.05)
 
     .seller
         padding-left: button-size * 0.2
@@ -18,13 +18,29 @@
         justify-content: center
         cursor: pointer
 
-        &:nth-child(2n+1)
-            color: color-green
+        line-height: 1em
 
-        &:nth-child(2n)
-            color: color-blue
+        &:after
+            content: ""
+            display: none
+            position: absolute
+            left: 0
+            right: 0
+            top: 0
+            height: 4px
+
+        padding-top: 3px
+
+
+        &:nth-child(2n+1):after
+            background: color-green
+
+        &:nth-child(2n):after
+            background: color-blue
 
         &.active
+            &:after
+                display: block
             order: -1
 
         &.tapped
