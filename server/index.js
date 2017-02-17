@@ -44,12 +44,16 @@ if (args.dev) {
 }
 
 if (args.bonjour) {
-	//TODO: add retry
-	try {
+	let attempts = 1
+	let publish = () => {
 		bonjour.publish({ name: advert, type: "http", port: args.port })
-	} catch (err) {
-		console.error(err)
+		.on("error", (err) => {
+			attempts++
+			console.log("Error: Service name is already in use on the network")
+			setTimeout(publish, 5000 * attempts)
+		})
 	}
+	publish()
 }
 
 //disable caching
