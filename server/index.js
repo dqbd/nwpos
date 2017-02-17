@@ -44,7 +44,12 @@ if (args.dev) {
 }
 
 if (args.bonjour) {
-	bonjour.publish({ name: advert, type: "http", port: args.port })
+	//TODO: add retry
+	try {
+		bonjour.publish({ name: advert, type: "http", port: args.port })
+	} catch (err) {
+		console.error(err)
+	}
 }
 
 //disable caching
