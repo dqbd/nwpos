@@ -23,10 +23,8 @@ Object.keys(available).forEach(dbname => {
 
 module.exports.backup = () => new Promise((resolve, reject) => {
 	fs.readdir(base, (err, files) => {
-		if (err) {
-			return reject(err)
-		}
-		resolve(files.filter(file => /\.db/.test(file)))
+		if (err) return reject(err)
+		resolve(files)
 	})
 }).then(files => {
 	let archive = archiver("zip", { store: true })
