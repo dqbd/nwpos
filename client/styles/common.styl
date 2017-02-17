@@ -18,8 +18,14 @@ noselect()
 	position: relative
 	flex-grow: 1
 	height: 0
+
 	flex-basis: button-size
 	padding-bottom: button-size
+	
+	@media (max-width: query--small)
+		flex-basis: button-size--small
+		padding-bottom: button-size--small
+	
 	position: relative
 	
 .btn a

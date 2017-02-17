@@ -44,6 +44,11 @@
 		color: white
 		min-height: button-size
 		flex-basis: button-size
+
+		@media (max-width: query--small)
+			min-height: button-size--small
+			flex-basis: button-size--small
+
 		cursor: pointer
 
 		&:active
@@ -70,6 +75,10 @@
 		background: transparent
 		border: 1px solid rgba(0,0,0, 0.3)
 		height: button-size * 0.8
+
+		@media (max-width: query--small)
+			height: button-size--small * 0.8
+
 		margin-right: 20px
 		&:last-child
 			margin-right: 0
@@ -84,6 +93,10 @@
 
 	input
 		min-height: button-size * 0.5
+
+		@media (max-width: query--small)
+			min-height: button-size--small * 0.5
+
 		padding: 15px
 		border: none
 		font-size: 1.4em
@@ -113,6 +126,10 @@
 			content: ""
 			width: button-size * 0.3
 			height: button-size * 0.3
+			@media (max-width: query--small)
+				width: button-size--small * 0.3
+				height: button-size--small * 0.3
+
 			border: 3px solid rgba(0,0,0,0.15)
 			margin-right: 10px
 
@@ -146,7 +163,11 @@
 		cursor: pointer
 
 		justify-content: center
+		
 		height: button-size
+		@media (max-width: query--small)
+			height: button-size--small
+
 		opacity: 0.8
 
 		&:active

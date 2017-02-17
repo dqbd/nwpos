@@ -1,11 +1,12 @@
 .panel
 	box-shadow: 0px -2px 10px rgba(0,0,0,0.05)
-	
-	// min-height: button-size * 2
-	// flex-basis: button-size * 2
 
 .second-panel
 	height: button-size	
+
+	@media (max-width: query--small)
+		height: button-size--small
+
 	display: flex
 	background: rgba(0,0,0,0.01)
 	box-shadow: inset 0px 1px 0px rgba(0,0,0,0.1)
@@ -20,11 +21,20 @@
 		min-width: button-size
 		flex-basis: button-size
 
+		@media (max-width: query--small)
+			width: button-size--small
+			max-width: button-size--small
+			min-width: button-size--small
+			flex-basis: button-size--small
+
 		a 
 			box-shadow: inset 0px 1px 0px rgba(0,0,0,0.1)
 			
 			width: button-size
 			background: color-lightgray
+
+			@media (max-width: query--small)
+				width: button-size--small
 			
 			&.tapped
 				background: darken(color-lightgray, 10%)
@@ -37,7 +47,6 @@
 			fill: #ffffff
 
 .names
-	height: button-size	
 	display: flex
 	
 	overflow-x: auto
@@ -45,8 +54,13 @@
 
 	align-items: center
 	
+	height: button-size	
 	padding-left: (button-size / 2) - (button-size / 4) + (5px / 2)
 	
+	@media (max-width: query--small)
+		height: button-size--small	
+		padding-left: (button-size--small / 2) - (button-size--small / 4) + (5px / 2)
+
 	.suggestion
 		
 		noselect()
@@ -70,12 +84,19 @@
 		&:last-child
 			margin-right: 0
 			
+		@media (max-width: query--small)
+			height: (button-size--small / 2) - 5px
 
 	&:after
 		content: ""
 		height: button-size
 		flex-basis: (button-size / 2) - (button-size / 4) + (5px / 2)
 		min-width: (button-size / 2) - (button-size / 4) + (5px / 2)
+
+		@media (max-width: query--small)
+			height: button-size--small
+			flex-basis: (button-size--small / 2) - (button-size--small / 4) + (5px / 2)
+			min-width: (button-size--small / 2) - (button-size--small / 4) + (5px / 2)
 
 	
 .actions
@@ -99,11 +120,12 @@
 
 	.small
 		max-width: button-size
+
+		@media (max-width: query--small)
+			max-width: button-size--small
 		
 	.total
 		background: color-purple
-		@media (max-width: 1200px)
-			display: none
 		a.tapped { background: darken(color-purple, 5%) }	
 			
 	.checkout, .edit, .print
@@ -113,8 +135,6 @@
 		
 	.qty
 		background: color-yellow
-		@media (max-width: 800px)
-			display: none
 		a.tapped { background: darken(color-yellow, 5%) }
 		
 	.clear

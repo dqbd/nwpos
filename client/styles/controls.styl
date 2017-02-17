@@ -4,6 +4,9 @@
 	text-align: right
 	
 	min-height: button-size
+	@media (max-width: query--small)
+		min-height: button-size--small
+
 	overflow-x: hidden
 	
 	font-weight: 400
@@ -38,6 +41,11 @@
 		
 		width: button-size
 		height: button-size
+
+		@media (max-width: query--small)
+			width: button-size--small
+			height: button-size--small
+
 		display: flex
 
 		color: #333
@@ -55,6 +63,9 @@
 	display: flex
 	flex-wrap: wrap
 	min-height: button-size * 4
+
+	@media (max-width: query--small)
+		min-height: button-size--small * 4
 	
 	.btn a.tapped
 		background: rgba(150,150,150,0.1)
@@ -80,12 +91,15 @@
 		box-shadow: inset -1px 0px 0px rgba(0,0,0,.1), inset 0px 1px 0px rgba(0,0,0,.1)
 		
 	.btn:nth-child(3n)
-		box-shadow: inset 2px 0px 0px rgba(0,0,0,.1), inset 0px 1px 0px rgba(0,0,0,.1)
+		box-shadow: inset 1px 0px 0px rgba(0,0,0,.1), inset 0px 1px 0px rgba(0,0,0,.1)
 		
 	.btn:nth-child(3n+2)
 		box-shadow: inset 0px 1px 0px rgba(0,0,0,.1)
 		
 
 	.btn:last-child
-		min-width: "calc(%s * 2)" % (button-size)
 		border-right: none
+		min-width: "calc(%s * 2)" % (button-size)
+
+		@media (max-width: query--small)
+			min-width: "calc(%s * 2)" % (button-size--small)
