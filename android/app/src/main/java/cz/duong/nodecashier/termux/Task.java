@@ -7,7 +7,7 @@ import cz.duong.nodecashier.R;
  */
 
 public enum Task {
-    INSTALL(R.raw.install, new String[]{}),
+    INSTALL(R.raw.install, null),
     RUN(R.raw.run, null),
     CHECK(R.raw.check, null),
     CLEAR(R.raw.clear, null);

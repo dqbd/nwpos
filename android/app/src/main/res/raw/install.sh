@@ -1,10 +1,10 @@
-git_user="$1"
-git_psk="$2"
+TOKEN="0b10415689d248e8059c327ccd0eec10add5990a"
 
 apt-get update
 apt-get install nodejs git openssl openssl-tool -y
-git clone "https://$git_user:$git_psk@github.com/delold/nwpos"
+git clone "https://$TOKEN@github.com/delold/nwpos"
 
 ls -l
 cd ./nwpos/server
 npm install --production
+npm install -g pm2 

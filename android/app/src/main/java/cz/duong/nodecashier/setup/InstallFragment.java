@@ -83,14 +83,7 @@ public class InstallFragment extends Fragment implements ServiceConnection {
                     @Override
                     public void run() {
                         if (exitCode == 42) {
-                            CredDialog dialog = new CredDialog(getActivity(), new CredDialog.CredInterface() {
-                                @Override
-                                public void onGithubCred(String username, String password) {
-                                    runScript(Task.INSTALL.args(new String[]{username, password}));
-                                }
-                            });
-
-                            dialog.show();
+                            runScript(Task.INSTALL);
                         } else {
                             onInstallFinished();
                         }
