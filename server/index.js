@@ -20,6 +20,7 @@ Object.keys(process.env)
 	})
 
 args = Object.assign(args, minimist(process.argv.slice(2), {boolean, default: args}))
+console.log(args)
 
 const express = require("express")
 const bodyParser = require("body-parser")
