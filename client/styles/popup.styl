@@ -148,7 +148,6 @@
 			noselect()
 			display: flex
 			align-items: center
-			height: (button-size / 2) - 5px 
 			padding: 0 .5em
 			border: 1px solid rgba(0,0,0,0.1)
 			margin-right: .5em
@@ -157,8 +156,10 @@
 			box-shadow: 0px 2px 4px rgba(0,0,0,0.05)
 			cursor: pointer
 
+			height: (button-size * 0.5) - 5px 
+
 			@media (max-width: query--small)
-				height: (button-size--small / 2) - 5px 
+				height: (button-size--small * 0.6) - 5px 
 		
 		.groupname
 			noselect()
@@ -166,12 +167,12 @@
 			display: flex
 			align-items: center
 			justify-content: center			
-			height: (button-size / 2) - 5px
-			min-width: (button-size / 2) - 5px
+			height: (button-size * 0.5) - 5px
+			min-width: (button-size * 0.5) - 5px
 
 			@media (max-width: query--small)
-				height: (button-size--small / 2) - 5px
-				min-width: (button-size--small / 2) - 5px
+				height: (button-size--small * 0.6) - 5px
+				min-width: (button-size--small * 0.6) - 5px
 						
 			text-transform: uppercase
 			color: #ffffff
