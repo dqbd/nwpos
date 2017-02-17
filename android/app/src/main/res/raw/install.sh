@@ -7,4 +7,4 @@ git clone "https://$TOKEN@github.com/delold/nwpos"
 ls -l
 cd ./nwpos/server
 npm install --production
-npm install -g pm2 
+# npm install -g pm2
