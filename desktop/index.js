@@ -5,6 +5,29 @@ const url = require('url')
 
 const bonjour = require("bonjour")()
 
+class App {
+
+	constructor(send) {
+		this.send = send
+
+		
+	}
+
+	discover(stop = false) {
+		bonjour.find({ type: "http" }, (service) => {
+			this.send("discover", service)			
+		})
+	}
+
+	install() {
+		this.send("")
+	}
+
+	verify() {
+
+	}
+}
+
 let mainWindow
 
 function createWindow () {
@@ -25,15 +48,14 @@ function createWindow () {
 
 	mainWindow.once("ready-to-show", () => {
 		mainWindow.show()
-		bonjour.find({ type: "http" }, (service) => {
-			send("service_detect", service)			
-		})
+		
 
 		setInterval(() => {
 			send("ping", new Date().getTime())
 		}, 1000)
 	})
 
+	
 }
 
 
