@@ -22,9 +22,12 @@ if (!config.server_id) {
 }
 
 let timer = null
+
+let cached = {}
 let promise = Promise.resolve(true)
 
 function send(event) {
+    console.log("Sending:", event)
     promise.then(fetch(config.url+"?query=log&id="+config.server_id, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -34,25 +37,47 @@ function send(event) {
 
 function poll() {
     clearTimeout(timer)
+    let time = Math.floor(new Date().getTime() / 1000) 
 
-    let time = Math.floor(new Date().getTime() / 1000) - 15
-    fetch(config.url + "?query=actions&id="+config.server_id+"&date="+time)
+    //clear any residues
+    Object.keys(cached).forEach(id => {
+        if (new Date().getTime() - cached[id] > 2 * 60 * 1000) { // 2 minute delay
+            console.log("delete:", id, cached[id], new Date().getTime())
+            delete cached[id]
+        } 
+    })
+
+    fetch(config.url + "?query=actions&id="+config.server_id+"&date="+(time - 15))
         .then(a => a.text())
         .then(res => {
-            console.log(time, res)
-            JSON.parse(res).data.forEach(task => {
-                let args = JSON.parse(task.arguments)
-                
-                args.push(function() {
-                    send({
-                        data: JSON.stringify(arguments),
-                        process: { name: "UPDATER" }
-                    })
-                })
+            //we're 15s sooner... 
+            payload = JSON.parse(res)
+            payload.data.forEach(task => {
+                if (cached[task.id] === undefined) {
+                    cached[task.id] = Date.parse(task.date)
 
-                console.log(pm2[task.action])
-                pm2[task.action].apply(pm2, args)
+                    let args = JSON.parse(task.arguments)
+
+                    args.push(function() {
+                        send({
+                            data: JSON.stringify(arguments),
+                            process: { name: "UPDATER" }
+                        })
+                    })
+
+                    pm2[task.action].apply(pm2, args)
+                }
             })
+
+            //delete if not broadcasted anymore
+            Object.keys(cached).filter(id => !payload.data.find((task) => task.id === id)).forEach(id => {
+                console.log("delete non broadcast:", id)
+                delete cached[id]
+            })
+
+            timer = setTimeout(poll.bind(this), 3000)
+        }).catch(err => {
+            console.error(err)
             timer = setTimeout(poll.bind(this), 3000)
         })
 }
