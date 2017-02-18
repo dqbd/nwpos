@@ -24,6 +24,7 @@
             android:alwaysRetainTaskState="true"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden|navigation"
             android:launchMode="singleTask"
+            android:keepScreenOn="true"
             android:screenOrientation="reverseLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,15 +33,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="cz.duong.nodecashier.utils.FakeHomeActivity"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <!--<activity-->
+            <!--android:name="cz.duong.nodecashier.utils.FakeHomeActivity"-->
+            <!--android:enabled="false">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.HOME" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
         <activity android:name="cz.duong.nodecashier.SetupActivity" android:launchMode="singleTask">
 
         </activity>

@@ -84,9 +84,9 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
             return;
         }
 
-        if (LauncherUtils.restartToLauncher(this)) {
-            return;
-        }
+//        if (LauncherUtils.restartToLauncher(this)) {
+//            return;
+//        }
 
         setContentView(R.layout.activity_main);
 
@@ -183,8 +183,8 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
         }
     }
 
-    @Override
-    public void onBackPressed() {}
+//    @Override
+//    public void onBackPressed() {}
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
@@ -238,8 +238,8 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
         super.onPause();
 
         if (!isClosing) {
-            ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-            am.moveTaskToFront(getTaskId(), 0);
+//            ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+//            am.moveTaskToFront(getTaskId(), 0);
         } else if (mFilePathCallback == null) {
             stopServer();
         }
@@ -339,8 +339,6 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
         startService(serviceIntent);
         if (!bindService(serviceIntent, this, 0))
             throw new RuntimeException("bindService() failed");
-
-
     }
 
     void stopServer() {
@@ -355,19 +353,13 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
         termuxService.mListener = new TermuxService.TaskListener() {
             @Override
             public void onStarted(String name) {
-                if (Task.fromName(name) == Task.RUN) {
-                    loadPage();
-                }
+
             }
 
             @Override
             public void onStopped(String name, int exitCode) {
                 if (Task.fromName(name) == Task.RUN) {
-                    showLoading();
-
-                    if (!isClosing) {
-                        TermuxService.runScript(Task.RUN, MainActivity.this, MainActivity.this);
-                    }
+                    loadPage();
                 }
             }
         };
