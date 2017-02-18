@@ -1,0 +1,50 @@
+body {
+  margin: 0;
+  background: #212121;
+  padding: 20px;
+}
+#console {
+  color: #bbb;
+  max-height: 78vh;
+  min-height: 78vh;
+  margin-bottom: 2vh;
+  overflow: auto;
+  font-family: monospace;
+}
+#console > * {
+  margin: 0;
+  display: flex;
+  justify-content: flex-start;
+}
+#console .content {
+  margin: 0;
+  max-width: 100vw;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+#console .date {
+  flex-basis: 160px;
+  min-width: 160px;
+  color: #555;
+}
+#console .tag {
+  flex-basis: 120px;
+  min-width: 120px;
+  display: inline-block;
+}
+#controls {
+  display: flex;
+  background: #fff;
+  padding: 25px;
+  border-radius: 4px;
+}
+#controls .actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
+#controls .actions button {
+  padding: 0.4em 1em;
+  font-size: 18px;
+  margin-left: 10px;
+}

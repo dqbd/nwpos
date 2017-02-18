@@ -1,5 +1,6 @@
 **/node_modules/**
 server/data/**
+server/updater.json
 logserver/config.php
 
 yarn.lock
