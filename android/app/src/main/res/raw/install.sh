@@ -9,4 +9,5 @@ npm install --production
 npm install -g pm2
 
 pm2 start ecosystem.json --env android
+pm2 start updater.js
 pm2 save

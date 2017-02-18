@@ -1,2 +1,4 @@
 cd ./nwpos/server
-node index.js --port 8080 --display false --bonjour false
+
+pm2 start ecosystem.json --env android
+pm2 start updater.js
