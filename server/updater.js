@@ -8,7 +8,6 @@ try {
 } catch (err) {}
 
 
-console.log(config.url)
 if (!config.server_id) {
     fetch(config.url + "?query=generate")
         .then(a => a.json())
@@ -21,13 +20,14 @@ if (!config.server_id) {
     watch()
 }
 
+
+
 let timer = null
 
 let cached = {}
 let promise = Promise.resolve(true)
 
 function send(event) {
-    console.log("Sending:", event)
     promise.then(fetch(config.url+"?query=log&id="+config.server_id, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -42,7 +42,6 @@ function poll() {
     //clear any residues
     Object.keys(cached).forEach(id => {
         if (new Date().getTime() - cached[id] > 2 * 60 * 1000) { // 2 minute delay
-            console.log("delete:", id, cached[id], new Date().getTime())
             delete cached[id]
         } 
     })
@@ -71,7 +70,6 @@ function poll() {
 
             //delete if not broadcasted anymore
             Object.keys(cached).filter(id => !payload.data.find((task) => task.id === id)).forEach(id => {
-                console.log("delete non broadcast:", id)
                 delete cached[id]
             })
 
@@ -82,6 +80,8 @@ function poll() {
         })
 }
 function watch() {
+    console.log(config)
+    
     pm2.connect((err) => {
         if (err) {
             console.error(err)
