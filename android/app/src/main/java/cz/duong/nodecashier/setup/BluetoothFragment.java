@@ -35,7 +35,7 @@ public class BluetoothFragment extends Fragment {
 
         }
 
-        getActivity().registerReceiver()
+//        getActivity().registerReceiver()
     }
 
     @Override

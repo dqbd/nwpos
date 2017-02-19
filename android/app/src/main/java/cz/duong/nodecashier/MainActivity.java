@@ -84,9 +84,9 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
             return;
         }
 
-//        if (LauncherUtils.restartToLauncher(this)) {
-//            return;
-//        }
+        if (LauncherUtils.restartToLauncher(this)) {
+            return;
+        }
 
         setContentView(R.layout.activity_main);
 
@@ -150,7 +150,7 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
 
         showLoading();
 
-//        registerReceiver(powerReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+        registerReceiver(powerReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
     }
 
     @Override
@@ -183,8 +183,8 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
         }
     }
 
-//    @Override
-//    public void onBackPressed() {}
+    @Override
+    public void onBackPressed() {}
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
@@ -238,8 +238,8 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
         super.onPause();
 
         if (!isClosing) {
-//            ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-//            am.moveTaskToFront(getTaskId(), 0);
+            ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+            am.moveTaskToFront(getTaskId(), 0);
         } else if (mFilePathCallback == null) {
             stopServer();
         }
