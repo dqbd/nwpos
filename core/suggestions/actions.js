@@ -21,12 +21,16 @@ module.exports.suggest = (price) => (dispatch, getState) => {
 	}
 }
 
+module.exports.setSuggestions = (grouped) => (dispatch) => {
+	dispatch({ type: types.SETLIST, grouped })
+	dispatch({ type: types.SUGGEST, suggestions: Object.keys(grouped).reduce((memo, key) => [...memo, ...grouped[key]], []) })
+}
+
 module.exports.listSuggestions = () => (dispatch) => {
 	return fetch(getUrl("/suggest"), { method: "GET" })
 	.then(a => a.json())
 	.then(a => {
-		dispatch({ type: types.SETLIST, grouped: a})
-		dispatch({ type: types.SUGGEST, suggestions: Object.keys(a).reduce((memo, key) => [...memo, ...a[key]], []) })
+		dispatch(module.exports.setSuggestions(a))
 	}).catch(e => {
 		console.error(e)
 	})

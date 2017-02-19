@@ -1,6 +1,6 @@
 const types = require("./actionTypes")
 
-const suggestions = require("../suggestions/actionTypes")
+const suggestions = require("../suggestions/actions")
 const fetch = require("isomorphic-fetch")
 const { getUrl } = require("../utils")
 
@@ -70,7 +70,7 @@ module.exports.log = (customer) => (dispatch) => {
 	.then(a => a.json())
 	.then(a => {
 		dispatch({ type: types.LOG, log: true })
-		dispatch({ type: suggestions.SETLIST, grouped: a })
+		dispatch(suggestions.setSuggestions(a))
 	}).catch(e => {
 		console.error(e)
 		dispatch({ type: types.LOG, log: false })
