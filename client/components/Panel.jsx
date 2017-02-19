@@ -9,6 +9,13 @@ import DifferenceButton from "../containers/StatefulDifferenceButton.jsx"
 const types = customer.types.STATUS_TYPES
 
 export default class Panel extends Component {
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.status !== this.props.status && this.props.status === types.COMMIT_END) {
+			this.props.onPrint()
+		}
+	}
+
 	render() {
 		let {status, onEdit, onClear, onDrawer, onDiscount, onPay, onPrint, onQtySet} = this.props
 		let actions = []
