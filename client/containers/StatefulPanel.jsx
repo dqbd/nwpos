@@ -11,7 +11,10 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => hapticFeedback({
-	onPay: () => dispatch(customer.pay()),
+	onPay: () => {
+		dispatch(customer.pay())
+		dispatch(customer.print())
+	},
 	onEdit: () => dispatch(customer.edit()),
 	onPrint: () => dispatch(customer.print()),
 	onQtySet: () => dispatch(customer.qty()),
