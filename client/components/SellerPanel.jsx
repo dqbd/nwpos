@@ -8,7 +8,6 @@ class Seller extends Component {
 
     render() {
         let seller = this.props.seller
-        console.log(seller.name, this.props.active)
         return <div className={this.props.active ? "seller active" : "seller"} onTouchTap={this.onClick.bind(this)}>
             <div className="name">{seller.name}</div>
             <div className="ic">IČ: {seller.ic}</div>
@@ -42,9 +41,8 @@ export default class SellerPanel extends Component {
     }
     render() {
         let sellers = this.props.sellers || []
-        console.log(this.props.active)
         return <div className="sellers-panel">
-            {sellers.map(seller => <Seller seller={seller} active={this.props.active === seller.ic} onNext={this.onNext.bind(this)} />)}
+            {sellers.map(seller => <Seller key={seller.ic} seller={seller} active={this.props.active === seller.ic} onNext={this.onNext.bind(this)} />)}
         </div>
     }
 }

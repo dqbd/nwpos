@@ -11,7 +11,7 @@ const types = customer.types.STATUS_TYPES
 export default class Panel extends Component {
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.status !== this.props.status && this.props.status === types.COMMIT_END) {
+		if (!this.props.debug && prevProps.status !== this.props.status && this.props.status === types.COMMIT_END) {
 			this.props.onPrint()
 		}
 	}

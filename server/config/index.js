@@ -13,7 +13,8 @@ class Config {
 	load() {
 		let src = {}
 		let initial = {
-			"sellers": []
+			"sellers": [],
+			"debug": false
 		}
 
 		try {

@@ -104,6 +104,10 @@ class Interface {
 		return Promise.resolve({ config: this.config.get() })
 	}
 
+	GET_DEBUG() {
+		return Promise.resolve({ debug: this.config.get().debug === true })
+	}
+
 	POST_CONFIG({config}) {
 		this.config.set(config)
 		return Promise.resolve({ config: this.config.get() })

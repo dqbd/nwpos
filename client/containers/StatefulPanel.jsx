@@ -5,7 +5,9 @@ import { customer, cart, screen, services } from "../../core"
 import { hapticFeedback, capitalize } from "../utils"
 
 const mapStateToProps = (state) => {
+
 	return {
+		debug: state.debug,
 		status: state.customer.status
 	}
 }

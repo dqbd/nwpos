@@ -7,6 +7,7 @@ let showClient = function() {
 	}
 	this.store.dispatch(suggestions.listSuggestions())
 	this.store.dispatch(seller.retrieveSellers())
+	this.store.dispatch(seller.retrieveDebug())
 	this.store.dispatch(customer.suggest())
 }
 
@@ -16,6 +17,7 @@ let showStats = function() {
 		this.hashHistory.push("/stats")
 	}
 	this.store.dispatch(seller.retrieveSellers())
+	this.store.dispatch(seller.retrieveDebug())
 	this.store.dispatch(stats.retrieve())
 }
 

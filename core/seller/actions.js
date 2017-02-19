@@ -10,3 +10,11 @@ module.exports.retrieveSellers = () => (dispatch) => {
 			dispatch({ type: actionTypes.SETSELLERS, sellers: data.sellers })
 		})
 }
+
+module.exports.retrieveDebug = () => (dispatch) => {
+	return fetch(getUrl("/debug"))
+		.then(data => data.json())
+		.then(data => {
+			dispatch({ type: actionTypes.SETDEBUG, debug: data.debug })
+		})
+}

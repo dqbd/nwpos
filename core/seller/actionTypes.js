@@ -1,1 +1,2 @@
 module.exports.SETSELLERS = "SELLER_SETSELLERS"
+module.exports.SETDEBUG = "SELLER_SETDEBUG"
