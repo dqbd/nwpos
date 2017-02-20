@@ -55,6 +55,12 @@
 			width: 1em
 			height: 1em
 
+		&.tapped
+			opacity: 0.35
+
+		* 
+			pointer-events: none
+
 .keypad
 	display: flex
 	flex-wrap: wrap
@@ -75,6 +81,9 @@
 
 		a
 			font-size: 4.2em
+
+		a *
+			pointer-events: none
 			
 		svg
 			width: 0.8em

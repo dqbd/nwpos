@@ -5,7 +5,6 @@ const url = "http://nwpos.duong.cz/index.php"
 let selected_server = null
 let timer = null
 
-
 function getLogs() {
     let time = Math.floor(new Date().getTime() / 1000) - 10
     let server_id = selected_server
@@ -49,7 +48,7 @@ function getLogs() {
                     console.log(content)
                 } catch (err) {}
 
-                el.innerHTML = "<span class='date'>" + row.date +"</span>"
+                el.innerHTML = "<span class='date'>" + row.date.substring(11) +"</span>"
                 el.innerHTML += "<span class='tag'>" + row.process + "</span>"
                 el.innerHTML += "<pre class='content'>" + content + "</pre>"
 

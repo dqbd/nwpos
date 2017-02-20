@@ -12,6 +12,7 @@ module.exports.retrieveSellers = () => (dispatch) => {
 }
 
 module.exports.retrieveDebug = () => (dispatch) => {
+	console.log("retrieving debug")
 	return fetch(getUrl("/debug"))
 		.then(data => data.json())
 		.then(data => {

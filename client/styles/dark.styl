@@ -8,12 +8,14 @@ body.dark, body.dark #root
 	.keypad, #dashboard .days
 		background: #393939
 		
-		
 	.panel
 		background: #353535
 		
-	.names .suggestion, .popup .content .groups .item
+	.names .suggestion, .popup .content .groups .item a
 		background: #444444
+
+		&.tapped
+			background: darken(@background, 8%)
 			
 	.btn, .screen[class="screen"], .screen .remove, .cart, .names .suggestion
 		color: rgb(255,255,255)
