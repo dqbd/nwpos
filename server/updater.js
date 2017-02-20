@@ -7,7 +7,6 @@ try {
     config = Object.assign(config, JSON.parse(fs.readFileSync("updater.json")))
 } catch (err) {}
 
-
 if (!config.server_id) {
     fetch(config.url + "?query=generate")
         .then(a => a.json())
@@ -19,8 +18,6 @@ if (!config.server_id) {
 } else {
     watch()
 }
-
-
 
 let timer = null
 
@@ -81,13 +78,12 @@ function poll() {
 }
 function watch() {
     console.log(config)
-    
     pm2.connect((err) => {
         if (err) {
             console.error(err)
             process.exit(2)
         }
-
+        
         poll()
 
         pm2.launchBus((err, bus) => {

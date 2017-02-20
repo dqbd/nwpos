@@ -6,15 +6,20 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="console"></div>
     <div id="controls">
-        <select id="servers"></select>
+        <div class="serverlist">
+            <select id="servers"></select>
+            <button id="nickname">nickname</button>
+        </div>
         <div class="actions">
-            <button id="pull">pullAndRestart</button>
+            <button id="cmd">command</button>
+            <button id="clear">clear</button>
+            <button id="pull">pull</button>
             <button id="restart">restart</button>
             <button id="list">list</button>
         </div>
     </div>
+    <div id="console"></div>
     <script src="app.js"></script>
 </body>
 </html>

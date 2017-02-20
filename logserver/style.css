@@ -1,13 +1,17 @@
 body {
   margin: 0;
   background: #212121;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+* {
+  box-sizing: border-box;
 }
 #console {
   color: #bbb;
-  max-height: 78vh;
-  min-height: 78vh;
-  margin-bottom: 2vh;
+  flex-grow: 1;
+  padding: 20px;
   overflow: auto;
   font-family: monospace;
 }
@@ -35,8 +39,19 @@ body {
 #controls {
   display: flex;
   background: #fff;
-  padding: 25px;
   border-radius: 4px;
+  max-height: 80px;
+  min-height: 80px;
+  padding: 20px;
+  margin: 20px;
+  margin-bottom: 0;
+}
+#controls .serverlist {
+  display: flex;
+}
+#controls .serverlist select {
+  margin-right: 10px;
+  padding: 0 10px;
 }
 #controls .actions {
   display: flex;
