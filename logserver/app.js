@@ -79,9 +79,9 @@ document.querySelector("#restart").onclick = (e) => sendAction("restart", [promp
 document.querySelector("#list").onclick = (e) => sendAction("list")
 document.querySelector("#clear").onclick = (e) => clearLogs()
 document.querySelector("#nickname").onclick = (e) => {
-
     if (selected_server) {
         let nickname = prompt("Přezdívka pro server " + selected_server)
+        if (!nickname) nickname = ""
     }
 }
 document.querySelector("#cmd").onclick = (e) => {
