@@ -7,11 +7,12 @@ test("init, get & save", () => {
     let data = config()
 
     expect(data.get()).toEqual({
+		debug: false,
         sellers: []
     })
 
     expect(fs.__getMockData()).toEqual({
-        "config.json": JSON.stringify({sellers: []})
+        "config.json": JSON.stringify({sellers: [], debug: false})
     })
 })
 
@@ -23,6 +24,7 @@ test("get default customer", () => {
     let data = config()
 
     expect(data.get()).toEqual({
+		debug: false,
         sellers: [{
 			name: null,
 			ic: "123456",

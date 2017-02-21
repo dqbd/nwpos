@@ -78,6 +78,12 @@ test("log customer", () => {
 		]
 	}
 
+	let suggests = [
+		{ "name": "aviváž", "min_price": 50, "max_price": 50, "bought": 1, "total": 50 },
+		{ "name": "barva na vlasy", "min_price": 62, "max_price": 62, "bought": 1, "total": 62 },
+		{ "name": "baterie", "min_price": 10, "max_price": 10, "bought": 1, "total": 10 },
+		{ "name": "batoh", "min_price": 250, "max_price": 250, "bought": 1, "total": 250 }
+	]
 
 	nock("http://localhost")
 		.post("/store", payload)
@@ -90,7 +96,9 @@ test("log customer", () => {
 
 		expect(actions).toEqual([
 			{ type: actionTypes.LOG, log: true },
-			{ type: suggestions.SETLIST, grouped: answer }
+			{ type: suggestions.SETLIST, grouped: answer },
+			{ type: suggestions.SUGGEST, suggestions: suggests },
+
 		])
 	})
 })
