@@ -31,16 +31,10 @@ test("send eet correctly", () => {
     index.upload(seller, total, poradCislo, now).then(data => {
         expect(eet.__calls).toEqual([{
             options: {
-                "enabled": true,
-                "file": "CZ1212121218.P12",
-                "pass": "eet",
-                "idPokl": "SiRLXKx1zv9EauXyWyyw",
-                "idProvoz": "123",
-                "playground": true,
-                "offline": true,
-                "privateKey": consts.key,
-                "certificate": consts.cert,
-                "dic": "CZ1212121218"
+                playground: true,
+                offline: true,
+                privateKey: consts.key,
+                certificate: consts.cert,
             },
             items: {
                 dicPopl: 'CZ1212121218',

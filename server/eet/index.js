@@ -21,19 +21,23 @@ const generatePoradCislo = () => {
 }
 
 module.exports.upload = (seller, total, poradCis, datTrzby) => certs.retrieveCert(seller.eet.file, seller.eet.pass).then(result => {
-	let options = Object.assign({}, seller.eet, { privateKey: result.key, certificate: result.cert, dic: seller.dic })
-	let { dic, idPokl, idProvoz } = options
-
 	poradCis = (poradCis !== undefined) ? poradCis : generatePoradCislo()
 	datTrzby = (datTrzby !== undefined) ? datTrzby : new Date()
 
+	const options = {
+		playground: seller.eet.playground,
+		offline: seller.eet.offline,
+		privateKey: result.key,
+		certificate: result.cert,
+	}
+
 	const items = {
-		dicPopl: dic,
-		idPokl: idPokl,
+		dicPopl: seller.dic,
+		idPokl: seller.eet.idPokl,
+		idProvoz: seller.eet.idProvoz,
 		poradCis: poradCis,
 		datTrzby: datTrzby,
-		celkTrzba: total,
-		idProvoz: idProvoz
+		celkTrzba: total
 	}
 
 	return eet(options, items).then(response => {
