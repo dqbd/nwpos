@@ -114,7 +114,7 @@ class Interface {
 	}
 
 	POST_P12_FILE({file, pass}) {
-		return eet.validateCert(file.filename, pass)
+		return eet.certs.validateCert(file.filename, pass)
 	}
 
 	GET_BACKUP_PIPE() {

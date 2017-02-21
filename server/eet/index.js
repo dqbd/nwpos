@@ -1,9 +1,5 @@
-const path = require("path")
-const fs = require("fs")
-
 const eet = require("eet")
-const pem = require("pem")
-const uuid = require("node-uuid")
+const certs = require("./certs")
 
 const generatePoradCislo = () => {
 	let date = new Date()
@@ -24,33 +20,8 @@ const generatePoradCislo = () => {
 	return payload
 }
 
-const getCertFile = (filename) => {
-	return path.resolve(__dirname, "..", "data", filename)
-}
-
-const retrieveCert = (filename, pass) => new Promise((resolve, reject) => {
-	let file = fs.readFileSync(getCertFile(filename))
-	pem.readPkcs12(file, {p12Password: pass}, (err, result) => {
-		if (err) return reject(err)
-		resolve(result)
-	})
-})
-
-const validateCert = (filename, pass) => {
-	return retrieveCert(filename, pass).then(a => {
-		return {filename}
-	}).catch(err => {
-		//delete file
-		console.log("Cert not valid", err)
-		fs.unlinkSync(getCertFile(filename))
-		return Promise.reject(false)
-	})
-}
-
-const upload = (seller, total, poradCis, datTrzby) => retrieveCert(seller.eet.file, seller.eet.pass).then(result => {
-	console.log("sending eet", total, seller.ic)
-
-	let options = Object.assign(seller.eet, { privateKey: result.key, certificate: result.cert, dic: seller.dic })
+module.exports.upload = (seller, total, poradCis, datTrzby) => certs.retrieveCert(seller.eet.file, seller.eet.pass).then(result => {
+	let options = Object.assign({}, seller.eet, { privateKey: result.key, certificate: result.cert, dic: seller.dic })
 	let { dic, idPokl, idProvoz } = options
 
 	poradCis = (poradCis !== undefined) ? poradCis : generatePoradCislo()
@@ -73,6 +44,4 @@ const upload = (seller, total, poradCis, datTrzby) => retrieveCert(seller.eet.fi
 	})
 }) 
 
-module.exports.retrieveCert = retrieveCert
-module.exports.validateCert = validateCert
-module.exports.upload = upload
+module.exports.certs = certs
