@@ -64,7 +64,7 @@ class Timer {
         let poradCislo = log.services.eet.poradCis
 
         let currSeller = this.getSeller(log.seller)
-        console.log("sending time eet", currSeller.seller, total)
+        console.log("sending time eet", currSeller.ic, total)
 
         return eet.upload(currSeller, total, poradCislo, datTrzby).then(res => {
             console.log(res)

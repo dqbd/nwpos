@@ -52,7 +52,7 @@ module.exports.printRaw = (lines) => new Promise((resolve, reject) => {
 	printer.feed().then(a => {
 		resolve(true)
 	}).catch(err => {
-		reject({ err: err.err, buffer: err.buffer, lines })
+		reject({ err: err.err, buffer: err.buffer.toJSON().data })
 	})
 })
 
