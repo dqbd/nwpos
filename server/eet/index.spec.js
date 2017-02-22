@@ -41,10 +41,10 @@ test("send eet correctly", () => {
                 idPokl: 'SiRLXKx1zv9EauXyWyyw',
                 poradCis: '123456',
                 datTrzby: now,
-                celkTrzba: 100,
+                celkTrzba: total,
                 idProvoz: '123'
             }
-        }])    
+        }])
     })
 
 })

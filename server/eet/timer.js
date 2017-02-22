@@ -48,37 +48,45 @@ class Timer {
             })
     }
 
+    retrieveFailedLogs(day) {
+        return this.logs.retrieveLog(day)
+        .then(logs => {
+            return logs.customers.filter(log => {
+                return log.services && log.services.eet && !log.services.eet.fik && log.services.eet.pkp
+            })
+        })
+    }
+
+    resendLog(result, log) {
+        console.log("Sending: " + log._id)
+        let total = log.cart.items.reduce((memo, item, index) => memo + item.price * item.qty, 0)
+        let datTrzby = new Date(Date.parse(log.services.eet.datTrzby))
+        let poradCislo = log.services.eet.poradCis
+
+        let currSeller = this.getSeller(log.seller)
+        console.log("sending time eet", currSeller.seller, total)
+
+        return eet.upload(currSeller, total, poradCislo, datTrzby).then(res => {
+            console.log(res)
+            let newCustomer = Object.assign({}, log)
+            newCustomer.services.eet = res
+            result.push(newCustomer)
+            return result
+        }, (err) => {
+            console.log(err)
+            return Promise.resolve(result)
+        })
+    }
+
     runTaskForDay(day) {
         if (!this.logs) return Promise.reject("no db for timer")
 
-        return this.logs.retrieveLog(day)
-            .then(logs => {
-                return logs.customers.filter(log => {
-                    return log.services && log.services.eet && !log.services.eet.fik && log.services.eet.pkp
-                })
-            })
+        return this.retrieveFailedLogs(day)
             .then(logs => {
                 let promise = Promise.resolve([])
                 logs.forEach(log => {
-                    promise = promise.then(result => {
-                        console.log("Sending: " + log._id)
-                        let total = log.cart.items.reduce((memo, item, index) => memo + item.price * item.qty, 0)
-                        let datTrzby = new Date(Date.parse(log.services.eet.datTrzby))
-                        let poradCislo = log.services.eet.poradCis
-
-                        let currSeller = this.getSeller(log.seller)
-                        console.log("sending time eet", currSeller.seller, total)
-
-                        return eet.upload(currSeller, total, poradCislo, datTrzby).then(res => {
-                            let newCustomer = Object.assign({}, log)
-                            newCustomer.services.eet = res
-                            result.push(newCustomer)
-                            return result
-                        }, (err) => {
-                            console.log(err)
-                            return Promise.resolve(result)
-                        }).then(list => new Promise(resolve => setTimeout(() => resolve(list), 1000)))
-                    })
+                    promise = promise.then(result => this.resendLog(result, log))
+                        .then(list => new Promise(resolve => setTimeout(() => resolve(list), 1000)))
                 })
 
                 return promise
@@ -93,6 +101,7 @@ class Timer {
     }
 }
 
+module.exports = Timer
 module.exports.init = (config, database) => {
     return new Timer(config, database.logs())
 }
