@@ -23,15 +23,18 @@ const generatePoradCislo = () => {
 module.exports.upload = (seller, total, poradCis, datTrzby) => certs.retrieveCert(seller.eet.file, seller.eet.pass).then(result => {
 	poradCis = (poradCis !== undefined) ? poradCis : generatePoradCislo()
 	datTrzby = (datTrzby !== undefined) ? datTrzby : new Date()
+	overeni = (seller.eet.overeni !== undefined) ? seller.eet.overeni : false  
 
 	const options = {
 		playground: seller.eet.playground,
 		offline: seller.eet.offline,
 		privateKey: result.key,
+		timeout: 3500,
 		certificate: result.cert,
 	}
 
 	const items = {
+		overeni: overeni,
 		dicPopl: seller.dic,
 		idPokl: seller.eet.idPokl,
 		idProvoz: seller.eet.idProvoz,
@@ -41,6 +44,15 @@ module.exports.upload = (seller, total, poradCis, datTrzby) => certs.retrieveCer
 	}
 
 	return eet(options, items).then(response => {
+		if (response.err && response.err instanceof Error) {
+			let newError = {}
+			Object.getOwnPropertyNames(response.err).forEach((key) => {
+				newError[key] = response.err[key]
+			})
+			response.err = newError
+			response.overeni = overeni
+		}
+
 		return Object.assign(response, {poradCis, datTrzby})
 	}, err => {
 		console.log(err)

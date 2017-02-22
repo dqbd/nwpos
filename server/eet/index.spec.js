@@ -28,13 +28,14 @@ test("send eet correctly", () => {
     let poradCislo = "123456"
     let now = new Date()
  
-    index.upload(seller, total, poradCislo, now).then(data => {
+    return index.upload(seller, total, poradCislo, now).then(data => {
         expect(eet.__calls).toEqual([{
             options: {
                 playground: true,
                 offline: true,
                 privateKey: consts.key,
                 certificate: consts.cert,
+                timeout: 3500
             },
             items: {
                 dicPopl: 'CZ1212121218',
@@ -42,9 +43,9 @@ test("send eet correctly", () => {
                 poradCis: '123456',
                 datTrzby: now,
                 celkTrzba: total,
-                idProvoz: '123'
+                idProvoz: '123',
+                overeni: false
             }
         }])
     })
-
 })

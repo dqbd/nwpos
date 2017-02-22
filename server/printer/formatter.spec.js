@@ -121,6 +121,40 @@ test("print eet offline", () => {
 	])
 })
 
+test("print eet test", () => {
+	let eet = {"pkp":"fU7tejtV0tFsoOZsNGae4S2UMaI2HYDpRb3toyzBWXyF8Zoe+3dNnuUJZ5ljYazvU5fegIQN+k5Eg1B5WZvaxsSChvxtwBzEn0VVLjeam5bXQlPuhwIP+ZRUGXpKdW/I9drFh6+4Ud7POaQCjCNRb+wX7S+5p4/2mA0vIlYQonvJk27daPdIbDsOweFCAQGSujo2NlBqg3cjL5zKyuhsTpYwiNWtVkAoMCDmbPQdd9PH5eV0ALVm0SwH0AoSHYds//LQGKQsYoVXffROpuaBJ5XhUnDkbvz0PlEcdQNQLqji7FOTzucDwiXZmaM1skM42ydhYSCplsawzizyZFoyyg==","bkp":"C6CFCCA8-17ACD4CF-B9FF974D-14CF5EB1-F7447354","err":{"message":"Datovou zpravu evidovane trzby v overovacim modu se podarilo zpracovat (0)"},"poradCis":"02222017182333672","datTrzby":"2017-02-22T17:23:33.672Z","overeni":true}
+
+	let lines = printer.printEet(eet, seller)
+	expect(lines).toEqual([
+		"",
+		"Ověřovací mód EET",
+		"Datovou zpravu evidovane trzby v",
+		"overovacim modu se podarilo zpra",
+		"covat (0)",
+		"",
+		"Tržba NENÍ evidována v EET",
+		"",
+		"Provozovna: 123",
+   		"Pokladna: n/n_vT:GOJP,KuDVZPGX",
+   		"",
+   		"Číslo účtenky: 02222017182333672",
+   		"",
+		"BKP: C6CFCCA8-17ACD4CF-B9FF974D-",
+		"14CF5EB1-F7447354",
+		"PKP: fU7tejtV0tFsoOZsNGae4S2UMaI",
+		"2HYDpRb3toyzBWXyF8Zoe+3dNnuUJZ5l",
+		"jYazvU5fegIQN+k5Eg1B5WZvaxsSChvx",
+		"twBzEn0VVLjeam5bXQlPuhwIP+ZRUGXp",
+		"KdW/I9drFh6+4Ud7POaQCjCNRb+wX7S+",
+		"5p4/2mA0vIlYQonvJk27daPdIbDsOweF",
+		"CAQGSujo2NlBqg3cjL5zKyuhsTpYwiNW",
+		"tVkAoMCDmbPQdd9PH5eV0ALVm0SwH0Ao",
+		"SHYds//LQGKQsYoVXffROpuaBJ5XhUnD",
+		"kbvz0PlEcdQNQLqji7FOTzucDwiXZmaM",
+		"1skM42ydhYSCplsawzizyZFoyyg=="
+	])
+})
+
 test("print existing info", () => {
 	let date = new Date(Date.parse("2017-01-06T15:50:19.283Z"))
 

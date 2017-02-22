@@ -27,7 +27,17 @@ class Config {
 		src = Object.assign(initial, src)
 
 		// attempt fixing sellers
-		src.sellers = src.sellers.map(seller => Object.assign({}, defaultSeller, seller))
+		src.sellers = src.sellers.map(seller => {
+			seller = Object.assign({}, defaultSeller, seller)
+			// validate nested objects
+			for (let key of Object.keys(seller)) {
+				if (seller[key] !== null && typeof seller[key] === "object" ) {
+					seller[key] = Object.assign({}, defaultSeller[key], seller[key])
+				}
+			}
+
+			return seller
+		})
 		
 		this.state = src
 		this.save()

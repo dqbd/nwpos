@@ -89,7 +89,7 @@ class Seller extends Component {
 			<input placeholder="PSČ" className="psc" onChange={this.onChange.bind(this)} value={safeOutput(seller.psc)}></input>
 			<label className="checkbox">
 				<input className="tax" type="checkbox" onChange={this.onChange.bind(this)} checked={safeOutput(seller.tax)}/>
-				<span>DPH</span>
+				<span>Jsem plátce 21% DPH</span>
 			</label>
 
 			<h2>EET</h2>
@@ -111,7 +111,19 @@ class Seller extends Component {
 					</svg>
 				</div>
 			</div>
-			<input placeholder="ID Provozovny" type="number" className="idProvoz" onChange={this.onEetChange.bind(this)} value={safeOutput(seller.eet.idProvoz)}></input>
+			<input placeholder="Číslo provozovny" type="number" className="idProvoz" onChange={this.onEetChange.bind(this)} value={safeOutput(seller.eet.idProvoz)}></input>
+			<label className="checkbox">
+				<input className="offline" type="checkbox" onChange={this.onEetChange.bind(this)} checked={safeOutput(seller.eet.offline)} />
+				<span>Znova odesílat po neúspěchu</span>
+			</label>
+			<label className="checkbox">
+				<input className="overeni" type="checkbox" onChange={this.onEetChange.bind(this)} checked={safeOutput(seller.eet.overeni)} />
+				<span>Pouze ověření (bez FIK)</span>
+			</label>
+			<label className="checkbox">
+				<input className="playground" type="checkbox" onChange={this.onEetChange.bind(this)} checked={safeOutput(seller.eet.playground)} />
+				<span>Vývojářské prostředí</span>
+			</label>
 			<h2>Akce</h2>
 			<div className="actions">
 				<a className="btn reset" onTouchTap={this.onReset.bind(this)}>Resetovat</a>

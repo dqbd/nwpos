@@ -54,7 +54,8 @@ const table = (rows, spacing = 2) => {
 const wrapLine = (line) => {
 	let lines = []
 	for(let i = 0; i < line.length; i += limit) {
-		lines.push(line.substring(i, Math.min(line.length, i + 32)).trim())
+		while(line[i].trim().length == 0) i++
+		lines.push(line.substring(i, Math.min(line.length, i + limit)).trim())
 	} 
 	return lines
 }
@@ -103,8 +104,19 @@ module.exports.printCart = (items, total, paid, date, tax = 21) => {
 
 module.exports.printEet = (eet, seller) => {
 	if (eet === null || eet === undefined || !eet.fik && !eet.pkp || !eet.bkp) return []
-	let result = (eet.fik) ? ["" ,...wrapLine("Tržba evidována v běžném režimu"), ""] : ["", ...wrapLine("Tržba evidována ve zjednodušeném režimu"), ""]
-	
+
+	let result = [""]
+
+	if (eet.fik) {
+		result = [...result, ...wrapLine("Tržba evidována v běžném režimu")]
+	} else if (eet.overeni && eet.err.message) {
+		result = [...result, ...wrapLine("Ověřovací mód EET"), ...wrapLine(eet.err.message), "", ...wrapLine("Tržba NENÍ evidována v EET")]
+	} else {
+		result = [...result, ...wrapLine("Tržba evidována ve zjednodušeném režimu")]
+	}
+
+	result.push("")
+
 	if (seller.eet !== null && seller.eet.idProvoz) {
 		result.push("Provozovna: " + seller.eet.idProvoz)
 	}

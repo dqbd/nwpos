@@ -11,6 +11,7 @@ module.exports.defaultSeller = {
         pass: null,
         idPokl: null,
         idProvoz: null,
+        overeni: false,
         playground: true,
         offline: true
     },

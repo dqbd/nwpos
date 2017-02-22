@@ -52,7 +52,7 @@ class Timer {
         return this.logs.retrieveLog(day)
         .then(logs => {
             return logs.customers.filter(log => {
-                return log.services && log.services.eet && !log.services.eet.fik && log.services.eet.pkp
+                return log.services && log.services.eet && !log.services.eet.fik && log.services.eet.pkp && !log.services.eet.overeni
             })
         })
     }

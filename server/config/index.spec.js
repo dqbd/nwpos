@@ -18,7 +18,7 @@ test("init, get & save", () => {
 
 test("get default customer", () => {
     fs.__setMockData({
-        "config.json": JSON.stringify({sellers: [{ic: "123456"}]})
+        "config.json": JSON.stringify({sellers: [{ic: "123456", eet: {enabled: true}}]})
     })
 
     let data = config()
@@ -33,7 +33,8 @@ test("get default customer", () => {
 			dic: null,
 			city: null,
 			eet: {
-				enabled: false,
+				enabled: true,
+				overeni: false,
 				file: null,
 				pass: null,
 				idPokl: null,
