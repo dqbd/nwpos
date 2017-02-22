@@ -22,9 +22,9 @@ class AppInterface {
     static final String JS_NAME = "android";
 
     private WebView view;
-    private AppLoadListener listener;
+    private Listener listener;
 
-    AppInterface(WebView view, AppLoadListener listener) {
+    AppInterface(WebView view, Listener listener) {
         this.view = view;
         this.listener = listener;
     }
@@ -69,11 +69,19 @@ class AppInterface {
     }
 
     @JavascriptInterface
-    public void printOnDevice(String[] lines) {
-
+    public void printOnDevice(final byte[] buffer) {
+        if (listener != null) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    listener.onNativePrint(buffer);
+                }
+            });
+        }
     }
 
-    interface AppLoadListener {
+    interface Listener {
+        void onNativePrint(byte[] buffer);
         void onAppLoaded(Map<String, String> actions);
     }
 }

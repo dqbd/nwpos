@@ -37,7 +37,7 @@ import cz.duong.nodecashier.utils.UrlChecker;
 import static cz.duong.nodecashier.termux.EmulatorDebug.LOG_TAG;
 import static cz.duong.nodecashier.termux.TermuxService.ACTION_STOP_SERVICE;
 
-public class MainActivity extends Activity implements AppInterface.AppLoadListener, ServiceConnection, UrlChecker.CheckListener {
+public class MainActivity extends Activity implements AppInterface.Listener, ServiceConnection, UrlChecker.CheckListener {
 
     private final static int MAX_ATTEMPTS = 3;
     private final static int DELAY_FACTOR = 3000;
@@ -274,6 +274,11 @@ public class MainActivity extends Activity implements AppInterface.AppLoadListen
         this.actions = actions;
         this.attempts = 0;
         showBrowser();
+    }
+
+    @Override
+    public void onNativePrint(byte[] buffer) {
+        
     }
 
     void loadPage() {
