@@ -51,8 +51,6 @@ public class BluetoothService {
     public static final int MESSAGE_CONNECTION_LOST = 6;
     public static final int MESSAGE_UNABLE_CONNECT = 7;
 
-    public static final String TOAST = "toast";
-
     public BluetoothService(Handler handler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
@@ -121,6 +119,8 @@ public class BluetoothService {
 
     private synchronized void reconnect(BluetoothDevice device) {
         if (!closed) {
+            Log.d(TAG, "Reconnecting: " + device.getAddress());
+            setState(STATE_CONNECTING);
             connect(device);
         }
     }

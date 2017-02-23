@@ -17,7 +17,9 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,6 +28,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -41,6 +44,8 @@ import cz.duong.nodecashier.utils.UrlChecker;
 import static cz.duong.nodecashier.printer.BluetoothService.MESSAGE_CONNECTION_LOST;
 import static cz.duong.nodecashier.printer.BluetoothService.MESSAGE_STATE_CHANGE;
 import static cz.duong.nodecashier.printer.BluetoothService.MESSAGE_UNABLE_CONNECT;
+import static cz.duong.nodecashier.printer.BluetoothService.STATE_LISTEN;
+import static cz.duong.nodecashier.printer.BluetoothService.STATE_NONE;
 import static cz.duong.nodecashier.termux.EmulatorDebug.LOG_TAG;
 import static cz.duong.nodecashier.termux.TermuxService.ACTION_STOP_SERVICE;
 
@@ -55,6 +60,7 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
     private WebView webView;
     private View errorView;
     private ProgressBar progressBar;
+    private Snackbar snackbar;
 
     private PowerManager.WakeLock wakeLock;
 
@@ -351,20 +357,38 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
         finish();
     }
 
+    void showSnackbar(String info, boolean infinite) {
+        if (snackbar != null && snackbar.isShown()) {
+            snackbar.dismiss();
+        }
+
+        snackbar = Snackbar.make(findViewById(android.R.id.content), info, infinite ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_SHORT);
+
+        Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout)snackbar.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layout.getLayoutParams();
+        params.gravity = Gravity.END | Gravity.TOP;
+        params.topMargin = 20;
+        params.rightMargin = 20;
+        params.leftMargin = 20;
+
+        layout.setLayoutParams(params);
+
+        snackbar.show();
+    }
+
     void setupPrinter() {
         bluetoothHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case MESSAGE_STATE_CHANGE:
-                        Log.i("BLUETOOTH", "MESSAGE_STATE_CHANGE: " + msg.arg1);
                         if (msg.arg1 == BluetoothService.STATE_CONNECTED) {
-                            Toast.makeText(MainActivity.this, "Printer connected", Toast.LENGTH_LONG).show();
+                            showSnackbar("Tiskárna připojena", false);
                         }
                         break;
                     case MESSAGE_CONNECTION_LOST:
                     case MESSAGE_UNABLE_CONNECT:
-                        Toast.makeText(MainActivity.this, "Failed to connect to printer", Toast.LENGTH_LONG).show();
+                        showSnackbar("Nelze se připojit k tiskárně", true);
                         break;
                 }
             }
@@ -386,10 +410,14 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
             setupPrinter();
         }
 
-        bluetoothService.connect(bluetoothAdapter.getRemoteDevice(address));
+        if (bluetoothService.getState() == STATE_NONE || bluetoothService.getState() == STATE_LISTEN) {
+            Log.d("MainActivity", "Starting printer");
+            bluetoothService.connect(bluetoothAdapter.getRemoteDevice(address));
+        }
     }
 
     void stopPrinter() {
+        Log.d("MainActivity", "Stopping printer");
         if (bluetoothService != null) {
             bluetoothService.stop();
             bluetoothService = null;

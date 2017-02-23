@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
     defaultConfig {
         applicationId "com.termux"
         minSdkVersion 23
@@ -27,4 +27,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'org.jetbrains:annotations-java5:15.0'
     compile 'org.jmdns:jmdns:3.5.1'
+    compile 'com.android.support:design:23.4.0'
 }
