@@ -28,10 +28,14 @@ Dotykačka je další z plejády poskytovatelů EET služeb, který má výrazn�
 
 ![Dotykačka](dotykacka.png)
 
-# Návod k použití
-Pro uživatele nabízíme 3 způsoby, jak tuto aplikaci provozovat. Díky tomu můžeme úspěšně říci, že naše aplikace běží na všech možných myslitelných platformách. Nejedná se o nic převrátného, jelikož v jádru aplikace se skrývá prostá webová aplikace. Byla však navržena tak, aby podávala stejný výkon jako klasická nativní aplikace. Strukturu projektu si rozebereme v další kapitole. Tento návod se bude v jistých částech opakovat, chceme napsat návod, který by chápal i běžný uživatel. 
+# Struktura aplikace
+Aplikace má strukturu klasické webové služby. Uživatel předně uvidí webovou stránku, kterou si rozjede na svém prohlížeči. Komunikaci se státní správou, tiskárnou a databází má na starost server. Pro Android jsme vyvinuli prohlížeč s funkcemi specifické pro provoz pokladny.
 
-## Instalace
+![Struktura aplikace](stack.png)
+
+Většinu kódu aplikace jsme napsali v JavaScriptu. JavaScript je i přes své nevýhody králem multiplatformních jazyků. Jedná se totiž o jediný programovací jazyk, který může běžet jak v prohlížeči, tak i samostatně na serveru. 
+
+# Instalace aplikace
 ### 1. způsob: All-in-one 
 Z pohledu uživatele nejjednodušší způsob, jak aplikaci nainstalovat. Stačí zapojit veškeré příslušenství a nainstalovat aplikaci na zařízení. Není vyžadováno žádné složité nastavení. Tento způsob je podporován na těchto platformách: Windows, Mac, Linux a Android. Pro iOS zařízení je v tuto chvíli k dispozici pouze 3. způsob, jelikož nemáme k dispozici dostatečně vybavené zařízení pro vývoj iOS aplikací. 
 
@@ -383,7 +387,7 @@ Původně jsem s tiskárnou přímo komunikoval za pomocí knihovny na úrovni o
 Jako testovací tiskárnu jsem použil ZJ-5890K dovozem z Číny. Tato tiskárna je identická s tiskárnou O2 Kasy, čimž je zaručena kompabalita s tablety O2 kasy. Vesměs jsou podporovány všechny tiskárny, které umí protokol ESC/POS, což je na trhu většina.
 
 ### Termux a emulace NodeJS v Androidu
-Aplikace byla na začátku koncipována tak, aby se skládala z klientské a serverové části. Tato architektura přináší výhody, které jsme si již zmínili. Dokážeme si ale představit, že instalace a údržba jak klientu, tak serveru by byla časově a v krajních případech i finančně náročná. Bylo by tedy ideální, kdyby šla zabalit funkcionalita serveru do klientské aplikace. Klasickým způsobem integrace by bylo oddělení business logic serveru (databáze, eet) od čistě serverové logiky (http server, mdns), což je dle našeho názoru neefektivní a přináší mnoho problému ve formě výkonu a chyb, které mohou nastat při takovém oddělení. 
+Aplikace byla na začátku koncipována tak, aby se skládala z klientské a serverové části. Tato architektura přináší výhody, které jsme si již zmínili. Dokážeme si ale představit, že instalace a údržba jak klientu, tak serveru by byly časově a v krajních případech i finančně náročné. Bylo by tedy ideální, kdyby šla zabalit funkcionalita serveru do klientské aplikace. Klasickým způsobem integrace by bylo oddělení business logic serveru (databáze, eet) od čistě serverové logiky (http server, mdns), což je dle našeho názoru neefektivní a přináší mnoho problému ve formě výkonu a chyb, které mohou nastat při takovém oddělení. 
 
 Naštěstí na pomoc přichází Termux. Termux je open-source emulátor terminálu pro Android. Spolu s výborným rozhraním terminálu obsahuje aplikace předkompilované Unix balíčky a svůj vlastní systém. Díky této aplikace máme k dispozici většinu Linuxových aplikací, včetně `bash`, `apt-get`, `sed` a hlavně `nodejs`, který potřebujeme pro server. Rozhodli jsme se forknout projekt a integrovat Termux přímo do naší aplikace. 
 
