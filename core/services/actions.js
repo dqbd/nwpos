@@ -38,6 +38,12 @@ module.exports.printCart = (customer) => (dispatch) => {
 	})
 	.then(res => {
 		dispatch({ type: types.PRINT, print: res.ok })
+		if (res.status !== 200) return res.json()
+	}).then(data => {
+		console.log(data)
+		if (data && window.android) {
+			window.android.printOnDevice(data.buffer)
+		}
 	})
 }
 
