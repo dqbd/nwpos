@@ -76,9 +76,9 @@ _.TEXT_FORMAT = {
 };
 
 _.CODEPAGE = {
-  DEFAULT         : '\x1b\x07\x00',
-  OEM852          : '\x1b\x07\x36',
-  WPC1250         : '\x1b\x07\x48'
+  DEFAULT         : '\x1b\x74\x00',
+  OEM852          : '\x1b\x74\x36',
+  WPC1250         : '\x1b\x74\x48'
 }
 
 /**
