@@ -63,6 +63,8 @@ class Printer {
 
 	feed() {
 		this.cache.push(Buffer.from(new Array(3).fill(_.EOL).join("")))
+		this.cache.unshift(Buffer.from(_.CODEPAGE.WPC1250))
+
 		let out = Buffer.concat(this.cache)
 
 		return this.getStream().then(stream => {

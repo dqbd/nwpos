@@ -75,6 +75,11 @@ _.TEXT_FORMAT = {
   TXT_ALIGN_RT    : '\x1b\x61\x02', // Right justification
 };
 
+_.CODEPAGE = {
+  DEFAULT         : '\x1b\x07\x00',
+  OEM852          : '\x1b\x07\x36',
+  WPC1250         : '\x1b\x07\x48'
+}
 
 /**
  * [exports description]
