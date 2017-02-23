@@ -5,6 +5,6 @@ package cz.duong.nodecashier.setup;
  */
 
 public interface InstallListener {
-    void installFinished(boolean noServer, String url);
+    void installFinished(boolean noServer, String url, boolean printer);
     void cancel();
 }

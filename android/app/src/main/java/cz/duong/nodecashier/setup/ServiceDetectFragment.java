@@ -187,7 +187,7 @@ public class ServiceDetectFragment extends Fragment implements UrlChecker.CheckL
 
     private void showServiceSelected(String url) {
         try {
-            ((InstallListener) getActivity()).installFinished(false, url);
+            ((InstallListener) getActivity()).installFinished(false, url, false);
         } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().toString() + " must implement InstallListener");
         }

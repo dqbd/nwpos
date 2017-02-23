@@ -8,7 +8,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +27,16 @@ import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import cz.duong.nodecashier.R;
+import cz.duong.nodecashier.printer.BluetoothService;
+
+import static cz.duong.nodecashier.printer.BluetoothService.MESSAGE_CONNECTION_LOST;
+import static cz.duong.nodecashier.printer.BluetoothService.MESSAGE_STATE_CHANGE;
+import static cz.duong.nodecashier.printer.BluetoothService.MESSAGE_UNABLE_CONNECT;
 
 /**
  * @author d^2
@@ -36,6 +48,11 @@ public class BluetoothFragment extends Fragment {
     BluetoothAdapter bluetoothAdapter;
 
     static final int REQUEST_ENABLE_BT = 1;
+    static final int REQUEST_LOC = 2;
+
+    private BluetoothDevice mDevice;
+    private BluetoothService mService;
+    private Handler mHandler;
 
     View progressBar;
     Button rescanBtn;
@@ -52,7 +69,10 @@ public class BluetoothFragment extends Fragment {
         deviceList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                mDevice = adapter.getItem(position);
+                if (mService != null && mDevice != null) {
+                    mService.connect(mDevice);
+                }
             }
         });
         deviceList.setAdapter(adapter);
@@ -79,7 +99,27 @@ public class BluetoothFragment extends Fragment {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         adapter = new DeviceAdapter(getContext());
 
+        mHandler = new Handler(Looper.getMainLooper()){
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case MESSAGE_STATE_CHANGE:
+                        Log.i("BLUETOOTH", "MESSAGE_STATE_CHANGE: " + msg.arg1);
+                        if (msg.arg1 == BluetoothService.STATE_CONNECTED) {
+                            printerDone(mDevice);
+                            mService.stop();
+                        }
+                        break;
+                    case MESSAGE_CONNECTION_LOST:
+                    case MESSAGE_UNABLE_CONNECT:
+                        mDevice = null;
+                        mService.stop();
+                        break;
+                }
+            }
+        };
 
+        mService = new BluetoothService(mHandler);
     }
 
     @Override
@@ -90,11 +130,54 @@ public class BluetoothFragment extends Fragment {
             if (!bluetoothAdapter.isEnabled()) {
                 Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+            } else if (!isLocationEnabled(getContext())) {
+                accessLocationPermission(getContext());
             } else {
                 discovery();
             }
         } else {
             Toast.makeText(getContext(), "Bluetooth not in device", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private boolean isLocationEnabled(Context context) {
+        int accessCoarseLocation = context.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION);
+        int accessFineLocation   = context.checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+        if (accessCoarseLocation != PackageManager.PERMISSION_GRANTED || accessFineLocation != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void accessLocationPermission(Context context) {
+        int accessCoarseLocation = context.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION);
+        int accessFineLocation   = context.checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+        List<String> listRequestPermission = new ArrayList<>();
+
+        if (accessCoarseLocation != PackageManager.PERMISSION_GRANTED) {
+            listRequestPermission.add(android.Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+        if (accessFineLocation != PackageManager.PERMISSION_GRANTED) {
+            listRequestPermission.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+
+        if (!listRequestPermission.isEmpty()) {
+            String[] strRequestPermission = listRequestPermission.toArray(new String[listRequestPermission.size()]);
+            requestPermissions(strRequestPermission, REQUEST_LOC);
+        }
+    }
+
+    void printerDone(BluetoothDevice device) {
+        if (getActivity() instanceof BluetoothListener) {
+            if (device != null) {
+                ((BluetoothListener) getActivity()).printerFinished(true, device.getAddress());
+            } else {
+                ((BluetoothListener) getActivity()).printerFinished(false, null);
+            }
+
         }
     }
 
@@ -135,6 +218,21 @@ public class BluetoothFragment extends Fragment {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == REQUEST_LOC) {
+            if (grantResults.length > 0) {
+                for (int result : grantResults) {
+                    if (result != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                }
+
+                discovery();
+            }
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
 
@@ -148,6 +246,15 @@ public class BluetoothFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        if (mService != null) {
+            mService.stop();
+            mService = null;
+        }
+
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
 
         if (bluetoothAdapter != null) {
             bluetoothAdapter.cancelDiscovery();
@@ -189,6 +296,30 @@ public class BluetoothFragment extends Fragment {
 
         public DeviceAdapter(Context context) {
             super(context, 0, new ArrayList<BluetoothDevice>());
+        }
+
+        @Override
+        public void add(BluetoothDevice object) {
+            for(int i = 0; i < getCount(); i++) {
+                BluetoothDevice item = getItem(i);
+                if (item != null && item.getAddress().equalsIgnoreCase(object.getAddress())) {
+                    return;
+                }
+            }
+
+            super.add(object);
+        }
+
+        @Override
+        public void addAll(@NotNull Collection<? extends BluetoothDevice> collection) {
+            for(int i = 0; i < getCount(); i++) {
+                BluetoothDevice item = getItem(i);
+                if (item != null && collection.contains(item)) {
+                    return;
+                }
+            }
+
+            super.addAll(collection);
         }
 
         @Override

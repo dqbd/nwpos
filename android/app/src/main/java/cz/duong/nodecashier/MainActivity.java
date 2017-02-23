@@ -3,6 +3,7 @@ package cz.duong.nodecashier;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.Message;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,15 +27,20 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import cz.duong.nodecashier.printer.BluetoothService;
 import cz.duong.nodecashier.termux.Task;
 import cz.duong.nodecashier.termux.TermuxService;
 import cz.duong.nodecashier.utils.LauncherUtils;
 import cz.duong.nodecashier.utils.UrlChecker;
 
+import static cz.duong.nodecashier.printer.BluetoothService.MESSAGE_CONNECTION_LOST;
+import static cz.duong.nodecashier.printer.BluetoothService.MESSAGE_STATE_CHANGE;
+import static cz.duong.nodecashier.printer.BluetoothService.MESSAGE_UNABLE_CONNECT;
 import static cz.duong.nodecashier.termux.EmulatorDebug.LOG_TAG;
 import static cz.duong.nodecashier.termux.TermuxService.ACTION_STOP_SERVICE;
 
@@ -55,6 +62,9 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
 
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private TermuxService termuxService;
+
+    private BluetoothService bluetoothService;
+    private Handler bluetoothHandler;
     private ValueCallback<Uri[]> mFilePathCallback;
 
     private boolean isClosing = false;
@@ -149,6 +159,7 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
         });
 
         showLoading();
+        setupPrinter();
 
         registerReceiver(powerReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
     }
@@ -156,6 +167,7 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
     @Override
     protected void onResume() {
         super.onResume();
+        startPrinter();
         startServer();
 
         if (webView != null) webView.requestFocus();
@@ -241,6 +253,7 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
             ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
             am.moveTaskToFront(getTaskId(), 0);
         } else if (mFilePathCallback == null) {
+            stopPrinter();
             stopServer();
         }
     }
@@ -278,7 +291,7 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
 
     @Override
     public void onNativePrint(byte[] buffer) {
-        
+        bluetoothService.write(buffer);
     }
 
     void loadPage() {
@@ -338,12 +351,58 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
         finish();
     }
 
+    void setupPrinter() {
+        bluetoothHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case MESSAGE_STATE_CHANGE:
+                        Log.i("BLUETOOTH", "MESSAGE_STATE_CHANGE: " + msg.arg1);
+                        if (msg.arg1 == BluetoothService.STATE_CONNECTED) {
+                            Toast.makeText(MainActivity.this, "Printer connected", Toast.LENGTH_LONG).show();
+                        }
+                        break;
+                    case MESSAGE_CONNECTION_LOST:
+                    case MESSAGE_UNABLE_CONNECT:
+                        Toast.makeText(MainActivity.this, "Failed to connect to printer", Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+        };
+
+        bluetoothService = new BluetoothService(bluetoothHandler);
+    }
+
+    void startPrinter() {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        String address = AppPreferences.getBtAddress(this);
+
+        if (address == null || bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+            Toast.makeText(this, "Printer not started", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (bluetoothService == null) {
+            setupPrinter();
+        }
+
+        bluetoothService.connect(bluetoothAdapter.getRemoteDevice(address));
+    }
+
+    void stopPrinter() {
+        if (bluetoothService != null) {
+            bluetoothService.stop();
+            bluetoothService = null;
+        }
+    }
+
     void startServer() {
         Intent serviceIntent = new Intent(this, TermuxService.class);
 
         startService(serviceIntent);
-        if (!bindService(serviceIntent, this, 0))
+        if (!bindService(serviceIntent, this, 0)) {
             throw new RuntimeException("bindService() failed");
+        }
     }
 
     void stopServer() {

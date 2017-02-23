@@ -178,7 +178,7 @@ public class InstallFragment extends Fragment implements ServiceConnection {
 
     private void onInstallFinished() {
         try {
-            ((InstallListener) getActivity()).installFinished(true, "http://localhost:8080");
+            ((InstallListener) getActivity()).installFinished(true, "http://localhost:8080", true);
         } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().toString() + " must implement InstallListener");
         }

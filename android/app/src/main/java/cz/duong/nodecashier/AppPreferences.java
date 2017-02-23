@@ -11,6 +11,7 @@ public class AppPreferences {
     public static final String FIRST_INIT = "cz.duong.FIRST_INIT";
     public static final String SERVER_URL = "cz.duong.SERVER_URL";
     public static final String RUN_SERVER = "cz.duong.RUN_SERVER";
+    public static final String BT_ADDRESS = "cz.duong.BT_ADDRESS";
 
     public static boolean shouldFirstInit(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(FIRST_INIT, true);
@@ -34,5 +35,13 @@ public class AppPreferences {
 
     public static void setServerUrl(Context context, String serverUrl) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putString(SERVER_URL, serverUrl).apply();
+    }
+
+    public static String getBtAddress(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(BT_ADDRESS, null);
+    }
+
+    public static void setBtAddress(Context context, String addr) {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString(BT_ADDRESS, addr).apply();
     }
 }
