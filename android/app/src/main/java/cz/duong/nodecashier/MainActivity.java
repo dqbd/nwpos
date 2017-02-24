@@ -30,7 +30,6 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +54,8 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
     private final static int DELAY_FACTOR = 3000;
 
     public static final int INPUT_FILE_REQUEST_CODE = 1;
+    public static final int BT_REQUEST_CODE = 2;
+
     public static final String KEY_MIMETYPE = "application/x-pkcs12";
 
     private WebView webView;
@@ -70,10 +71,10 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
     private TermuxService termuxService;
 
     private BluetoothService bluetoothService;
-    private Handler bluetoothHandler;
     private ValueCallback<Uri[]> mFilePathCallback;
 
     private boolean isClosing = false;
+    private boolean isPrinterConnected = false;
     private int attempts = 0;
 
     private BroadcastReceiver powerReceiver = new BroadcastReceiver() {
@@ -270,26 +271,37 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
 
     @Override
     public void onActivityResult (int requestCode, int resultCode, Intent data) {
-        if(requestCode != INPUT_FILE_REQUEST_CODE || mFilePathCallback == null) {
-            super.onActivityResult(requestCode, resultCode, data);
-            return;
-        }
 
-        Uri[] results = null;
-
-        // Check that the response is a good one
-        if(resultCode == Activity.RESULT_OK) {
-            if(data != null) {
-                String dataString = data.getDataString();
-                if (dataString != null) {
-                    results = new Uri[]{Uri.parse(dataString)};
+        switch (requestCode) {
+            case INPUT_FILE_REQUEST_CODE:
+                if (mFilePathCallback == null) {
+                    super.onActivityResult(requestCode, resultCode, data);
+                    return;
                 }
-            }
-        }
 
-        isClosing = false;
-        mFilePathCallback.onReceiveValue(results);
-        mFilePathCallback = null;
+                Uri[] results = null;
+
+                // Check that the response is a good one
+                if(resultCode == Activity.RESULT_OK) {
+                    if(data != null) {
+                        String dataString = data.getDataString();
+                        if (dataString != null) {
+                            results = new Uri[]{Uri.parse(dataString)};
+                        }
+                    }
+                }
+
+                isClosing = false;
+                mFilePathCallback.onReceiveValue(results);
+                mFilePathCallback = null;
+                break;
+            case BT_REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    startPrinter();
+                } else {
+                    showSnackbar("Bluetooth je vypnutý", true);
+                }
+        }
     }
 
     @Override
@@ -306,7 +318,6 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
 
     void loadPage() {
         if (attempts < MAX_ATTEMPTS) {
-
             mHandler.removeCallbacksAndMessages(null);
             mHandler.post(new Runnable() {
                 @Override
@@ -366,8 +377,15 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
             snackbar.dismiss();
         }
 
-        snackbar = Snackbar.make(findViewById(android.R.id.content), info, infinite ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_SHORT);
-
+        snackbar = Snackbar.make(findViewById(android.R.id.content), info, infinite ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_LONG);
+        snackbar.setAction("Zavřít", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (snackbar != null) {
+                    snackbar.dismiss();
+                }
+            }
+        });
         Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout)snackbar.getView();
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layout.getLayoutParams();
         params.gravity = Gravity.END | Gravity.TOP;
@@ -381,18 +399,22 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
     }
 
     void setupPrinter() {
-        bluetoothHandler = new Handler(Looper.getMainLooper()) {
+        Handler bluetoothHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case MESSAGE_STATE_CHANGE:
                         if (msg.arg1 == BluetoothService.STATE_CONNECTED) {
+                            isPrinterConnected = true;
                             showSnackbar("Tiskárna připojena", false);
                         }
                         break;
                     case MESSAGE_CONNECTION_LOST:
                     case MESSAGE_UNABLE_CONNECT:
-                        showSnackbar("Nelze se připojit k tiskárně", true);
+                        if (isPrinterConnected) {
+                            isPrinterConnected = false;
+                            showSnackbar("Nelze se připojit k tiskárně", true);
+                        }
                         break;
                 }
             }
@@ -402,14 +424,14 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
     }
 
     void startPrinter() {
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         String address = AppPreferences.getBtAddress(this);
+        if (address == null) return;
 
-        if (address == null || bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
-            if (address != null) {
-                showSnackbar("Bluetooth není zapnutý", true);
-            }
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, BT_REQUEST_CODE);
             return;
         }
 
@@ -451,9 +473,7 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
         termuxService = ((TermuxService.LocalBinder) service).service;
         termuxService.mListener = new TermuxService.TaskListener() {
             @Override
-            public void onStarted(String name) {
-
-            }
+            public void onStarted(String name) {}
 
             @Override
             public void onStopped(String name, int exitCode) {

@@ -1,19 +1,17 @@
 package cz.duong.nodecashier.printer;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.UUID;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.UUID;
 
 /**
  * @author d^2
@@ -125,7 +123,7 @@ public class BluetoothService {
         }
     }
 
-    public synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
+    private synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
         if (DEBUG) Log.d(TAG, "connected");
 
         // Cancel the thread that completed the connection
@@ -198,7 +196,7 @@ public class BluetoothService {
         // The local server socket
         private final BluetoothServerSocket mmServerSocket;
 
-        public AcceptThread() {
+        AcceptThread() {
             BluetoothServerSocket tmp = null;
 
             // Create a new listening server socket
@@ -252,7 +250,7 @@ public class BluetoothService {
             if (DEBUG) Log.i(TAG, "END mAcceptThread");
         }
 
-        public void cancel() {
+        void cancel() {
             if (DEBUG) Log.d(TAG, "cancel " + this);
             try {
                 mmServerSocket.close();
@@ -266,7 +264,7 @@ public class BluetoothService {
         private final BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
 
-        public ConnectThread(BluetoothDevice device) {
+        ConnectThread(BluetoothDevice device) {
             mmDevice = device;
             BluetoothSocket tmp = null;
 
@@ -315,7 +313,7 @@ public class BluetoothService {
             connected(mmSocket, mmDevice);
         }
 
-        public void cancel() {
+        void cancel() {
             try {
                 mmSocket.close();
             } catch (IOException e) {
@@ -330,7 +328,7 @@ public class BluetoothService {
         private final OutputStream mmOutStream;
         private final BluetoothDevice mDevice;
 
-        public ConnectedThread(BluetoothSocket socket, BluetoothDevice device) {
+        ConnectedThread(BluetoothSocket socket, BluetoothDevice device) {
             Log.d(TAG, "create ConnectedThread");
             mmSocket = socket;
             mDevice = device;
@@ -386,7 +384,7 @@ public class BluetoothService {
             }
         }
 
-        public void write(byte[] buffer) {
+        void write(byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
                 mmOutStream.flush();
@@ -398,7 +396,7 @@ public class BluetoothService {
             }
         }
 
-        public void cancel() {
+        void cancel() {
             try {
                 mmSocket.close();
             } catch (IOException e) {
