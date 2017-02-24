@@ -31,6 +31,34 @@ test("print customer", () => {
 	})
 })
 
+test("print native customer", () => {
+	let customer = {
+		status: "STAGE_TYPING",
+		screen: 0, paid: 0,
+		seller: "123456789",
+		services: { print: false, eet: false, log: false },
+		cart: { selection: 0, items: [] }
+	}
+
+	nock("http://localhost")
+		.post("/print", { customer })
+		.reply(500, JSON.stringify({
+			buffer: [71, 25, 30]
+		}))
+	
+	let native = jest.fn()
+
+	let store = mockStore()
+	return store.dispatch(actions.printCart(customer, native)).then(() => {
+		expect(store.getActions()).toEqual([
+			{ type: actionTypes.PRINT, print: false }
+		])
+
+		expect(native.mock.calls.length).toBe(1)
+		expect(native.mock.calls[0][0]).toEqual([71,25,30])
+	})
+})
+
 
 test("log customer", () => {
 	let customer = {

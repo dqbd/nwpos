@@ -118,12 +118,10 @@ module.exports.print = () => (dispatch, getState) => {
 			//prevent resending
 			let total = cart.getTotal(newCart)
 			let ic = getState().customer.seller
-
-			console.log("sending eet", total, ic)
 			if (!eet) return dispatch(services.eet(total, ic)).catch(a => false)
 			return eet 
 		})
-		.then(eet => dispatch(services.printCart(getState().customer)))
+		.then(eet => dispatch(services.printCart(getState().customer, window.android ? window.android.printOnDevice : null)))
 		.then(print => {
 			let { newServices } = wrapState(getState())
 

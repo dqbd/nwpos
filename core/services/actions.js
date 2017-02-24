@@ -30,7 +30,7 @@ module.exports.drawer = () => (dispatch) => {
 	})
 }
 
-module.exports.printCart = (customer) => (dispatch) => {
+module.exports.printCart = (customer, nativePrint) => (dispatch) => {
 	return fetch(getUrl(`/print`), {
 		method: "POST",
 		headers: { 'Content-Type': 'application/json' },
@@ -40,9 +40,8 @@ module.exports.printCart = (customer) => (dispatch) => {
 		dispatch({ type: types.PRINT, print: res.ok })
 		if (res.status !== 200) return res.json()
 	}).then(data => {
-		console.log(data)
-		if (data && window.android) {
-			window.android.printOnDevice(data.buffer)
+		if (data && data.buffer && nativePrint) {
+			nativePrint(data.buffer)
 		}
 	})
 }

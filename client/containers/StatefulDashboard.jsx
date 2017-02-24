@@ -13,7 +13,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => hapticFeedback({
-	onPrint: (customer) => dispatch(services.printCart(customer)),
+	onPrint: (customer) => dispatch(services.printCart(customer, window.android ? window.android.printOnDevice : null)),
 	onDaySelected: (day) => dispatch(stats.retrieveDay(day)) 
 })
 
