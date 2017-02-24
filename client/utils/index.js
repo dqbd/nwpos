@@ -19,6 +19,12 @@ module.exports.bindFeedback = (func) => {
 	}.bind(func)
 }
 
+module.exports.printNative = (buffer) => {
+	if (window.android) {
+		window.android.printOnDevice(buffer)
+	}
+}
+
 module.exports.invokeFeedback = () => {
 	if (navigator.vibrate) {
 		navigator.vibrate(90)

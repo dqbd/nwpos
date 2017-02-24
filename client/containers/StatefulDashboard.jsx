@@ -1,6 +1,6 @@
 import { connect } from "react-redux"
 import { services, stats } from "../../core"
-import { hapticFeedback } from "../utils"
+import { hapticFeedback, printNative } from "../utils"
 
 import Dashboard from "../components/Dashboard.jsx"
 
@@ -13,7 +13,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => hapticFeedback({
-	onPrint: (customer) => dispatch(services.printCart(customer, window.android ? window.android.printOnDevice : null)),
+	onPrint: (customer) => dispatch(services.printCart(customer, printNative)),
 	onDaySelected: (day) => dispatch(stats.retrieveDay(day)) 
 })
 
