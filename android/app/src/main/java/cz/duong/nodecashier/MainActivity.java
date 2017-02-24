@@ -182,6 +182,7 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unbindService(this);
 
         if (termuxService != null) {
             termuxService.onDestroy();
@@ -199,6 +200,9 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
             wakeLock.release();
             wakeLock = null;
         }
+
+        stopPrinter();
+        stopServer();
     }
 
     @Override
@@ -402,7 +406,10 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
         String address = AppPreferences.getBtAddress(this);
 
         if (address == null || bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
-            Toast.makeText(this, "Printer not started", Toast.LENGTH_LONG).show();
+            if (address != null) {
+                showSnackbar("Bluetooth není zapnutý", true);
+            }
+
             return;
         }
 
