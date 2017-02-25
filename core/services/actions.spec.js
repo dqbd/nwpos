@@ -21,7 +21,7 @@ test("print customer", () => {
 
 	nock("http://localhost")
 		.post("/print", { customer })
-		.reply(200, "good job")
+		.reply(200, {})
 
 	let store = mockStore()
 	return store.dispatch(actions.printCart(customer)).then(() => {
