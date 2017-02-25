@@ -1,5 +1,5 @@
 const fetch = require("isomorphic-fetch")
-const socket = require('socket.io-client')("http://localhost:8080")
+const socket = require('socket.io-client')("http://"+window.location.host)
 
 let connected = false
 socket.on('connect', () => {
