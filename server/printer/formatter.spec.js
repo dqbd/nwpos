@@ -22,11 +22,13 @@ test("print raw", () => {
 })
 
 test("print info", () => {
+	let date = new Date(2016, 0, 30, 20, 10, 35, 50)
+
 	let lines = printer.printCart([
 		{ name: "Vejcovodovodní potrubí", price: 123, qty: 1 },
 		{ name: "", price: 3500, qty: 2 },
 		{ name: "Sleva", price: -350, qty: 2 },
-	], 6423, 8000)
+	], 6423, 8000, date)
 
 	expect(lines).toEqual([
 		"Vejcovod   123.00  1 ks   123.00",
@@ -40,7 +42,7 @@ test("print info", () => {
 		"PLACENO                  8000.00",
 		"VRÁCENO                  1577.00",
 		"--------------------------------",
-		getDateString(new Date()),
+		"Datum: So 30.01.2016  20:10:35",
 		"DĚKUJEME ZA VÁŠ NÁKUP"
 	])
 })
@@ -176,7 +178,7 @@ test("print existing info", () => {
 		"PLACENO                  8000.00",
 		"VRÁCENO                  1577.00",
 		"--------------------------------",
-		getDateString(date),
+		"Datum: Pá 06.01.2017  16:50:19",
 		"DĚKUJEME ZA VÁŠ NÁKUP"
 	])
 })
@@ -199,7 +201,7 @@ test("print cart no tax", () => {
 		"PLACENO                  8000.00",
 		"VRÁCENO                  1577.00",
 		"--------------------------------",
-		getDateString(date),
+		"Datum: Pá 06.01.2017  16:50:19",
 		"DĚKUJEME ZA VÁŠ NÁKUP"
 	])
 })

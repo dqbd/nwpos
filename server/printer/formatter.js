@@ -9,11 +9,11 @@ const divider = (char = "-") => {
 
 const datestamp = (date) => {
 	let dateString = "Datum: "
-	dateString += ["Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"][date.getDay()] + " "
+	dateString += ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"][date.getDay()] + " "
 	dateString += ("0" + date.getDate()).slice(-2) + "."
 	dateString += ("0" + (date.getMonth() + 1)).slice(-2) + "."
 	dateString += date.getFullYear()
-	dateString += "  " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2)
+	dateString += "  " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2)
 
 	return dateString
 }
