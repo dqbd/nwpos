@@ -17,7 +17,7 @@ function sendStream(newVal, loc) {
 	throttle = setTimeout(() => {
 		get("/stream", {customer: cache})
 		cache = {}
-	}, 200)
+	}, 25)
 }
 
 module.exports.bindDisplayEvents = (store) => {
