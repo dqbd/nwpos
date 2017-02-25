@@ -20,8 +20,7 @@
     "nedb": "^1.8.0",
     "node-fetch": "^1.6.3",
     "pem": "^1.9.4",
-    "pm2": "^2.4.0",
-    "socket.io": "^1.7.3"
+    "pm2": "^2.4.0"
   },
   "devDependencies": {
     "lokijs": "^1.4.2",

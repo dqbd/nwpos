@@ -78,6 +78,7 @@ test("print eet online", () => {
    		"",
    		"Číslo účtenky: UrwfWNbQ#u92#/dtV",
 		"yeg",
+		"Datum tržby: 04.02.2017 21:15:19",
    		"",
 		"BKP: 0F2F1F2B-BF3B6315-FEE010E8-",
 		"9C111F54-967A23F4",
@@ -106,6 +107,7 @@ test("print eet offline", () => {
    		"",
    		"Číslo účtenky: 3jY.S#7tqEFcCsW28",
    		"cx3",
+		"Datum tržby: 04.02.2017 21:45:45",
    		"",
 		"BKP: F923B375-DAE2ACFD-B67B9F5B-",
 		"575A3292-5D7041A4",
@@ -140,6 +142,7 @@ test("print eet test", () => {
    		"Pokladna: n/n_vT:GOJP,KuDVZPGX",
    		"",
    		"Číslo účtenky: 02222017182333672",
+		"Datum tržby: 22.02.2017 18:23:23",
    		"",
 		"BKP: C6CFCCA8-17ACD4CF-B9FF974D-",
 		"14CF5EB1-F7447354",
@@ -178,7 +181,7 @@ test("print existing info", () => {
 		"PLACENO                  8000.00",
 		"VRÁCENO                  1577.00",
 		"--------------------------------",
-		"Datum: Pá 06.01.2017  16:50:19",
+		"Datum: Pá 06.01.2017    16:50:19",
 		"DĚKUJEME ZA VÁŠ NÁKUP"
 	])
 })
