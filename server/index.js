@@ -26,10 +26,14 @@ const bodyParser = require("body-parser")
 const multer = require("multer")
 const path = require("path")
 
+
 const bonjour = require('bonjour')()
 const interface = require("./interface")(config, args)
 
 const app = express()
+const server = require("http").createServer(app)
+const io = require("socket.io")(server, {serveClient: false})
+
 let advert = "nodecashier-service"
 if (args.dev) {
 	const webpack = require("webpack")
@@ -88,7 +92,22 @@ for(let name of Object.getOwnPropertyNames(Object.getPrototypeOf(interface))) {
 	}
 }
 
-app.listen(args.port, (err, port) => {
+
+io.on("connection", (client) => {
+	for(let name of Object.getOwnPropertyNames(Object.getPrototypeOf(interface))) {
+		let [method, url, args] = name.toLowerCase().split("_")
+		if (url) {
+			client.on(method.toUpperCase() + "/"+url, (args, callback) => {
+				console.log(method, url, args)
+				interface[name](args ? args : {})
+					.then(data => callback({ok: true, data}))
+					.catch(err => callback({ok: false, data: err}))
+			})
+		}
+	}
+})
+
+server.listen(args.port, (err) => {
 	if (!err) {
 		console.log("Listening on port", args.port)
 	}
