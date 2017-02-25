@@ -1,6 +1,5 @@
 const types = require("./actionTypes")
-const fetch = require("isomorphic-fetch")
-const { getUrl } = require("../utils")
+const { get } = require("../utils")
 
 module.exports.reset = () => {
 	return { type: "" }
@@ -27,10 +26,9 @@ module.exports.setSuggestions = (grouped) => (dispatch) => {
 }
 
 module.exports.listSuggestions = () => (dispatch) => {
-	return fetch(getUrl("/suggest"), { method: "GET" })
-	.then(a => a.json())
+	return get("/suggest")
 	.then(a => {
-		dispatch(module.exports.setSuggestions(a))
+		dispatch(module.exports.setSuggestions(a.data))
 	}).catch(e => {
 		console.error(e)
 	})

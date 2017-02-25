@@ -1,6 +1,5 @@
 const stats = require("./actionTypes")
-const fetch = require("isomorphic-fetch")
-const { getUrl } = require("../utils")
+const { get } = require("../utils")
 
 const setList = (list) => {
 	return { type: stats.SETLIST, list }
@@ -11,13 +10,12 @@ const setDay = (day) => {
 }
 
 module.exports.retrieveDay = (day) => (dispatch) => {
-	return fetch(getUrl("/logs") + "?day=" + day).then(a => a.json())
-		.then(day => {
-			dispatch(setDay(day))
+	return get("/logs?day=" + day)
+		.then(res => {
+			dispatch(setDay(res.data))
 		})
 }
 
 module.exports.retrieve = () => (dispatch) => {
-	return fetch(getUrl("/loglist")).then(a => a.json())
-		.then(a => dispatch(setList(a)))
+	return get("/loglist").then(a => dispatch(setList(a.data)))
 }

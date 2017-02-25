@@ -1,47 +1,34 @@
 const types = require("./actionTypes")
 
 const suggestions = require("../suggestions/actions")
-const fetch = require("isomorphic-fetch")
-const { getUrl } = require("../utils")
+const { get } = require("../utils")
 
 module.exports.reset = () => {
 	return { type: types.RESET }
 }
 
 module.exports.eet = (total, ic) => (dispatch) => {
-	return fetch(getUrl("/eet"), {
-		method: "POST",
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ total, ic })
-	})
-	.then(a => {
-		if (!a.ok) return Promise.reject("Failed sending EET")
-		return a.json()
-	}).then(eet => {
-		dispatch({ type: types.EET, eet })
+	return get("/eet", { total, ic })
+	.then(res => {
+		if (!res.ok) return Promise.reject("Failed sending EET")
+		dispatch({ type: types.EET, eet: res.data })
 	})
 }
 
 module.exports.drawer = () => (dispatch) => {
-	return fetch(getUrl("/drawer"))
-	.then(a => {
-		if (!a.ok) return Promise.reject("Failed opening drawer")
-		return a.json()
+	return get("/drawer")
+	.then(res => {
+		if (!res.ok) return Promise.reject("Failed opening drawer")
+		return res.data
 	})
 }
 
 module.exports.printCart = (customer, nativePrint) => (dispatch) => {
-	return fetch(getUrl(`/print`), {
-		method: "POST",
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ customer })
-	})
+	return get('/print', { customer })
 	.then(res => {
 		dispatch({ type: types.PRINT, print: res.ok })
-		if (res.status !== 200) return res.json()
-	}).then(data => {
-		if (data && data.buffer && nativePrint) {
-			nativePrint(data.buffer)
+		if (res.status !== 200 && res.data && res.data.buffer && nativePrint) {
+			nativePrint(res.data.buffer)
 		}
 	})
 }
@@ -67,15 +54,10 @@ module.exports.log = (customer) => (dispatch) => {
 		payload.date = new Date()
 	}
 
-	return fetch(getUrl(`/store`), {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ customer: payload })
-	})
-	.then(a => a.json())
+	return get('/store', { customer: payload })
 	.then(a => {
-		dispatch({ type: types.LOG, log: true })
-		dispatch(suggestions.setSuggestions(a))
+		dispatch({ type: types.LOG, log: a.ok })
+		dispatch(suggestions.setSuggestions(a.data))
 	}).catch(e => {
 		console.error(e)
 		dispatch({ type: types.LOG, log: false })

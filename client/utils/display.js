@@ -1,7 +1,8 @@
 const deepEqual = require("deep-equal")
 const watch = require("redux-watch")
 
-const customer = require("../../core").customer
+const { customer } = require("../../core")
+const { get } = require("../../core/utils")
 
 let throttle = null
 let cache = {} 
@@ -14,11 +15,7 @@ function sendStream(newVal, loc) {
 
 	clearTimeout(throttle)
 	throttle = setTimeout(() => {
-		fetch("/stream", {
-			method: "POST",
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({customer: cache})
-		})
+		get("/stream", {customer: cache})
 		cache = {}
 	}, 200)
 }
