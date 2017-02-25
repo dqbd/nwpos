@@ -26,8 +26,6 @@ class Seller extends Component {
 			}
 			
 			this.props.onChange(Object.assign({}, seller, payload))
-		} else {
-			console.log(key)
 		}
 	}
 

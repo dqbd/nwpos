@@ -9,7 +9,6 @@ module.exports.retrieveSellers = () => (dispatch) => {
 }
 
 module.exports.retrieveDebug = () => (dispatch) => {
-	console.log("retrieving debug")
 	return get("/debug")
 		.then(res => {
 			dispatch({ type: actionTypes.SETDEBUG, debug: res.data.debug })
