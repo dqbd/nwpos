@@ -32,7 +32,8 @@ test("add item via keyboard", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 1,
@@ -57,7 +58,8 @@ test("clear screen after adding", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 1,
@@ -80,7 +82,8 @@ test("checkout begin", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 1,
@@ -105,7 +108,8 @@ test("checkout payment", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 1,
@@ -128,7 +132,8 @@ test("payment finished", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 1,
@@ -150,7 +155,8 @@ test("new payment", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 0,
@@ -179,7 +185,8 @@ test("direct payment", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 2,
@@ -217,7 +224,8 @@ test("revert back to edit", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 3,
@@ -246,7 +254,8 @@ test("quantity payment", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 3,
@@ -279,7 +288,8 @@ test("multiple adding", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 1,
@@ -314,7 +324,8 @@ test("set qty", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 0,
@@ -339,7 +350,8 @@ test("clears correctly", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 0,
@@ -359,7 +371,8 @@ test("doesnt add on screen 0", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 0,
@@ -393,7 +406,8 @@ test("add item with name", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 3,
@@ -424,7 +438,8 @@ test("checkout instead payment when 0", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 0,
@@ -452,7 +467,8 @@ test("checkout instead payment when added", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 0,
@@ -477,7 +493,8 @@ test("prevent payment when 0", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 0,
@@ -498,7 +515,8 @@ test("set seller", () => {
 		services: {
 			print: false,
 			eet: null,
-			log: false
+			log: false,
+			working: false
 		},
 		cart: {
 			selection: 0,

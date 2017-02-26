@@ -7,13 +7,14 @@ const divider = (char = "-") => {
 	return char.repeat(limit)
 }
 
-const datestamp = (date) => {
-	let dateString = "Datum: "
-	dateString += ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"][date.getDay()] + " "
+const datestamp = (date, weekday = true, divisor = "  ", dateString = "Datum: ") => {
+	if (weekday) {
+		dateString += ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"][date.getDay()] + " "
+	}
 	dateString += ("0" + date.getDate()).slice(-2) + "."
 	dateString += ("0" + (date.getMonth() + 1)).slice(-2) + "."
 	dateString += date.getFullYear()
-	dateString += "  " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2)
+	dateString += divisor + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2)
 
 	return dateString
 }
@@ -125,7 +126,7 @@ module.exports.printEet = (eet, seller) => {
 		result.push("Pokladna: " + seller.eet.idPokl)
 	}
 
-	result = [...result, "", ...wrapLine("Číslo účtenky: " + eet.poradCis), "", ...wrapLine("BKP: " + eet.bkp)]
+	result = [...result, "", ...wrapLine("Číslo účtenky: " + eet.poradCis), ...wrapLine(datestamp(new Date(Date.parse(eet.datTrzby)), false, " ", "Datum tržby: ")), "", ...wrapLine("BKP: " + eet.bkp)]
 	if (eet.fik) {
 		result = [...result, ...wrapLine("FIK: " + eet.fik)]
 	} else if (eet.pkp) {

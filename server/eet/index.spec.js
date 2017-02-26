@@ -35,6 +35,7 @@ test("send eet correctly", () => {
                 offline: true,
                 privateKey: consts.key,
                 certificate: consts.cert,
+                startTime: now.getTime(),
                 timeout: 3500
             },
             items: {

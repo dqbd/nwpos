@@ -142,7 +142,7 @@ test("print eet test", () => {
    		"Pokladna: n/n_vT:GOJP,KuDVZPGX",
    		"",
    		"Číslo účtenky: 02222017182333672",
-		"Datum tržby: 22.02.2017 18:23:23",
+		"Datum tržby: 22.02.2017 18:23:33",
    		"",
 		"BKP: C6CFCCA8-17ACD4CF-B9FF974D-",
 		"14CF5EB1-F7447354",
@@ -181,7 +181,7 @@ test("print existing info", () => {
 		"PLACENO                  8000.00",
 		"VRÁCENO                  1577.00",
 		"--------------------------------",
-		"Datum: Pá 06.01.2017    16:50:19",
+		"Datum: Pá 06.01.2017  16:50:19",
 		"DĚKUJEME ZA VÁŠ NÁKUP"
 	])
 })

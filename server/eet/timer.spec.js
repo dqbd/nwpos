@@ -128,7 +128,8 @@ test("resend log correctly", () => {
                 offline: true,
                 privateKey: consts.key,
                 certificate: consts.cert,
-                timeout: 3500
+                timeout: 3500,
+                startTime: Date.parse("2017-02-19T19:43:26.434Z")
             },
             items: {
                 dicPopl: 'CZ1212121218',

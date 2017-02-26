@@ -50,7 +50,8 @@ test("shop still working", () => {
 			services: {
 				eet: null,
 				log: false,
-				print: false
+				print: false,
+				working: false
 			}
 		}
 	})
@@ -105,7 +106,8 @@ test("get sellers", () => {
 				services: {
 					eet: null,
 					log: false,
-					print: false
+					print: false,
+					working: false
 				}
 			}
 		})

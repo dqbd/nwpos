@@ -20,12 +20,10 @@ const generatePoradCislo = () => {
 	return payload
 }
 
-module.exports.upload = (seller, total, poradCis, datTrzby, startTime = 0) => certs.retrieveCert(seller.eet.file, seller.eet.pass).then(result => {
+module.exports.upload = (seller, total, poradCis, datTrzby) => certs.retrieveCert(seller.eet.file, seller.eet.pass).then(result => {
 	poradCis = (poradCis !== undefined) ? poradCis : generatePoradCislo()
 	datTrzby = (datTrzby !== undefined) ? datTrzby : new Date()
 	overeni = (seller.eet.overeni !== undefined) ? seller.eet.overeni : false  
-
-	let timings = {startEet: startTime, certRetrieved: new Date().getTime() - startTime, request: []}
 
 	const options = {
 		playground: seller.eet.playground,
@@ -33,7 +31,7 @@ module.exports.upload = (seller, total, poradCis, datTrzby, startTime = 0) => ce
 		privateKey: result.key,
 		timeout: 3500,
 		certificate: result.cert,
-		startTime
+		startTime: datTrzby.getTime()
 	}
 
 	const items = {
@@ -55,9 +53,6 @@ module.exports.upload = (seller, total, poradCis, datTrzby, startTime = 0) => ce
 			response.err = newError
 			response.overeni = overeni
 		}
-
-		response.timings = timings
-		response.timings.sendFinished = new Date().getTime() - startTime
 
 		return Object.assign(response, {poradCis, datTrzby})
 	}, err => {
