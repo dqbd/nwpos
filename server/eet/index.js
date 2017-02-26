@@ -1,5 +1,6 @@
 const eet = require("eet")
 const certs = require("./certs")
+const req = require("request")
 
 const generatePoradCislo = () => {
 	let date = new Date()
@@ -20,10 +21,12 @@ const generatePoradCislo = () => {
 	return payload
 }
 
-module.exports.upload = (seller, total, poradCis, datTrzby) => certs.retrieveCert(seller.eet.file, seller.eet.pass).then(result => {
+module.exports.upload = (seller, total, poradCis, datTrzby, startTime = 0) => certs.retrieveCert(seller.eet.file, seller.eet.pass).then(result => {
 	poradCis = (poradCis !== undefined) ? poradCis : generatePoradCislo()
 	datTrzby = (datTrzby !== undefined) ? datTrzby : new Date()
 	overeni = (seller.eet.overeni !== undefined) ? seller.eet.overeni : false  
+
+	let timings = {startEet: startTime, certRetrieved: new Date().getTime() - startTime}
 
 	const options = {
 		playground: seller.eet.playground,
@@ -31,6 +34,13 @@ module.exports.upload = (seller, total, poradCis, datTrzby) => certs.retrieveCer
 		privateKey: result.key,
 		timeout: 3500,
 		certificate: result.cert,
+		request: (options, callback) => {
+			options.time = true
+			return req(options, (err, res, body) => {
+				timings = Object.assign(timings, res.timings)
+				callback(err, res, body)
+			})
+		} 
 	}
 
 	const items = {
@@ -52,6 +62,9 @@ module.exports.upload = (seller, total, poradCis, datTrzby) => certs.retrieveCer
 			response.err = newError
 			response.overeni = overeni
 		}
+
+		response.timings = timings
+		response.timings.sendFinished = new Date().getTime() - startTime
 
 		return Object.assign(response, {poradCis, datTrzby})
 	}, err => {

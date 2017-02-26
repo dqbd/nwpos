@@ -38,7 +38,7 @@ module.exports.print = (customer) => {
 module.exports.drawer = (pin = 2) => printer.drawer(pin)
 
 module.exports.printRaw = (lines) => new Promise((resolve, reject) => {
-	console.log(lines)
+	console.log("printing")
 	formatter.print(lines).forEach(line => {
 		if (line.indexOf("$center") == 0) {
 			printer.align("CT")

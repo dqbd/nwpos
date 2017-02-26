@@ -89,7 +89,8 @@ class Interface {
 		}
 
 		if (!seller.eet.enabled) return Promise.reject("EET disabled")
-		return eet.upload(seller, total)
+		console.log("Start EET", new Date().getTime())
+		return eet.upload(seller, total, undefined, undefined, new Date().getTime())
 	}
 
 	GET_SELLERS() {
