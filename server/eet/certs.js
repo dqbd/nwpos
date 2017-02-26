@@ -4,6 +4,8 @@ const path = require("path")
 const pem = require("pem")
 const uuid = require("node-uuid")
 
+const cache = {}
+
 module.exports.getCertFile = (filename) => {
 	return path.resolve(__dirname, "..", "data", filename)
 }
@@ -15,11 +17,17 @@ module.exports.deleteCert = (filename) => {
 }
 
 module.exports.retrieveCert = (filename, pass) => new Promise((resolve, reject) => {
-	let file = fs.readFileSync(module.exports.getCertFile(filename))
-	pem.readPkcs12(file, {p12Password: pass}, (err, result) => {
-		if (err) return reject(err)
-		resolve(result)
-	})
+	let key = [filename, pass].join("")
+
+	if (!cache[key]) {
+		pem.readPkcs12(module.exports.getCertFile(filename), {p12Password: pass}, (err, result) => {
+			if (err) return reject(err)
+			cache[key] = result
+			resolve(result)
+		})
+	} else {
+		resolve(cache[key])
+	}
 })
 
 module.exports.validateCert = (filename, pass) => {
