@@ -7,6 +7,10 @@ module.exports.reset = () => {
 	return { type: types.RESET }
 }
 
+module.exports.working = (status) => {
+	return { type: types.STATUS, status }
+}
+
 module.exports.eet = (total, ic) => (dispatch) => {
 	return get("/eet", { total, ic })
 	.then(res => {

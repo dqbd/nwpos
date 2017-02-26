@@ -113,6 +113,8 @@ module.exports.print = (nativePrint) => (dispatch, getState) => {
 	// TODO: eet offline
 	let { newServices, newCart, newCustomer } = wrapState(getState())
 
+	let timeout = setTimeout(() => dispatch(services.working(true)), 100)
+
 	Promise.resolve(newServices.eet)
 		.then(eet => {
 			//prevent resending
@@ -128,6 +130,9 @@ module.exports.print = (nativePrint) => (dispatch, getState) => {
 			if (!newServices.log) {
 				dispatch(services.log(getState().customer))
 			}
+
+			clearTimeout(timeout)
+			dispatch(services.working(false))
 		})
 }
 

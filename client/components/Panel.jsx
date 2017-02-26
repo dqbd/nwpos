@@ -17,7 +17,7 @@ export default class Panel extends Component {
 	}
 
 	render() {
-		let {status, onEdit, onClear, onDrawer, onDiscount, onPay, onPrint, onQtySet} = this.props
+		let {status, working, onEdit, onClear, onDrawer, onDiscount, onPay, onPrint, onQtySet} = this.props
 		let actions = []
 
 		if ([types.STAGE_TYPING, types.STAGE_ADDED].indexOf(status) >= 0) {
@@ -38,8 +38,11 @@ export default class Panel extends Component {
 				<DifferenceButton key="diff" onPay={onPay} />
 			]
 		} else if (types.COMMIT_END === status) {
+
+
 			actions = [
-				<span key="print" className="btn color print"><a onTouchTap={onPrint}>Vytisknout účtenku</a></span>
+				working ? <span key="print" className="btn color print working"><a>Probíhá odesílání a tisk</a></span> : 
+					<span key="print" className="btn color print"><a onTouchTap={onPrint}>Vytisknout účtenku</a></span>
 			]
 		}
 

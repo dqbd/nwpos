@@ -1,6 +1,5 @@
 const eet = require("eet")
 const certs = require("./certs")
-const req = require("request")
 
 const generatePoradCislo = () => {
 	let date = new Date()
@@ -26,7 +25,7 @@ module.exports.upload = (seller, total, poradCis, datTrzby, startTime = 0) => ce
 	datTrzby = (datTrzby !== undefined) ? datTrzby : new Date()
 	overeni = (seller.eet.overeni !== undefined) ? seller.eet.overeni : false  
 
-	let timings = {startEet: startTime, certRetrieved: new Date().getTime() - startTime}
+	let timings = {startEet: startTime, certRetrieved: new Date().getTime() - startTime, request: []}
 
 	const options = {
 		playground: seller.eet.playground,
@@ -34,14 +33,7 @@ module.exports.upload = (seller, total, poradCis, datTrzby, startTime = 0) => ce
 		privateKey: result.key,
 		timeout: 3500,
 		certificate: result.cert,
-		startTime,
-		request: (options, callback) => {
-			options.time = true
-			return req(options, (err, res, body) => {
-				timings = Object.assign(timings, res.timings)
-				callback(err, res, body)
-			})
-		} 
+		startTime
 	}
 
 	const items = {

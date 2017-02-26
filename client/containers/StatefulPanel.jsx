@@ -8,7 +8,8 @@ const mapStateToProps = (state) => {
 
 	return {
 		debug: state.debug,
-		status: state.customer.status
+		status: state.customer.status,
+		working: state.customer.services.working
 	}
 }
 

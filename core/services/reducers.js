@@ -3,7 +3,8 @@ let services = require("./actionTypes")
 const initialState = {
 	print: false,
 	eet: null,
-	log: false
+	log: false,
+	working: false
 }
 
 module.exports = (state = initialState, action) => {
@@ -20,11 +21,16 @@ module.exports = (state = initialState, action) => {
 			return Object.assign({}, state, {
 				print: false,
 				eet: null,
-				log: false
+				log: false,
+				working: false
 			})
 		case services.LOG:
 			return Object.assign({}, state, {
 				log: action.log
+			})
+		case services.STATUS:
+			return Object.assign({}, state, {
+				working: action.status
 			})
 	}
 
