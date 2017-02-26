@@ -34,6 +34,7 @@ module.exports.upload = (seller, total, poradCis, datTrzby, startTime = 0) => ce
 		privateKey: result.key,
 		timeout: 3500,
 		certificate: result.cert,
+		startTime,
 		request: (options, callback) => {
 			options.time = true
 			return req(options, (err, res, body) => {
