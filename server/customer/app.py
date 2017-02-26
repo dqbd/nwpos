@@ -13,7 +13,7 @@ class customer:
 	global width, height
 
 	screen = None
-	eetMode = False
+	eetMode = True
 
 	limit = 9 if eetMode else 10
 	itemHeight = height * 87 / 1024
