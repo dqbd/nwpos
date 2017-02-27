@@ -81,6 +81,11 @@ _.CODEPAGE = {
   WPC1250         : '\x1b\x74\x48'
 }
 
+_.FONT = {
+  DEFAULT         : '\x1b\x4d\x00',
+  SMALL           : '\x1b\x4d\x01' 
+}
+
 /**
  * [exports description]
  * @type {[type]}

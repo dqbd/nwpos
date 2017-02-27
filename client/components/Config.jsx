@@ -110,6 +110,7 @@ class Seller extends Component {
 				</div>
 			</div>
 			<input placeholder="Číslo provozovny" type="number" className="idProvoz" onChange={this.onEetChange.bind(this)} value={safeOutput(seller.eet.idProvoz)}></input>
+			<input placeholder="Číslo pokladny" type="text" className="idPokl" onChange={this.onEetChange.bind(this)} value={safeOutput(seller.eet.idPokl)}></input>
 			<label className="checkbox">
 				<input className="offline" type="checkbox" onChange={this.onEetChange.bind(this)} checked={safeOutput(seller.eet.offline)} />
 				<span>Znova odesílat po neúspěchu</span>

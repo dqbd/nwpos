@@ -17,6 +17,9 @@ module.exports.print = (customer) => {
 	if (customer.date) {
 		date = new Date(Date.parse(customer.date))
 	}
+	if (customer.services.eet && customer.services.eet.datTrzby) {
+		date = new Date(Date.parse(customer.services.eet.datTrzby))
+	}
 
 	if (config.get().sellers.length > 0) {
 		let seller = config.get().sellers.find((seller) => seller.ic === customer.seller)
@@ -38,7 +41,7 @@ module.exports.print = (customer) => {
 module.exports.drawer = (pin = 2) => printer.drawer(pin)
 
 module.exports.printRaw = (lines) => new Promise((resolve, reject) => {
-	console.log("printing")
+	console.log(lines)
 	formatter.print(lines).forEach(line => {
 		if (line.indexOf("$center") == 0) {
 			printer.align("CT")

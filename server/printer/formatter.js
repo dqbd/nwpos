@@ -1,6 +1,10 @@
 const limit = 32
-const alignRight = (left, right) => {
-	return left + " ".repeat(limit - left.length - right.length) + right
+const alignRight = (left, right, spaces = 2) => {
+	if (limit - left.length - right.length >= spaces) {
+		return [left + " ".repeat(limit - left.length - right.length) + right]
+	} else {
+		return [left, right]
+	}
 }
 
 const divider = (char = "-") => {
@@ -66,7 +70,6 @@ module.exports.print = (lines) => {
 }
 
 module.exports.printCart = (items, total, paid, date, tax = 21) => {
-
 	if (!date) {
 		date = new Date()
 	}
@@ -85,18 +88,18 @@ module.exports.printCart = (items, total, paid, date, tax = 21) => {
 
 		let taxed = (total / (100 + tax) * 100).toFixed(2)
 
-		body.push(alignRight(`Základ ${tax}% DPH`, taxed))
-		body.push(alignRight(`Daň`, (total - Number.parseFloat(taxed)).toFixed(2)))
+		body.push(...alignRight(`Základ ${tax}% DPH`, taxed))
+		body.push(...alignRight(`Daň`, (total - Number.parseFloat(taxed)).toFixed(2)))
 	}
 
 	body.push(divider("="))
 
-	body.push(alignRight("CELKEM", `${total}.00`))
-	body.push(alignRight("PLACENO", `${paid}.00`))
-	body.push(alignRight("VRÁCENO", `${returned}.00`))
+	body.push(...alignRight("CELKEM", `${total}.00`))
+	body.push(...alignRight("HOTOVOST", `${paid}.00`))
+	body.push(...alignRight("VRÁCENO", `${returned}.00`))
 
 	body.push(divider("-"))
-	body.push(datestamp(date))
+	body.push(...alignRight.apply(this, datestamp(date).split("  ")))
 
 	body.push("DĚKUJEME ZA VÁŠ NÁKUP")
 
@@ -104,29 +107,23 @@ module.exports.printCart = (items, total, paid, date, tax = 21) => {
 }
 
 module.exports.printEet = (eet, seller) => {
-	if (eet === null || eet === undefined || !eet.fik && !eet.pkp || !eet.bkp) return []
+	if (eet === null || eet === undefined || eet === false || !eet.fik && !eet.pkp || !eet.bkp) return []
 
-	let result = [""]
+	let result = [
+		divider("-"), 
+		...alignRight("Provozovna: " + seller.eet.idProvoz, "Pokladna: " + seller.eet.idPokl),
+		...wrapLine("Číslo účtenky: " + eet.poradCis)
+	]
 
 	if (eet.fik) {
-		result = [...result, ...wrapLine("Tržba evidována v běžném režimu")]
+		result = [...result, "Režim tržby: běžný"]
 	} else if (eet.overeni && eet.err.message) {
-		result = [...result, ...wrapLine("Ověřovací mód EET"), ...wrapLine(eet.err.message), "", ...wrapLine("Tržba NENÍ evidována v EET")]
+		result = [...result, "Režim tržby: ověřovací", ...wrapLine(eet.err.message), "", ...wrapLine("Tržba NENÍ evidována v EET")]
 	} else {
-		result = [...result, ...wrapLine("Tržba evidována ve zjednodušeném režimu")]
+		result = [...result, "Režim tržby: zjednodušený"]
 	}
 
-	result.push("")
-
-	if (seller.eet !== null && seller.eet.idProvoz) {
-		result.push("Provozovna: " + seller.eet.idProvoz)
-	}
-
-	if (seller.eet !== null && seller.eet.idProvoz) {
-		result.push("Pokladna: " + seller.eet.idPokl)
-	}
-
-	result = [...result, "", ...wrapLine("Číslo účtenky: " + eet.poradCis), ...wrapLine(datestamp(new Date(Date.parse(eet.datTrzby)), false, " ", "Datum tržby: ")), "", ...wrapLine("BKP: " + eet.bkp)]
+	result = [...result, "", ...wrapLine("BKP: " + eet.bkp)]
 	if (eet.fik) {
 		result = [...result, ...wrapLine("FIK: " + eet.fik)]
 	} else if (eet.pkp) {
@@ -141,14 +138,12 @@ module.exports.printHeader = (seller) => {
 		seller.name,
 		seller.street,
 		`${seller.psc} ${seller.city.toUpperCase()}`,
-		`IČ: ${seller.ic}`,
+		`IČO: ${seller.ic}`
 	]
 
 	if (seller.dic) {
 		result.push(`DIČ: ${seller.dic}`)
 	}
-
-	
 
 	result.push(divider())
 	return result
