@@ -50,24 +50,29 @@ public class LauncherUtils {
         return null;
     }
 
-    public static void setFullscreen(final Activity activity) {
-        activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    private static View setFullscreen(final Activity activity) {
         activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         final View decorView = activity.getWindow().getDecorView();
-        final int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        final int uiOptions =
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
 
         decorView.setSystemUiVisibility(uiOptions);
+        return decorView;
+    }
+
+    public static void bindFullscreenMode(final Activity activity) {
+        View decorView = setFullscreen(activity);
         decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
             public void onSystemUiVisibilityChange(int visibility) {
-                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                    decorView.setSystemUiVisibility(uiOptions);
-                }
+                setFullscreen(activity);
             }
         });
     }

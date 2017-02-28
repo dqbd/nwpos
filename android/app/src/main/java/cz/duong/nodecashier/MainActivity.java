@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -92,9 +93,9 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        LauncherUtils.setFullscreen(this);
+        LauncherUtils.bindFullscreenMode(this);
 
         if (AppPreferences.shouldFirstInit(this)) {
             showSetup();
@@ -177,6 +178,8 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
         startPrinter();
         startServer();
 
+        LauncherUtils.bindFullscreenMode(this);
+
         if (webView != null) webView.requestFocus();
     }
 
@@ -204,6 +207,12 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
 
         stopPrinter();
         stopServer();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        LauncherUtils.bindFullscreenMode(this);
     }
 
     @Override
@@ -271,7 +280,7 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
 
     @Override
     public void onActivityResult (int requestCode, int resultCode, Intent data) {
-
+//        LauncherUtils.setFullscreen(this);
         switch (requestCode) {
             case INPUT_FILE_REQUEST_CODE:
                 if (mFilePathCallback == null) {
