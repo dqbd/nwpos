@@ -14,17 +14,23 @@ function addLog(tag, content, id = -1, time = getTime()) {
     let scrollRoll = (cons.scrollTop + cons.clientHeight == cons.scrollHeight)
     
     let el = document.createElement("div")
+    el.classList.add("log")
     el.dataset.id = id
 
     if (id < 0 || cons.querySelectorAll("[data-id='"+id+"']").length == 0) {
+        rawContent = content
         try {
             content = JSON.stringify(JSON.parse(content), null, 4)
         } catch (err) {}
 
         el.innerHTML = "<span class='date'>" + time +"</span>"
         el.innerHTML += "<span class='tag'>" + tag + "</span>"
-        el.innerHTML += "<pre class='content'>" + content + "</pre>"
+        el.innerHTML += `<div class='content'><div class='short'>${rawContent}</div><div class='formatted'>${content}</div></div>`
 
+        el.addEventListener("click", (e) => {
+            e.preventDefault()
+            el.classList.toggle("expanded")
+        })
         cons.appendChild(el)
 
         if (scrollRoll) {
@@ -75,8 +81,11 @@ function sendAction(action, args = []) {
 }
 
 document.querySelector("#pull").onclick = (e) => sendAction("pullAndRestart", [prompt("Cíl")])
+document.querySelector("#start").onclick = (e) => sendAction("start", [prompt("Cíl")])
+document.querySelector("#stop").onclick = (e) => sendAction("stop", [prompt("Cíl")])
 document.querySelector("#restart").onclick = (e) => sendAction("restart", [prompt("Cíl")])
 document.querySelector("#list").onclick = (e) => sendAction("list")
+document.querySelector("#ping").onclick = (e) => sendAction("ping")
 document.querySelector("#clear").onclick = (e) => clearLogs()
 document.querySelector("#nickname").onclick = (e) => {
     if (selected_server) {

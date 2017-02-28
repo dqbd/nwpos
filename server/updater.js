@@ -2,9 +2,13 @@ const fetch = require("node-fetch")
 const pm2 = require("pm2")
 const fs = require("fs")
 
+try {
+    fs.mkdirSync("./data")
+} catch (err) {}
+
 let config = JSON.parse(fs.readFileSync("updater.example.json"))
 try {
-    config = Object.assign(config, JSON.parse(fs.readFileSync("updater.json")))
+    config = Object.assign(config, JSON.parse(fs.readFileSync("data/updater.json")))
 } catch (err) {}
 
 if (!config.server_id) {
@@ -12,7 +16,7 @@ if (!config.server_id) {
         .then(a => a.json())
         .then(res => {
             config.server_id = res["data"]
-            fs.writeFileSync("updater.json", JSON.stringify(config))
+            fs.writeFileSync("data/updater.json", JSON.stringify(config))
             watch()
         })
 } else {
@@ -85,7 +89,6 @@ function watch() {
         }
         
         poll()
-
         pm2.launchBus((err, bus) => {
             if (err) return console.error(err)
             
