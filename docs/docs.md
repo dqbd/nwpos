@@ -401,5 +401,3 @@ Po instalaci terminálu můžeme používat balíčky, na které jsme zvykli z k
 # Závěr
 
 Vyvinuli jsme pokladní systém pro maloobchodní podniky. Do budoucna bychom chtěli rozšířit aplikaci o správu zboží, skladu a čtečku čárových kódů. Dále by bylo dobré přemigrovat zdrojové kódy a deploy servery na vlastní VPS, abychom nebyli závislí na infrastruktůře GitHubu.
- 
-Toť je vše, čau.

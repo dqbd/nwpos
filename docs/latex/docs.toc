@@ -1,0 +1,18 @@
+\select@language {czech}
+\contentsline {section}{\numberline {1}\IeC {\'U}vod}{3}{section.1}
+\contentsline {subsection}{\numberline {1.1}Srovn\IeC {\'a}n\IeC {\'\i } s~konkurenc\IeC {\'\i }}{3}{subsection.1.1}
+\contentsline {section}{\numberline {2}Hardware}{5}{section.2}
+\contentsline {section}{\numberline {3}Instalace a provoz}{6}{section.3}
+\contentsline {subsection}{\numberline {3.1}Samostatn\IeC {\'y} provoz}{6}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Provoz \enquote {server a klient}}{8}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Android}{9}{subsubsection.3.2.1}
+\contentsline {subsection}{\numberline {3.3}N\IeC {\'a}vod k~pou\IeC {\v z}it\IeC {\'\i }}{10}{subsection.3.3}
+\contentsline {section}{\numberline {4}Struktura aplikace}{14}{section.4}
+\contentsline {section}{\numberline {5}Technick\IeC {\'e} specifikace}{14}{section.5}
+\contentsline {subsection}{\numberline {5.1}React}{15}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Redux}{19}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}mDNS}{22}{subsection.5.3}
+\contentsline {subsection}{\numberline {5.4}ESC/POS a tisk\IeC {\'a}rny}{22}{subsection.5.4}
+\contentsline {subsection}{\numberline {5.5}Linuxov\IeC {\'e} aplikace v~Androidu}{23}{subsection.5.5}
+\contentsline {subsection}{\numberline {5.6}Aktualizace a podpora}{24}{subsection.5.6}
+\contentsline {section}{\numberline {6}Z\IeC {\'a}v\IeC {\v e}r}{25}{section.6}

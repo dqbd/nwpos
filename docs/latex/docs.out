@@ -1,0 +1,17 @@
+\BOOKMARK [1][-]{section.1}{\332vod}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Srovn\341n\355 s konkurenc\355}{section.1}% 2
+\BOOKMARK [1][-]{section.2}{Hardware}{}% 3
+\BOOKMARK [1][-]{section.3}{Instalace a provoz}{}% 4
+\BOOKMARK [2][-]{subsection.3.1}{Samostatn\375 provoz}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.2}{Provoz "server a klient"}{section.3}% 6
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Android}{subsection.3.2}% 7
+\BOOKMARK [2][-]{subsection.3.3}{N\341vod k pou\236it\355}{section.3}% 8
+\BOOKMARK [1][-]{section.4}{Struktura aplikace}{}% 9
+\BOOKMARK [1][-]{section.5}{Technick\351 specifikace}{}% 10
+\BOOKMARK [2][-]{subsection.5.1}{React}{section.5}% 11
+\BOOKMARK [2][-]{subsection.5.2}{Redux}{section.5}% 12
+\BOOKMARK [2][-]{subsection.5.3}{mDNS}{section.5}% 13
+\BOOKMARK [2][-]{subsection.5.4}{ESC/POS a tisk\341rny}{section.5}% 14
+\BOOKMARK [2][-]{subsection.5.5}{Linuxov\351 aplikace v Androidu}{section.5}% 15
+\BOOKMARK [2][-]{subsection.5.6}{Aktualizace a podpora}{section.5}% 16
+\BOOKMARK [1][-]{section.6}{Z\341ver}{}% 17
