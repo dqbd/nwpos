@@ -186,7 +186,13 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(this);
+
+        try {
+            unbindService(this);
+        } catch (Exception e) {
+            Log.e("Test error", Log.getStackTraceString(e));
+        }
+
 
         if (termuxService != null) {
             termuxService.onDestroy();

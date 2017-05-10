@@ -9,6 +9,7 @@ import cz.duong.nodecashier.setup.BluetoothFragment;
 import cz.duong.nodecashier.setup.BluetoothListener;
 import cz.duong.nodecashier.setup.FinishFragment;
 import cz.duong.nodecashier.setup.FinishListener;
+import cz.duong.nodecashier.setup.InstallFragment;
 import cz.duong.nodecashier.setup.InstallListener;
 import cz.duong.nodecashier.setup.IntroFragment;
 import cz.duong.nodecashier.setup.IntroListener;
@@ -38,7 +39,7 @@ public class SetupActivity extends Activity implements IntroListener, InstallLis
         if (noServer) {
             fragmentManager.beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.activity_setup, BluetoothFragment.newInstance())
+                .replace(R.id.activity_setup, InstallFragment.newInstance())
                 .commit();
         } else {
             fragmentManager.beginTransaction()
