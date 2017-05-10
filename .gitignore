@@ -2,5 +2,6 @@
 server/data/**
 server/updater.json
 logserver/config.php
+demo/printer
 
 yarn.lock
