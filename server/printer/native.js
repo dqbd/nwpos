@@ -5,9 +5,8 @@ const fs = require("fs")
 const _ = require("./commands")
 
 class Printer {
-	constructor(target, autoclose = true) {
+	constructor(target) {
 		this.target = target
-		this.autoclose = autoclose
 
 		this.cache = []
 
@@ -53,11 +52,8 @@ class Printer {
 	drawer(pin = 2) {
 		return this.getStream().then(stream => {
 			stream.write(Buffer.from(_.CASH_DRAWER["CD_KICK_"+pin]))
-
-			if (this.autoclose) {
-				this.closed = true
-				stream.end()
-			}
+			this.closed = true
+			stream.end()
 		})
 	}
 
@@ -69,11 +65,8 @@ class Printer {
 
 		return this.getStream().then(stream => {
 			stream.write(out)
-
-			if (this.autoclose) {
-				this.closed = true
-				stream.end()
-			}
+			this.closed = true
+			stream.end()
 
 			this.cache.length = 0
 		}).catch(err => {
