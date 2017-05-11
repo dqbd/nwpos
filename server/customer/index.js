@@ -1,5 +1,6 @@
 const child_process = require("child_process")
 const path = require("path")
+const os = require("os")
 
 let stopped = false
 let kiosk = null
@@ -10,7 +11,7 @@ module.exports.init = () => {
 }
 
 module.exports.loop = () => {
-	kiosk = child_process.spawn("python", [path.resolve(__dirname, "app.py")])
+	kiosk = child_process.spawn(os.platform() === "win32" ? "pythonw" : "python", [path.resolve(__dirname, "app.py")])
 
 	kiosk.stdout.on("data", (data) => {
 		console.log(data.toString())
