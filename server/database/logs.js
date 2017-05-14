@@ -1,8 +1,5 @@
 const Database = require("./database")
 
-const fs = require("fs")
-const path = require("path")
-
 class Logs extends Database {
 	getDb(date = this.retrieveDateString(new Date())) {
 		return super.getDb(date)
