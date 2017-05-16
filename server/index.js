@@ -5,12 +5,15 @@ const minimist = require('minimist')
 let args = {
 	port: 80,
 	display: true,
+	windowed: false,
+	width: 1280,
+	height: 1024,
 	bonjour: true,
 	dev: false,
 	printer: (os.platform() === "win32") ? `\\\\${os.hostname()}\\nwcashier-printer` : "/dev/usb/lp0"
 }
 
-let boolean = ["display", "dev", "bonjour"]
+let boolean = ["display", "dev", "bonjour", "windowed"]
 
 Object.keys(process.env)
 	.filter(i => Object.keys(args).indexOf(i.toLowerCase().replace("nwpos_", "")) >= 0)

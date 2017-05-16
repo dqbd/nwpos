@@ -12,7 +12,7 @@ class Interface {
 		this.timer = timer.init(config, database)
 
 		if (args.display) {
-			display.init()
+			display.init(args.width, args.height, args.windowed)
 		}
 
 		this.timer.enqueue()
