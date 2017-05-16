@@ -123,8 +123,12 @@ class Interface {
 		return database.backup()
 	}
 
-	GET_ITEMS() {
+	GET_ITEMSEARCH() {
 		return database.storage().getSearchMapping()
+	}
+
+	GET_ITEMS() {
+		return database.storage().getItems()
 	}
 
 	GET_EAN() {

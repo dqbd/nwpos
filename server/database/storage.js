@@ -74,6 +74,15 @@ class Storage extends Database {
         }))
     }
 
+    getItems() {
+        return this.getDb().then(db => new Promise((resolve, reject) => {
+            db.find({}, (err, items) => {
+                if (err) return reject(err)
+                resolve({ items })
+            })
+        }))
+    }
+
     getSearchMapping() {
         return this.getDb().then(db => new Promise((resolve, reject) => {
             db.find({ qty: {$gt: 0} }).projection({ 
