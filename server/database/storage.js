@@ -44,10 +44,10 @@ class Storage extends Database {
         }))
     }
 
-    qtyItem(eans, inc = 1) {
+    qtyItem(eans, inc = -1) {
         if (!eans || eans.length <= 0) return Promise.reject("No eans")
         return this.getDb().then(db => new Promise((resolve, reject) => {
-            db.update({qty: {$gt: 1}, ean: { $in: eans }}, { $inc: { qty: -1 } }, (err, res) => {
+            db.update({qty: {$gt: 1}, ean: { $in: eans }}, { $inc: { qty: inc } }, (err, res) => {
                 if (err) return reject(err)
                 resolve(res)
             })

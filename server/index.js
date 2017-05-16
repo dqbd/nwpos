@@ -80,7 +80,7 @@ for(let name of Object.getOwnPropertyNames(Object.getPrototypeOf(interface))) {
 				if (args === "pipe") {
 					data.pipe(res)
 				} else {
-					res.status(200).send(data)
+					res.status(200).json(data)
 				}
 			})
 			.catch(err => res.status(500).send(err))

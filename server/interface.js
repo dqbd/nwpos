@@ -131,6 +131,10 @@ class Interface {
 		return database.storage().generateEan()
 	}
 
+	POST_QTYITEM({eans}) {
+		return database.storage().qtyItem(eans)
+	}
+
 	POST_ADDITEM({ean, name, price, qty, retail_price}) {
 		return database.storage().addItem(ean, name, price, qty, retail_price)
 	}
