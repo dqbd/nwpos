@@ -18,6 +18,7 @@ import { bindActions } from "./utils/actions.js"
 import Main from "./components/Main.jsx"
 import Config from "./components/Config.jsx"
 import Dashboard from "./containers/StatefulDashboard.jsx"
+import Storage from "./containers/StatefulStorage.jsx"
 
 history.getCurrentLocation = () => (history.location)
 
@@ -38,7 +39,7 @@ hashHistory.listen((data) => {
 
 render(<Provider store={store}>
 	<Router history={hashHistory}>
-		<Route path="/" component={Main} />
+		<Route path="/" component={Storage} />
 		<Route path="/config" component={Config} />
 		<Route path="/stats" component={Dashboard} />
 	</Router>
