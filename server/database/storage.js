@@ -1,7 +1,6 @@
 const Database = require("./database")
 
 class Storage extends Database {
-
     getDb() {
         return super.getDb().then(db => new Promise((resolve, reject) => {
             db.ensureIndex({ fieldName: "ean", unique: true }, (err) => {
@@ -11,7 +10,7 @@ class Storage extends Database {
         }))
     }
 
-    addItem(ean, name, price, qty, retail_price) {
+    setItem(ean, name, price, qty, retail_price) {
         return this.getDb().then(db => new Promise((resolve, reject) => {
             let retail_amount = price
 
