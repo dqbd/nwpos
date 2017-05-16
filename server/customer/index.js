@@ -8,7 +8,7 @@ let kiosk_state = { cart: { items: [], selection: 0 }, paid: 0, status: "STAGE_T
 
 let params = [] 
 
-module.exports.init = (width = 800, height = 600, window = true) => {
+module.exports.init = (width = 0, height = 0, window = false) => {
 
 	if (width > 0) params.push(width)
 	if (height > 0) params.push(height)
