@@ -3,12 +3,14 @@ const path = require("path")
 const exec = require('child_process').exec
 
 let args = process.argv.slice(2)
-let target = args.length > 0 ? args[0] : __dirname
 
-exec("python ./loadfont.py", (err, stdout, stderr) => {
+console.log(process.cwd())
+let target = args.length > 0 ? path.resolve(process.cwd(), args[0]) : __dirname
+
+exec(`python ` + path.resolve(__dirname, "loadfont.py"), (err, stdout, stderr) => {
     if (err) throw new Error(err)
 
-    let file = fs.readFileSync("display.src.py", "utf-8")
+    let file = fs.readFileSync(path.resolve(__dirname, "display.src.py"), "utf-8")
     let matched = file.match(/\r\n|\r|\n/)
 
     if (matched) {

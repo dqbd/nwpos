@@ -40,6 +40,9 @@ module.exports = {
 		new webpack.optimize.UglifyJsPlugin({
 			compress: { warnings: false }
 		}),
-		new webpack.optimize.DedupePlugin()
+		new webpack.optimize.DedupePlugin(),
+		new WebpackShellPlugin({
+			onBuildEnd: "node ./display/compile.js server/dist"
+		})
 	]
 }
