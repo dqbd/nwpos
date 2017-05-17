@@ -4,7 +4,7 @@
         "script": "index.js",
         "env": {
             "NWPOS_PORT": 8080,
-            "NWPOS_DISPLAY": "python ./customer/app.py",
+            "NWPOS_DISPLAY": "python ./dist/display.py",
             "BONJOUR": true
         },
         "env_android": {
@@ -13,7 +13,7 @@
         },
         "env_dev:": {
             "NWPOS_PORT": 81,
-            "NWPOS_DEV": "python ./customer/app.py 800 600 --windowed",
+            "NWPOS_DEV": "python ./dist/display.py 800 600 --windowed",
             "NWPOS_DISPLAY": false,
             "BONJOUR": false
         }
@@ -28,7 +28,7 @@
             "post-deploy": "pm2 startOrRestart ecosystem.json",
             "env": {
                 "NWPOS_PORT": 8080,
-                "NWPOS_DISPLAY": "python ./customer/app.py",
+                "NWPOS_DISPLAY": "python ./dist/display.py",
                 "BONJOUR": true
             }
         }

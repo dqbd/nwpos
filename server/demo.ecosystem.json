@@ -4,7 +4,7 @@
         "script": "index.js",
         "env": {
             "NWPOS_PORT": 80,
-            "NWPOS_DISPLAY": "pythonw ./customer/app.py 800 600 --windowed",
+            "NWPOS_DISPLAY": "pythonw ./dist/display.py 800 600 --windowed",
             "BONJOUR": true,
             "PRINTER": "../demo/printer"
         }
