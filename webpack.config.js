@@ -1,5 +1,6 @@
 const webpack = require('webpack')
 const path = require("path")
+const WebpackShellPlugin = require('webpack-shell-plugin')
 
 module.exports = {
 	context: path.resolve(__dirname),
