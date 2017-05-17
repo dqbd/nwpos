@@ -4,16 +4,13 @@ const minimist = require('minimist')
 
 let args = {
 	port: 80,
-	display: true,
-	windowed: false,
-	width: 1280,
-	height: 1024,
 	bonjour: true,
 	dev: false,
+	display: "",
 	printer: (os.platform() === "win32") ? `\\\\${os.hostname()}\\nwcashier-printer` : "/dev/usb/lp0"
 }
 
-let boolean = ["display", "dev", "bonjour", "windowed"]
+let boolean = ["dev", "bonjour"]
 
 Object.keys(process.env)
 	.filter(i => Object.keys(args).indexOf(i.toLowerCase().replace("nwpos_", "")) >= 0)
@@ -28,7 +25,6 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const multer = require("multer")
 const path = require("path")
-
 
 const bonjour = require('bonjour')()
 const interface = require("./interface")(config, args)
