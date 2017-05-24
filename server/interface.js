@@ -11,9 +11,7 @@ class Interface {
 		this.args = args
 		this.timer = timer.init(config, database)
 
-		if (args.display) {
-			display.init(args.width, args.height, args.windowed)
-		}
+		display.init(args.display)
 
 		this.timer.enqueue()
 		printer.init(config, args)

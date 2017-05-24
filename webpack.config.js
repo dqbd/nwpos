@@ -1,5 +1,6 @@
 const webpack = require('webpack')
 const path = require("path")
+const WebpackShellPlugin = require('webpack-shell-plugin')
 
 module.exports = {
 	context: path.resolve(__dirname),
@@ -40,6 +41,9 @@ module.exports = {
 		new webpack.optimize.UglifyJsPlugin({
 			compress: { warnings: false }
 		}),
-		new webpack.optimize.DedupePlugin()
+		new webpack.optimize.DedupePlugin(),
+		new WebpackShellPlugin({
+			onBuildEnd: "node ./display/compile.js server/dist"
+		})
 	]
 }

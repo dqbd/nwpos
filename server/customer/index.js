@@ -8,17 +8,18 @@ let kiosk_state = { cart: { items: [], selection: 0 }, paid: 0, status: "STAGE_T
 
 let params = [] 
 
-module.exports.init = (width = 0, height = 0, window = false) => {
+module.exports.init = (command) => {
+	if (typeof command === "string") {
+		params = command.split(" ").filter(a => a.trim().length > 0)
+	} 
 
-	if (width > 0) params.push(width)
-	if (height > 0) params.push(height)
-	if (window) params.push("--windowed")
-
-	module.exports.loop()
+	if (params.length > 0) {
+		module.exports.loop()
+	}
 }
 
 module.exports.loop = () => {
-	kiosk = child_process.spawn(os.platform() === "win32" ? "pythonw" : "python", [path.resolve(__dirname, "app.py"), ...params])
+	kiosk = child_process.spawn(params[0], params.slice(1))
 
 	kiosk.stdout.on("data", (data) => {
 		console.log(data.toString())

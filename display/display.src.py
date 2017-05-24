@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import sys, os, json, pygame
+import sys, os, json, pygame, StringIO, base64
 from threading import Thread
 from Queue import Queue, Empty
 
@@ -8,6 +8,8 @@ def enqueue_output(stdin, queue):
    		queue.put(line)
 
 class customer:
+	global montserrat
+
 	screen = None
 	eetMode = True
 
@@ -29,9 +31,10 @@ class customer:
 
 	state = json.loads('{"cart": { "items": [], "selection": 0 }, "paid": 0, "status": "STAGE_TYPING"}')
 
-	font = os.path.dirname(os.path.realpath(__file__)) + "/montserrat.ttf"
+	font = None
 
 	def __init__(self):
+		self.load_assets()
 		self.init_display()
 		pygame.font.init()
 		pygame.mouse.set_visible(False)
@@ -41,6 +44,11 @@ class customer:
 		else:
 			self.updateSize(pygame.display.Info().current_w, pygame.display.Info().current_h)
 
+	def createFont(self, size):
+		font = StringIO.StringIO(self.font)
+		font.seek(0)
+
+		return pygame.font.Font(font, size)
 
 	def updateState(self, json = json.loads('{"cart": { "items": [], "selection": 0 }, "paid": 0, "status": "STAGE_TYPING"}')):
 		self.state = json
@@ -125,7 +133,7 @@ class customer:
 		pygame.display.flip()
 
 	def drawText(self, text, x, y, mode):
-		basicfont = pygame.font.Font(self.font, 28 * self.width / 1280)
+		basicfont = self.createFont(28 * self.width / 1280)
 		textSurface = basicfont.render(text, True, self.textBlack)
 		textRect = textSurface.get_rect()
 		textRect.centery = y
@@ -141,7 +149,7 @@ class customer:
 
 		pygame.draw.rect(self.screen, self.eetColor, (0, self.listHeight, self.width, self.eetHeight))
 
-		linefont = pygame.font.Font(self.font, 20 * self.width / 1280)
+		linefont = self.createFont(20 * self.width / 1280)
 
 		line = linefont.render(u"Podle zákona o evidenci tržeb je prodávající povinen vystavit kupujícímu účtenku. Zároveň je povinen zaevidovat", True, self.textBlack)
 		lineRect = line.get_rect()
@@ -186,11 +194,11 @@ class customer:
 		if status == "COMMIT_END":
 			mainText = u"vráceno: " + str((sumItems - paid) * -1 ) + u" Kč"
 
-			totalfont = pygame.font.Font(self.font, 28 * self.width / 1280)
+			totalfont = self.createFont(28 * self.width / 1280)
 			total = totalfont.render("celkem: "+ str(sumItems) + u" Kč", True, self.white)
 			totalrect = total.get_rect()
 
-			cashfont = pygame.font.Font(self.font, 28 * self.width / 1280)
+			cashfont = self.createFont(28 * self.width / 1280)
 			cash = cashfont.render("hotovost: " + str(paid) + u" Kč", True, self.white)
 			cashrect = cash.get_rect()
 
@@ -203,12 +211,16 @@ class customer:
 			self.screen.blit(total, totalrect)
 			self.screen.blit(cash, cashrect)
 		
-		finalfont = pygame.font.Font(self.font, 64 * self.width / 1280)
+		finalfont = self.createFont(64 * self.width / 1280)
 		final = finalfont.render(mainText, True, self.white)
 		finalrect = final.get_rect()
 		finalrect.right = self.width - self.padding
 		finalrect.centery = self.listHeight + self.eetHeight + ((self.height - self.listHeight - self.eetHeight) / 2)
 		self.screen.blit(final, finalrect)
+
+	def load_assets(self):
+		# TODO: load font from base64.txt
+		self.font = base64.b64decode(montserrat)
 
 	def __del__(self):
 		"Destructor to make sure pygame shuts down, etc."

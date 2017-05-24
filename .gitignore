@@ -3,5 +3,6 @@ server/data/**
 server/updater.json
 logserver/config.php
 demo/printer
+display/display.py
 
 yarn.lock
