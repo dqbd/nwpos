@@ -7,6 +7,7 @@ let seller = require("./actionTypes")
 const initialState = {
 	sellers: [],
 	debug: false,
+	current: 0,
 	customer: undefined,
 	suggestions: undefined,
 	stats: undefined
@@ -26,12 +27,18 @@ const debug = (state = false, action) =>{
 	return state
 }
 
-module.exports = (state = initialState, action) => {
+const switcher = (state = initialState, action) => {
 	return {
+		current: state.current,
+		customer: customer.reducer(state.customer, action),
+	}
+}
+
+module.exports = (state = initialState, action) => {
+	return Object.assign({
 		sellers: sellers(state.sellers, action),
 		debug: debug(state.debug, action),
-		customer: customer.reducer(state.customer, action),
 		suggestions: suggestions.reducer(state.suggestions, action),
 		stats: stats.reducer(state.stats, action)
-	}
+	}, switcher(state, action))
 }

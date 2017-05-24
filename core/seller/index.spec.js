@@ -31,6 +31,7 @@ test("shop still working", () => {
 			day: undefined
 		},
 		debug: false,
+		current: 0,
 		sellers: [],
 		suggestions: {
 			all: {},
@@ -84,6 +85,7 @@ test("get sellers", () => {
 				{name: "two", ic: "987654321"}
 			],
 			debug: false,
+			current: 0,
 			suggestions: {
 				all: {},
 				contextual: ["vejce", "moje matka"]
