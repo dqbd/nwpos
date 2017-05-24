@@ -1,6 +1,22 @@
 let actionTypes = require("./actionTypes")
 const { get } = require("../utils")
 
+module.exports.addTab = () => {
+	return { type: actionTypes.ADDTAB }
+}
+
+module.exports.switchTab = (index) => {
+	return { type: actionTypes.SWITCHTAB, index }
+}
+
+module.exports.deleteTab = (index) => {
+	return { type: actionTypes.DELETETAB, index }
+}
+
+module.exports.closeAllTabs = () => {
+	return { type: actionTypes.CLOSETABS }
+}
+
 module.exports.retrieveSellers = () => (dispatch) => {
 	return get("/sellers")
 		.then(res => {

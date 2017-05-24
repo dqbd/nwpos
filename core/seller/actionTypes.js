@@ -1,2 +1,7 @@
 module.exports.SETSELLERS = "SELLER_SETSELLERS"
 module.exports.SETDEBUG = "SELLER_SETDEBUG"
+
+module.exports.ADDTAB = "SELLER_ADDTAB"
+module.exports.SWITCHTAB = "SELLER_SWITCHTAB"
+module.exports.DELETETAB = "SELLER_DELETETAB"
+module.exports.CLOSETABS = "SELLER_CLOSETABS"
