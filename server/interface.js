@@ -52,6 +52,7 @@ class Interface {
 		let date = Date.parse(customer.date)
 		customer.date = Number.isNaN(date) ? new Date() : new Date(date)
 
+		//TODO: implement storage
 		return database.logs().logCustomer(customer)
 			.then(a => Promise.all(items.map(item => database.suggestion().updateSuggestion(item["name"], item["price"]))))
 			.then(a => database.suggestion().getGrouped())
@@ -118,6 +119,30 @@ class Interface {
 
 	GET_BACKUP_PIPE() {
 		return database.backup()
+	}
+
+	GET_ITEMSEARCH() {
+		return database.storage().getSearchMapping()
+	}
+
+	GET_ITEMS() {
+		return database.storage().getItems()
+	}
+
+	GET_EAN() {
+		return database.storage().generateEan()
+	}
+
+	POST_QTYITEM({eans}) {
+		return database.storage().qtyItem(eans)
+	}
+
+	POST_ADDITEM({ean, name, price, qty, retail_price}) {
+		return database.storage().addItem(ean, name, price, qty, retail_price)
+	}
+
+	POST_SETITEM({ean, name, price, qty, retail_price}) {
+		return database.storage().setItem(ean, name, price, qty, retail_price)
 	}
 }
 

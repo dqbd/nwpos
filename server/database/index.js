@@ -6,7 +6,8 @@ const base = path.resolve(__dirname, "..", "data")
 
 let available = {
 	suggestion: require("./suggestions"),
-	logs: require("./logs")
+	logs: require("./logs"),
+	storage: require("./storage")
 }
 
 let instances = {}

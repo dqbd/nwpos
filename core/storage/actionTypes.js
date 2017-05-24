@@ -1,0 +1,1 @@
+module.exports.SETITEMS = "STORAGE_SETITEMS"
