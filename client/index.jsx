@@ -39,7 +39,7 @@ hashHistory.listen((data) => {
 
 render(<Provider store={store}>
 	<Router history={hashHistory}>
-		<Route path="/" component={Storage} />
+		<Route path="/" component={Main} />
 		<Route path="/config" component={Config} />
 		<Route path="/stats" component={Dashboard} />
 	</Router>
