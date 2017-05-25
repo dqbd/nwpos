@@ -78,6 +78,10 @@ class Interface {
 		return database.logs().retrieveLog(day)
 	}
 
+	GET_LOGSUMMARY() {
+		return database.logs().retrieveSummary()
+	}
+
 	POST_EET({total, ic}) {
 		let sellers = this.config.get().sellers
 		if (sellers.length == 0) return Promise.reject("No seller")
