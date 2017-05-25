@@ -8,6 +8,7 @@ const mapStateToProps = (state) => {
 	return {
 		list: state.stats.list,
 		day: state.stats.day,
+		summary: state.stats.summary,
 		sellers: state.sellers
 	}
 }

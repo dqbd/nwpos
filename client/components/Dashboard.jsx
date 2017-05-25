@@ -72,27 +72,11 @@ const DayButton = ({active, day, onClick}) => (
 	</div>
 )
 
-export default class Dashboard extends Component {
-
-	constructor(props) {
-		super(props)
-		this.state = { selected: 0 }
-	}
-
-	renderCustomers() {
-		let day = this.props.day
-		if (day !== undefined) {
-			return day.customers.map((customer, key) => (
-				<Customer key={key} onPrint={this.props.onPrint} customer={customer} />
-			))
-		}
-	}
-
+class DayInfo extends Component {
 	renderDayInfo() {
 		let day = this.props.day
 
 		if (day !== undefined) {
-
 			let sellers = []
 
 			if (this.props.sellers.length > 1) {
@@ -130,14 +114,79 @@ export default class Dashboard extends Component {
 		}
 	}
 
+	renderCustomers() {
+		let day = this.props.day
+		if (day !== undefined) {
+			return day.customers.map((customer, key) => (
+				<Customer key={key} onPrint={this.props.onPrint} customer={customer} />
+			))
+		}
+	}
+
 	render() {
-		let {day, list, onDaySelected} = this.props
-		return <div id="dashboard">
-			<div className="day">{this.renderDayInfo()}
-				<div className="customers">
-					{this.renderCustomers()}
-				</div>
+		return (<div className="day">{this.renderDayInfo()}
+			<div className="customers">
+				{this.renderCustomers()}
 			</div>
+		</div>)
+	}
+}
+
+class Summary extends Component {
+
+	monthToString(input) {
+		let labels = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"]
+		let [month, year] = input.split(".")
+		return labels[Number.parseInt(month) - 1] + " " + year
+	}
+
+	renderTable(summary, sellers) {
+		let pool = [<div key="head" className="month head">
+			<div className="period">Období</div>
+			<div className="totals">{sellers.map(seller => <span key={seller.ic} className="seller">
+				<span className="name">{seller.name}</span>
+				<span className="ic">({seller.ic})</span>¨
+			</span>)}</div>
+			<div className="full">Celkem</div>
+		</div>]
+
+		for (let month of summary) {
+			pool.push(<div key={month.period} className="month">
+				<div className="period">{this.monthToString(month.period)} ({month.days} dní)</div>
+				<div className="totals">{sellers.map((seller, index) => {
+					let total = Object.keys(month.total).reduce((memo, key) => {
+						if (key === "0" && index === 0 || seller.ic === key) {
+							memo += month.total[key] 
+						}
+						return memo
+					}, 0)
+
+					return <span key={seller.ic} className="total">{total} Kč</span>
+				})}</div>
+				<div className="full">{Object.values(month.total).reduce((memo, total) => memo + total, 0)} Kč</div>
+			</div>)
+		}
+
+		return pool
+	}
+
+	render() {
+		return <div className="day summary">
+			<div className="table">{this.renderTable(this.props.summary, this.props.sellers)}</div>
+		</div>
+	}
+}
+
+export default class Dashboard extends Component {
+	constructor(props) {
+		super(props)
+		this.state = { selected: 0 }
+	}
+
+	render() {
+		let {day, list, summary, sellers, onDaySelected} = this.props
+		return <div id="dashboard">
+			{day ? <DayInfo {...this.props} /> : <Summary summary={summary} sellers={sellers} />}
 			<div className="days">
 				{list.map(label => (
 					<DayButton active={day && label === day.date} onClick={() => onDaySelected(label)} day={label} key={label} />

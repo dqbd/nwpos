@@ -18,6 +18,7 @@ let showStats = function() {
 	}
 	this.store.dispatch(seller.retrieveSellers())
 	this.store.dispatch(seller.retrieveDebug())
+	this.store.dispatch(stats.retrieveSummary())
 	this.store.dispatch(stats.retrieve())
 }
 
