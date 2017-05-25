@@ -47,19 +47,34 @@ class Logs extends Database {
 		})
 	}
 
-	retrieveLog(date) {
+	retrieveLog(date, detailed = false) {
 		return this.getDb(date).then(db => new Promise((resolve, reject) => {
 			db.find({}).sort({date: -1}).exec((err, data) => {
 				if (err) {
 					return reject(err)
 				}
 
+				let dayTotal = data.reduce((sum, customer) => {
+					let total = customer.cart.items.reduce((memo, item) => memo + item.price * item.qty, 0)
+
+					if (detailed) {
+						let index = !customer.seller ? "0" : customer.seller 
+						if (sum === 0) sum = {}
+						if (!sum[index]) sum[index] = 0
+
+						sum[index] += total
+
+						console.log(sum)
+						return sum
+
+					} else {
+						return sum + total
+					}
+				}, 0)
+
 				resolve({
 					date: date,
-					total: data.reduce((memo, customer) => {
-						let total = customer.cart.items.reduce((memo, item) => memo + item.price * item.qty, 0)
-						return memo + total
-					}, 0),
+					total: dayTotal,
 					customers: data
 				})
 			})
@@ -92,9 +107,16 @@ class Logs extends Database {
 							if (data.length > 0) return resolve([...result, data[0]])
 
 							// calculate sum
-							let summer = Promise.resolve(0)
+							let summer = Promise.resolve({})
 							for (let date of list) {
-								summer = summer.then((total) => this.retrieveLog(date).then(log => total + log.total))
+								summer = summer.then((total) => this.retrieveLog(date, true).then(log => {
+									if (Object.keys(log.total).length <= 0) total = {"0": 0} 
+									for (let key of Object.keys(log.total)) {
+										if (!total[key]) total[key] = 0
+										total[key] += log.total[key]
+									}
+									return total
+								}))
 							}
 							
 							summer.then(total => {
