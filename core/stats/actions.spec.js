@@ -24,8 +24,24 @@ test("retrieve day list", () => {
 })
 
 test("retrieve summary", () => {
+	let summary = [{
+		"period": "05.2017",
+		"days": 7,
+		"total": { "1212121218": 10803, "1234567890": 1420 },
+	}]
+
+	nock("http://localhost")
+		.get("/logsummary")
+		.reply(200, summary)
 	// TODO
-	return expect(true).toBe(false)
+
+	let store = mockStore()
+	return store.dispatch(actions.retrieveSummary()).then(() => {
+		expect(store.getActions()).toEqual([{
+			type: actionTypes.SETSUMMARY,
+			summary
+		}])
+	})
 })
 
 test("retrieve day info", () => {

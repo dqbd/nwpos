@@ -39,7 +39,7 @@ const switcher = (state = initialState, action) => {
 			currentCustomer = undefined
 			break
 		case seller.SWITCHTAB:
-			if (current !== action.index && action.index < inactive.length + 1) {
+			if (current !== action.index && action.index < inactive.length + 1 && action.index >= 0) {
 				let oldCustomer = currentCustomer
 				let old = current
 
@@ -55,12 +55,12 @@ const switcher = (state = initialState, action) => {
 					}
 				}) 
 			}
+			break
 		case seller.DELETETAB:
 			if (action.index < current) {
 				current = current - 1
 				inactive = inactive.filter((item, index) => index !== action.index)
-			} else if (action.index === current && inactive.length > 1) {
-
+			} else if (action.index === current && inactive.length > 0) {
 				current = (action.index >= inactive.length) ? current - 1 : current
 				currentCustomer = inactive[current]
 				inactive = inactive.filter((item, index) => index !== current)
@@ -69,9 +69,11 @@ const switcher = (state = initialState, action) => {
 				inactive = inactive.filter((item, index) => index + 1 !== action.index)
 			}
 
+			break
 		case seller.CLOSETABS:
 			inactive = []
 			current = 0
+			break
 	}
 
 	currentCustomer = customer.reducer(currentCustomer, action)

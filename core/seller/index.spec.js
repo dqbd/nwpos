@@ -28,7 +28,8 @@ test("shop still working", () => {
 	expect(store.getState()).toEqual({
 		stats: {
 			list: [],
-			day: undefined
+			day: undefined,
+			summary: []
 		},
 		debug: false,
 		inactive: [],
@@ -94,7 +95,8 @@ test("get sellers", () => {
 			},
 			stats: {
 				list: [],
-				day: undefined
+				day: undefined,
+				summary: []
 			},
 			customer: {
 				status: "STAGE_TYPING",
@@ -132,10 +134,17 @@ test("add tab", () => {
 	store.dispatch(screen.set(456))
 	store.dispatch(customer.add())
 
+	store.dispatch(seller.addTab())
+
+	store.dispatch(screen.set(789))
+	store.dispatch(customer.add())
+	store.dispatch(customer.add())
+
 	expect(store.getState()).toEqual({
 		stats: {
 			list: [],
-			day: undefined
+			day: undefined,
+			summary: []
 		},
 		debug: false,
 		inactive: [{
@@ -147,6 +156,95 @@ test("add tab", () => {
 				selection: 0,
 				items: [
 					{ name: "", price: 123, qty: 1 }
+				]
+			},
+			services: {
+				eet: null,
+				log: false,
+				print: false,
+				working: false
+			}
+		}, {
+			status: "STAGE_ADDED",
+			paid: 0,
+			screen: 456,
+			seller: null,
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "", price: 456, qty: 1 }
+				]
+			},
+			services: {
+				eet: null,
+				log: false,
+				print: false,
+				working: false
+			}
+		}],
+		current: 2,
+		sellers: [],
+		suggestions: {
+			all: {},
+			contextual: ["vejce", "moje matka"]
+		},
+		customer: {
+			status: "STAGE_ADDED",
+			paid: 0,
+			screen: 789,
+			seller: null,
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "", price: 789, qty: 2 }
+				]
+			},
+			services: {
+				eet: null,
+				log: false,
+				print: false,
+				working: false
+			}
+		}
+	})
+})
+
+test("switch tab", () => {
+	store.dispatch(seller.switchTab(1))
+
+	expect(store.getState()).toEqual({
+		stats: {
+			list: [],
+			day: undefined,
+			summary: []
+		},
+		debug: false,
+		inactive: [{
+			status: "STAGE_TYPING",
+			paid: 0,
+			screen: 5,
+			seller: null,
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "", price: 123, qty: 1 }
+				]
+			},
+			services: {
+				eet: null,
+				log: false,
+				print: false,
+				working: false
+			}
+		}, {
+			status: "STAGE_ADDED",
+			paid: 0,
+			screen: 789,
+			seller: null,
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "", price: 789, qty: 2 }
 				]
 			},
 			services: {
@@ -181,21 +279,235 @@ test("add tab", () => {
 			}
 		}
 	})
+
 })
 
-test("switch tab", () => {
-	// TODO
-	return expect(true).toBe(false)
-})
+test("switch tabs greater than current", () => {
+	store.dispatch(seller.switchTab(-1)) //invalid
+	store.dispatch(seller.switchTab(2)) //valid
+	store.dispatch(seller.switchTab(5)) //invalid
 
+	store.dispatch(seller.switchTab(2)) //invalid, should not change
+
+	expect(store.getState()).toEqual({
+		stats: {
+			list: [],
+			day: undefined,
+			summary: []
+		},
+		debug: false,
+		inactive: [{
+			status: "STAGE_TYPING",
+			paid: 0,
+			screen: 5,
+			seller: null,
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "", price: 123, qty: 1 }
+				]
+			},
+			services: {
+				eet: null,
+				log: false,
+				print: false,
+				working: false
+			}
+		}, {
+			status: "STAGE_ADDED",
+			paid: 0,
+			screen: 456,
+			seller: null,
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "", price: 456, qty: 1 }
+				]
+			},
+			services: {
+				eet: null,
+				log: false,
+				print: false,
+				working: false
+			}
+		}],
+		current: 2,
+		sellers: [],
+		suggestions: {
+			all: {},
+			contextual: ["vejce", "moje matka"]
+		},
+		customer: {
+			status: "STAGE_ADDED",
+			paid: 0,
+			screen: 789,
+			seller: null,
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "", price: 789, qty: 2 }
+				]
+			},
+			services: {
+				eet: null,
+				log: false,
+				print: false,
+				working: false
+			}
+		}
+	})
+})
 
 test("delete tab", () => {
-	// TODO
-	return expect(true).toBe(false)
+	store.dispatch(seller.deleteTab(0))
+
+	expect(store.getState()).toEqual({
+		stats: {
+			list: [],
+			day: undefined,
+			summary: []
+		},
+		debug: false,
+		inactive: [{
+			status: "STAGE_ADDED",
+			paid: 0,
+			screen: 456,
+			seller: null,
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "", price: 456, qty: 1 }
+				]
+			},
+			services: {
+				eet: null,
+				log: false,
+				print: false,
+				working: false
+			}
+		}],
+		current: 1,
+		sellers: [],
+		suggestions: {
+			all: {},
+			contextual: ["vejce", "moje matka"]
+		},
+		customer: {
+			status: "STAGE_ADDED",
+			paid: 0,
+			screen: 789,
+			seller: null,
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "", price: 789, qty: 2 }
+				]
+			},
+			services: {
+				eet: null,
+				log: false,
+				print: false,
+				working: false
+			}
+		}
+	})
+
+})
+
+test("delete active tab", () => {
+	store.dispatch(seller.deleteTab(1))
+	store.dispatch(seller.deleteTab(1)) // invalid
+
+	expect(store.getState()).toEqual({
+		stats: {
+			list: [],
+			day: undefined,
+			summary: []
+		},
+		debug: false,
+		inactive: [],
+		current: 0,
+		sellers: [],
+		suggestions: {
+			all: {},
+			contextual: ["vejce", "moje matka"]
+		},
+		customer: {
+			status: "STAGE_ADDED",
+			paid: 0,
+			screen: 456,
+			seller: null,
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "", price: 456, qty: 1 }
+				]
+			},
+			services: {
+				eet: null,
+				log: false,
+				print: false,
+				working: false
+			}
+		}
+	})
 })
 
 
 test("close tabs", () => {
 	// TODO
-	return expect(true).toBe(false)
+	store = createStore(seller.reducer, applyMiddleware(thunk))
+	store.dispatch({ type: suggestions.types.SUGGEST, suggestions: ["vejce", "moje matka"]})
+
+	store.dispatch(screen.set(123))
+	store.dispatch(customer.add())
+	store.dispatch(screen.addDigit(5))
+
+	// add new tab
+	store.dispatch(seller.addTab())
+
+	store.dispatch(screen.set(456))
+	store.dispatch(customer.add())
+
+	store.dispatch(seller.addTab())
+
+	store.dispatch(screen.set(789))
+	store.dispatch(customer.add())
+	store.dispatch(customer.add())
+
+	store.dispatch(seller.closeAllTabs())
+
+	expect(store.getState()).toEqual({
+		stats: {
+			list: [],
+			day: undefined,
+			summary: []
+		},
+		debug: false,
+		inactive: [],
+		current: 0,
+		sellers: [],
+		suggestions: {
+			all: {},
+			contextual: ["vejce", "moje matka"]
+		},
+		customer: {
+			status: "STAGE_ADDED",
+			paid: 0,
+			screen: 789,
+			seller: null,
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "", price: 789, qty: 2 }
+				]
+			},
+			services: {
+				eet: null,
+				log: false,
+				print: false,
+				working: false
+			}
+		}
+	})
 })
