@@ -12,6 +12,8 @@
     cursor: pointer
     position: relative
 
+    white-space: nowrap
+
     .bg
         position: absolute
         opacity: 0.5
@@ -21,6 +23,12 @@
 
     &.active .bg
         opacity: 1
+        
+    &.active .content
+        box-shadow: none
+
+    &.active + .tab .content
+        box-shadow: none
 
     &:first-child:last-child .close
         opacity: 0
@@ -41,7 +49,7 @@
 
     .label
         padding: 0 22px
-        padding-right: 44px
+        padding-right: 80px
         display: flex
         align-items: center
         height: "calc(%s * 0.45)" % (button-size)
@@ -61,9 +69,12 @@
 .tabs .tablist
     display: flex
     flex-grow: 1
+    overflow-x: auto
+    overflow-y: hidden
 
 .tabs .newtab
     width: "calc(%s * 0.45)" % (button-size)
+    min-width: "calc(%s * 0.45)" % (button-size)
     height: "calc(%s * 0.45)" % (button-size)
 
     display: flex
