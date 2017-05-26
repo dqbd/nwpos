@@ -5,16 +5,20 @@ import StatefulScreen from "../containers/StatefulScreen.jsx"
 import StatefulPanel from "../containers/StatefulPanel.jsx"
 import StatefulSellerPanel from "../containers/StatefulSellerPanel.jsx"
 import StatefulKeyboard from "../containers/StatefulKeyboard.jsx"
+import StatefulTabs from "../containers/StatefulTabs.jsx"
 
 const Main = () => (
 	<div className="app">
-		<div className="info">
-			<StatefulSellerPanel />
-			<StatefulCart />
-			<StatefulPanel />
+		<StatefulTabs />
+		<div className="tabcontent">
+			<div className="info">
+				<StatefulSellerPanel />
+				<StatefulCart />
+				<StatefulPanel />
+			</div>
+			<StatefulScreen />
+			<StatefulKeyboard />
 		</div>
-		<StatefulScreen />
-		<StatefulKeyboard />
 	</div>
 )
 

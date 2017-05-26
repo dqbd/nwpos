@@ -9,17 +9,26 @@
 .app
 	display: flex
 	align-items: flex-start
-	
+	flex-direction: column
+	height: 100vh
+
+.app .tabcontent
+	display: flex
+	align-items: flex-start
+	width: 100%
+	flex-grow: 1
+	position: relative
+
 .sidebar	
 	flex-basis: "calc(%s * 3)" % (button-size)
 	min-width: "calc(%s * 3)" % (button-size)
+	align-self: stretch
 
 	@media (max-width: query--small)
 		flex-basis: "calc(%s * 3)" % (button-size--small)
 		min-width: "calc(%s * 3)" % (button-size--small)
 		
 	box-shadow: 0px 2px 10px rgba(0,0,0,0.04), inset 1px 0px 0px rgba(0,0,0,0.1)
-	height: 100vh
 	
 	display: flex
 	flex-direction: column
@@ -28,7 +37,7 @@
 	flex-grow: 1
 	font-size: 1.5em
 	overflow-y: auto
-	height: 100vh
+	align-self: stretch
 	
 	display: flex
 	flex-direction: column

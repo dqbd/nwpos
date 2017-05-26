@@ -1,0 +1,55 @@
+.tabs
+    width: 100%
+    background: darken(color-gray, 40%)
+
+    display: flex
+
+.tabs .tab
+    height: "calc(%s * 0.45)" % (button-size)
+    display: flex
+    align-items: center
+    color: white
+
+    background: darken(color-red, 20%)
+    cursor: pointer
+    position: relative
+
+    box-shadow: inset 1px 0px 0px rgba(0,0,0,0.1)
+
+    &.active
+        background: color-red
+        box-shadow: none
+
+    .label
+        padding: 22px
+        padding-right: 44px
+    
+    .close
+        height: 100%
+        display: flex
+        align-items: center
+        justify-content: center
+        width: "calc(%s * 0.45)" % (button-size)
+        
+    .close svg
+        width: "calc(%s * 0.2)" % (button-size)
+        height: "calc(%s * 0.2)" % (button-size)
+        fill: white
+    
+.tabs .tablist
+    display: flex
+    flex-grow: 1
+
+.tabs .newtab
+    width: "calc(%s * 0.45)" % (button-size)
+    height: "calc(%s * 0.45)" % (button-size)
+
+    display: flex
+
+    align-items: center
+    justify-content: center
+
+    svg
+        width: "calc(%s * 0.25)" % (button-size)
+        height: "calc(%s * 0.25)" % (button-size)
+        fill: white
