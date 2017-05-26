@@ -182,3 +182,20 @@ test("add tab", () => {
 		}
 	})
 })
+
+test("switch tab", () => {
+	// TODO
+	return expect(true).toBe(false)
+})
+
+
+test("delete tab", () => {
+	// TODO
+	return expect(true).toBe(false)
+})
+
+
+test("close tabs", () => {
+	// TODO
+	return expect(true).toBe(false)
+})

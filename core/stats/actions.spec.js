@@ -23,6 +23,10 @@ test("retrieve day list", () => {
 	})
 })
 
+test("retrieve summary", () => {
+	return expect(true).toBe(false)
+})
+
 test("retrieve day info", () => {
 	let day = {"date":"19.01.2017","total":0,"customers":[]}
 

@@ -23,3 +23,8 @@ test("set day", () => {
 		day: day
 	})
 })
+
+test("set summary", () => {
+	// TODO
+	return expect(true).toBe(false)
+})
