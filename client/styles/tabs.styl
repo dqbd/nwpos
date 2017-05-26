@@ -6,23 +6,45 @@
 
 .tabs .tab
     height: "calc(%s * 0.45)" % (button-size)
-    display: flex
-    align-items: center
+    
     color: white
 
-    background: darken(color-red, 20%)
     cursor: pointer
     position: relative
 
-    box-shadow: inset 1px 0px 0px rgba(0,0,0,0.1)
+    padding-top: 4px
 
-    &.active
-        background: color-red
-        box-shadow: none
+    .bg
+        position: absolute
+        opacity: 0.5
+        height: 100%
+        top: 0; left: 0; right: 0; bottom: 0
+        
+
+    &.active .bg
+        opacity: 1
+
+    &:first-child:last-child .close
+        opacity: 0
+        pointer-events: none
+
+
+    .content
+        box-shadow: inset 1px 0px 0px rgba(0,0,0,0.1)
+        position: relative
+        z-index: 1
+        display: flex
+        height: 100%
+        align-items: center
+
+        noselect()
 
     .label
-        padding: 22px
+        padding: 0 22px
         padding-right: 44px
+        display: flex
+        align-items: center
+        height: "calc(%s * 0.45)" % (button-size)
     
     .close
         height: 100%

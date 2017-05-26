@@ -6,10 +6,12 @@ import StatefulPanel from "../containers/StatefulPanel.jsx"
 import StatefulSellerPanel from "../containers/StatefulSellerPanel.jsx"
 import StatefulKeyboard from "../containers/StatefulKeyboard.jsx"
 import StatefulTabs from "../containers/StatefulTabs.jsx"
+import StatefulSellerColor from "../containers/StatefulSellerColor.jsx"
 
 const Main = () => (
 	<div className="app">
 		<StatefulTabs />
+		<StatefulSellerColor />
 		<div className="tabcontent">
 			<div className="info">
 				<StatefulSellerPanel />

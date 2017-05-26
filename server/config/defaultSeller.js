@@ -15,6 +15,6 @@ module.exports.defaultSeller = {
         playground: true,
         offline: true
     },
-    color: "#000000",
+    color: "#03A9F4",
     tax: false
 } 

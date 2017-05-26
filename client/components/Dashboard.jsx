@@ -134,7 +134,6 @@ class DayInfo extends Component {
 }
 
 class Summary extends Component {
-
 	monthToString(input) {
 		let labels = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"]
 		let [month, year] = input.split(".")
@@ -276,7 +275,7 @@ class Summary extends Component {
 				<div className="sum">
 					{doughnut.labels.map((label, index) => <p key={label}>
 						<span className="label">{label}</span>
-						<span className="total">{doughnut.datasets[0].data[index]} Kč</span>
+						<span className="total" style={{color: doughnut.datasets[0].backgroundColor[index]}}>{doughnut.datasets[0].data[index]} Kč</span>
 					</p>)}
 				</div>
 			</div>
