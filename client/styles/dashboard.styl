@@ -6,9 +6,56 @@
 	height: 100vh
 
 #dashboard .summary
+	padding: 30px
+
+	h1
+		font-weight: 300
+		margin-bottom: 1.2em
+	.graph
+		margin-bottom: 0
+		
+	.graph .container
+		display: flex
+
+	.graph .bar
+		width: 60%
+	.graph .doughnut
+		position: relative
+		width: 40%
+		
+	.graph .doughnut .sum
+		position: absolute
+		top: 0; left: 0; right: 0; bottom: 0
+		display: flex
+		flex-direction: column
+		justify-content: center
+		align-items: center
+
+		p
+			margin-bottom: 1.8em
+
+		p:last-child
+			margin-bottom: 0
+
+		p span
+			display: block
+			text-align: center
+			font-size: 1em
+
+		p .total
+			font-size: 1.8em
+			margin-top: 5px
+
+		p:nth-child(2n+1) .total
+			color: color-red
+
+		p:nth-child(2n) .total
+			color: color-blue
+
+
 
 	.table
-		margin: 30px
+		margin-top: 40px
 		border: 1px solid rgba(0,0,0,0.1)
 		border-bottom: none
 

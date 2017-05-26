@@ -18,6 +18,11 @@ module.exports.retrieveSummary = () => (dispatch) => {
 }
 
 module.exports.retrieveDay = (day) => (dispatch) => {
+	if (!day) return Promise.resolve().then(() => {
+		dispatch(module.exports.retrieveSummary())
+		dispatch(setDay(undefined))
+	})
+
 	return get("/logs?day=" + day)
 		.then(res => {
 			dispatch(setDay(res.data))
