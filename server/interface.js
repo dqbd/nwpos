@@ -99,7 +99,7 @@ class Interface {
 	GET_SELLERS() {
 		return Promise.resolve({ 
 			sellers: this.config.get().sellers.map(seller => {
-				return { name: seller.name, ic: seller.ic }
+				return { name: seller.name, ic: seller.ic, color: seller.color }
 			}) 
 		})
 	}

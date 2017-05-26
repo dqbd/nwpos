@@ -90,6 +90,9 @@ class Seller extends Component {
 				<span>Jsem plátce 21% DPH</span>
 			</label>
 
+			<h2>Barva provozovny</h2>
+			<input placeholder="Barva pokladny" className="color" onChange={this.onChange.bind(this)} value={safeOutput(seller.color)}></input>
+			
 			<h2>EET</h2>
 			<label className="checkbox">
 				<input className="enabled" type="checkbox" onChange={this.onEetChange.bind(this)} checked={safeOutput(seller.eet.enabled)} />
