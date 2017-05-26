@@ -194,11 +194,11 @@ class Summary extends Component {
 					return memo
 				}, 0))
 
-				let backgroundColor = index % 2 == 1 ? "#03A9F4" : "#EF6C00" 
-
+				let backgroundColor = seller.color
 				return { label, data, backgroundColor }
 			})
 		}
+
 
 		let doughnut = {
 			labels: sellers.map(seller => `${seller.name} (${seller.ic})`),
@@ -215,7 +215,7 @@ class Summary extends Component {
 						return total
 					}, 0)
 				}),
-				backgroundColor: sellers.map((seller, index) => index % 2 == 1 ? "#03A9F4" : "#EF6C00")
+				backgroundColor: sellers.map((seller) => seller.color)
 			}]
 		}
 
