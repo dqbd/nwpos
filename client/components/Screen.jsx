@@ -38,7 +38,7 @@ export default class Screen extends Component {
 					<span className="value">{screen}</span>
 				</div>
 				<div className="keypad">
-					{[1,2,3,4,5,6,7,8,9].map(i => <span key={i} className="btn"><a onTouchTap={() => onNumber(i)}>{i}</a></span>)}
+					{[7,8,9,4,5,6,1,2,3].map(i => <span key={i} className="btn"><a onTouchTap={() => onNumber(i)}>{i}</a></span>)}
 					<span className="btn color add">
 						<a onTouchTap={this.onEnter.bind(this)}>
 							<svg viewBox="0 0 24 24"><path d={this.renderIcon()} /></svg>
