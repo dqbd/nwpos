@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { findDOMNode } from "react-dom"
 import SellerColor from "./SellerColor.jsx"
 
 class Tab extends Component {
@@ -14,13 +15,39 @@ class Tab extends Component {
 }
 
 export default class Tabs extends Component {
+
+    componentDidUpdate(prevProps) {
+		if (this.props.current !== prevProps.current) {
+			let itemComponent = this.refs.active
+			if (itemComponent) {
+				let domNode = findDOMNode(itemComponent)
+
+				let parentRect = findDOMNode(this).getBoundingClientRect()
+				let childRect = domNode.getBoundingClientRect()
+
+				if (childRect.left < parentRect.left || childRect.right > parentRect.right) {
+					domNode.scrollIntoView()
+				}
+			}
+		}
+	}
+
     render() {
         let {tabs, current, onTabSwitch, onTabClose, onTabAdd} = this.props
         if (!tabs || tabs.length <= 0) return null
 
         return <div className="tabs">
             <div className="tablist">
-                {tabs.map((tab, index) => <Tab active={current === index} key={index} onShow={() => onTabSwitch(index)} onClose={() => onTabClose(index)} label={tab.label} color={tab.color} />)}
+                {tabs.map((tab, index) => 
+                    <Tab 
+                        active={current === index} 
+                        key={index} 
+                        ref={current === index ? "active" : null}
+                        onShow={() => onTabSwitch(index)} 
+                        onClose={() => onTabClose(index)} 
+                        label={tab.label} 
+                        color={tab.color} />
+                )}
             </div>
             <a className="newtab" onClick={onTabAdd}><svg viewBox="0 0 24 24"><path d="M19,6H22V8H19V11H17V8H14V6H17V3H19V6M17,17V14H19V19H3V6H11V8H5V17H17Z" /></svg></a>
         </div>
