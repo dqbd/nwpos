@@ -42,6 +42,7 @@ test("get default customer", () => {
 				playground: true,
 				offline: true
 			},
+			color: "#03A9F4",
 			tax: false
 		}]
     })
