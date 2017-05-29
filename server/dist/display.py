@@ -26,10 +26,11 @@ class customer:
 
 	white = (255, 255, 255)
 	statusColor = (33, 150, 243)
-	eetColor = (230, 230, 230)
+	eetColor = (245, 245, 245)
 	selectedColor = (245, 245, 245)
 	textBlack = (50, 50, 50)
 	lineBlack = (200, 200, 200)
+	lineBlue = (12, 120, 200)
 
 	state = json.loads('{"cart": { "items": [], "selection": 0 }, "paid": 0, "status": "STAGE_TYPING"}')
 
@@ -148,31 +149,32 @@ class customer:
 		self.screen.blit(textSurface, textRect)
 
 	def drawInfo(self):
-
-		pygame.draw.rect(self.screen, self.eetColor, (0, self.listHeight, self.width, self.eetHeight))
+		top = self.listHeight + self.statusHeight
+		pygame.draw.rect(self.screen, self.eetColor, (0, top, self.width, self.eetHeight))
 
 		linefont = self.createFont(20 * self.width / 1280)
 
 		line = linefont.render(u"Podle zákona o evidenci tržeb je prodávající povinen vystavit kupujícímu účtenku. Zároveň je povinen zaevidovat", True, self.textBlack)
 		lineRect = line.get_rect()
 		lineRect.left = self.padding
-		lineRect.top = self.listHeight + self.eetHeight / 2 - lineRect.height 
+		lineRect.top = top + self.eetHeight / 2 - lineRect.height 
 		self.screen.blit(line, lineRect)
 
 		line = linefont.render(u"přijatou tržbu u správce daně online, v případě technického výpadku pak nejpozději do 48 hodin.", True, self.textBlack)
 		lineRect = line.get_rect()
 		lineRect.left = self.padding
-		lineRect.top = self.listHeight + self.eetHeight / 2
+		lineRect.top = top + self.eetHeight / 2
 		self.screen.blit(line, lineRect)
 
+		pygame.draw.line(self.screen, self.lineBlack, [0, top], [self.width, top])
 
 	def drawItem(self, item, relative, selected = False):
-		center = self.itemHeight * relative + self.itemHeight * .5
-		begin = self.itemHeight * relative
-		end = self.itemHeight * (relative + 1)
+		center = self.statusHeight + self.itemHeight * relative + self.itemHeight * .5
+		begin = self.statusHeight + self.itemHeight * relative
+		end = self.statusHeight + self.itemHeight * (relative + 1)
 
 		if selected:
-			pygame.draw.rect(self.screen, self.selectedColor, (0, self.itemHeight * relative, self.width, self.itemHeight))
+			pygame.draw.rect(self.screen, self.selectedColor, (0, self.statusHeight + self.itemHeight * relative, self.width, self.itemHeight))
 
 		self.drawText(u"Zboží" if len(item["name"].strip()) == 0 else item["name"], self.width * 120 / 1280, center, "left")
 		self.drawText(str(item["index"]), self.padding * 5 / 4, center, "center")
@@ -182,19 +184,21 @@ class customer:
 
 		if relative is not 0:
 			pygame.draw.line(self.screen, self.lineBlack, [0, begin], [self.width, begin])
+
 		pygame.draw.line(self.screen, self.lineBlack, [0, end], [self.width, end])
 
 		relative = relative + 1
 
 	def drawStatus(self, items, status, paid):
-		pygame.draw.rect(self.screen, self.statusColor, (0, self.listHeight + self.eetHeight, self.width, self.statusHeight))
+		pygame.draw.rect(self.screen, self.statusColor, (0, 0, self.width, self.statusHeight))
+		pygame.draw.line(self.screen, self.lineBlue, [0, self.statusHeight], [self.width, self.statusHeight])
 
 		sumItems = sum([item["price"] * item["qty"] for item in items]) 
 
 		mainText = "celkem: " + str(sumItems) + u" Kč"
 
 		if status == "COMMIT_END":
-			mainText = u"vráceno: " + str((sumItems - paid) * -1 ) + u" Kč"
+			mainText = u"Vráceno: " + str((sumItems - paid) * -1 ) + u" Kč"
 
 			totalfont = self.createFont(28 * self.width / 1280)
 			total = totalfont.render("celkem: "+ str(sumItems) + u" Kč", True, self.white)
@@ -204,10 +208,10 @@ class customer:
 			cash = cashfont.render("hotovost: " + str(paid) + u" Kč", True, self.white)
 			cashrect = cash.get_rect()
 
-			cashrect.left = self.padding
-			totalrect.left = self.padding
+			cashrect.right = self.width - self.padding
+			totalrect.right = self.width - self.padding
 			
-			totalrect.top = self.listHeight + self.eetHeight + (self.statusHeight - (totalrect.height + cashrect.height + 10)) / 2
+			totalrect.top = 0 + (self.statusHeight - (totalrect.height + cashrect.height + 10)) / 2
 			cashrect.top = totalrect.top + totalrect.height + 10
 
 			self.screen.blit(total, totalrect)
@@ -216,13 +220,18 @@ class customer:
 		finalfont = self.createFont(64 * self.width / 1280)
 		final = finalfont.render(mainText, True, self.white)
 		finalrect = final.get_rect()
-		finalrect.right = self.width - self.padding
-		finalrect.centery = self.listHeight + self.eetHeight + ((self.height - self.listHeight - self.eetHeight) / 2)
+		finalrect.left = self.padding
+		finalrect.centery = 0 + ((self.height - self.listHeight - self.eetHeight) / 2)
+		
 		self.screen.blit(final, finalrect)
 
 	def load_assets(self):
-		# TODO: load font from base64.txt
-		self.font = base64.b64decode(montserrat)
+		try:
+			self.font = base64.b64decode(montserrat)
+		except NameError:
+			src = os.path.dirname(os.path.realpath(__file__)) + "/montserrat.ttf"
+			with open(src, "rb") as font:
+				self.font = font.read()
 
 	def __del__(self):
 		"Destructor to make sure pygame shuts down, etc."
