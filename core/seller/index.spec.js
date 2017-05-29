@@ -453,6 +453,97 @@ test("delete active tab", () => {
 	})
 })
 
+test("add tab append style", () => {
+	store = createStore(seller.reducer, applyMiddleware(thunk))
+	store.dispatch({ type: suggestions.types.SUGGEST, suggestions: ["vejce", "moje matka"]})
+
+	store.dispatch(screen.set(123))
+	store.dispatch(customer.add())
+	store.dispatch(screen.addDigit(5))
+
+	// add new tab
+	store.dispatch(seller.addTab())
+
+	store.dispatch(screen.set(456))
+	store.dispatch(customer.add())
+
+	// switch tab 0
+	store.dispatch(seller.switchTab(0))
+	store.dispatch(seller.addTab())
+
+	store.dispatch(screen.set(789))
+	store.dispatch(customer.add())
+	store.dispatch(customer.add())
+
+	expect(store.getState()).toEqual({
+		stats: {
+			list: [],
+			day: undefined,
+			summary: []
+		},
+		debug: false,
+		inactive: [{
+			status: "STAGE_TYPING",
+			paid: 0,
+			screen: 5,
+			seller: null,
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "", price: 123, qty: 1 }
+				]
+			},
+			services: {
+				eet: null,
+				log: false,
+				print: false,
+				working: false
+			}
+		}, {
+			status: "STAGE_ADDED",
+			paid: 0,
+			screen: 456,
+			seller: null,
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "", price: 456, qty: 1 }
+				]
+			},
+			services: {
+				eet: null,
+				log: false,
+				print: false,
+				working: false
+			}
+		}],
+		current: 2,
+		sellers: [],
+		suggestions: {
+			all: {},
+			contextual: ["vejce", "moje matka"]
+		},
+		customer: {
+			status: "STAGE_ADDED",
+			paid: 0,
+			screen: 789,
+			seller: null,
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "", price: 789, qty: 2 }
+				]
+			},
+			services: {
+				eet: null,
+				log: false,
+				print: false,
+				working: false
+			}
+		}
+	})
+})
+
 
 test("close tabs", () => {
 	// TODO

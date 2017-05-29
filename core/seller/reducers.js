@@ -34,8 +34,8 @@ const switcher = (state = initialState, action) => {
 
 	switch (action.type) {
 		case seller.ADDTAB:
-			current = current + 1
-			inactive = [...inactive.slice(0, current), clonedeep(currentCustomer), ...inactive.slice(current+1)]
+			inactive = [...inactive.slice(0, current), clonedeep(currentCustomer), ...inactive.slice(current)]
+			current = inactive.length
 			currentCustomer = undefined
 			break
 		case seller.SWITCHTAB:
