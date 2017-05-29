@@ -63,10 +63,7 @@ class Logs extends Database {
 						if (!sum[index]) sum[index] = 0
 
 						sum[index] += total
-
-						console.log(sum)
 						return sum
-
 					} else {
 						return sum + total
 					}
@@ -98,14 +95,17 @@ class Logs extends Database {
 		}).then(maps => {
 			return this.getDb("summary").then(db => {
 				let final = Promise.resolve([])
+				let currentSeason = this.retrieveDateString(new Date()).split(".").slice(1).join(".")
+
 				Object.keys(maps).forEach((season) => {
 					let { days, list } = maps[season]
 
 					final = final.then((result) => new Promise((resolve, reject) => {
 						db.find({ period: season, days: { $gte: days } }, (err, data) => {
 							if (err) return reject(err)
-							if (data.length > 0) return resolve([...result, data[0]])
+							if (data.length > 0 && season !== currentSeason) return resolve([...result, data[0]])
 
+							// TODO: update only current day
 							// calculate sum
 							let summer = Promise.resolve({})
 							for (let date of list) {
