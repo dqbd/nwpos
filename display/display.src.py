@@ -196,7 +196,7 @@ class customer:
 		mainText = "celkem: " + str(sumItems) + u" Kč"
 
 		if status == "COMMIT_END":
-			mainText = u"Vráceno: " + str((sumItems - paid) * -1 ) + u" Kč"
+			mainText = u"vráceno: " + str((sumItems - paid) * -1 ) + u" Kč"
 
 			totalfont = self.createFont(28 * self.width / 1280)
 			total = totalfont.render("celkem: "+ str(sumItems) + u" Kč", True, self.white)
