@@ -15,8 +15,8 @@ const mockStore = require("redux-mock-store").default([thunk])
 const { createStore, applyMiddleware } = require("redux")
 
 let store = createStore(seller.reducer, applyMiddleware(thunk))
-let clock = lolex.install(1496254302513, ["Date"])
 
+let clock = lolex.install(1496254302513, ["Date"])
 
 test("shop still working", () => {
 	store.dispatch(screen.set(123))
