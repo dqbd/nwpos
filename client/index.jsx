@@ -10,7 +10,7 @@ import { render } from "react-dom"
 import { HashRouter, Switch } from "react-router-dom"
 
 import { reducer, config } from "../core"
-import { capitalize } from "./utils"
+import { capitalize, hideLoading } from "./utils"
 import { bindDisplayEvents } from "./utils/display.js"
 import { bindActions } from "./utils/actions.js"
 
@@ -33,9 +33,7 @@ render(<Provider store={store}>
 			{Dashboard.Page}
 		</Switch>
 	</HashRouter>
-</Provider>, document.getElementById("root"), (callback) => {
-	if (window.android) setTimeout(() => window.android.loadFinished(JSON.stringify({ actions })), 500)
-})
+</Provider>, document.getElementById("root"), hideLoading)
 
 window.toggleNight(true)
 

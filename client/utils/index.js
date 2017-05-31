@@ -25,6 +25,13 @@ module.exports.printNative = (buffer) => {
 	}
 }
 
+module.exports.hideLoading = () => {
+	console.log("Hiding loading")
+	if (window.android) {
+		setTimeout(() => window.android.loadFinished(JSON.stringify({ actions })), 500)
+	}
+}
+
 module.exports.invokeFeedback = () => {
 	if (navigator.vibrate) {
 		navigator.vibrate(90)
