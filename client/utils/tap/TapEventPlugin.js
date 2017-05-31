@@ -142,9 +142,7 @@ function createTapEventPlugin() {
 
 			if (nativeEvent instanceof MouseEvent) lastMouseEvent = now()
 			if (nativeEvent instanceof TouchEvent) lastTouchEvent = now()
-
 			if (nativeEvent instanceof MouseEvent && Math.abs(lastTouchEvent - lastMouseEvent) < 1000) return null
-
 
 			if (!isStartish(topLevelType) && !isEndish(topLevelType)) {
 				return null;

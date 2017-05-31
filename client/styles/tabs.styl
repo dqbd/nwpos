@@ -30,6 +30,9 @@
 
     &.active .bg
         opacity: 1
+
+    &.active .label.tapped
+        background: none        
         
     &.active .content
         box-shadow: none
@@ -37,9 +40,10 @@
     &.active + .tab .content
         box-shadow: none
 
-    &:first-child:last-child .close
-        opacity: 0
-        pointer-events: none
+    &:first-child:last-child 
+        .close
+            opacity: 0
+            pointer-events: none
 
     .content
         box-shadow: inset 1px 0px 0px rgba(0,0,0,0.1)
