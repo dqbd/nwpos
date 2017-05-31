@@ -7,7 +7,7 @@ import injectTapEventPlugin from "./utils/tap/injectTapEventPlugin"
 import { createStore, applyMiddleware } from "redux"
 import { Provider } from "react-redux"
 import { render } from "react-dom"
-import { HashRouter, Switch, Route } from "react-router-dom"
+import { HashRouter, Switch } from "react-router-dom"
 
 import { reducer, config } from "../core"
 import { capitalize } from "./utils"
