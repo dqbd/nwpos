@@ -19,6 +19,7 @@
     position: relative
 
     white-space: nowrap
+    noselect()
 
     .bg
         position: absolute
@@ -40,7 +41,6 @@
         opacity: 0
         pointer-events: none
 
-
     .content
         box-shadow: inset 1px 0px 0px rgba(0,0,0,0.1)
         position: relative
@@ -49,23 +49,35 @@
         height: 100%
         align-items: center
 
-        padding-top: 4px
-
         noselect()
+
+
 
     .label
         padding: 0 22px
+        padding-top: 4px
         padding-right: 80px
         display: flex
         align-items: center
         height: "calc(%s * 0.45)" % (button-size)
+
+        &.tapped
+            background-color: rgba(0,0,0,0.1)
+        *
+            pointer-events: none
     
     .close
         height: 100%
         display: flex
         align-items: center
         justify-content: center
+        padding-top: 4px
         width: "calc(%s * 0.45)" % (button-size)
+
+        &.tapped
+            background-color: rgba(0,0,0,0.1)
+        *
+            pointer-events: none
         
     .close svg
         width: "calc(%s * 0.2)" % (button-size)
@@ -93,3 +105,9 @@
         width: "calc(%s * 0.25)" % (button-size)
         height: "calc(%s * 0.25)" % (button-size)
         fill: white
+
+    &.tapped
+        background-color: rgba(0,0,0,0.2)
+        
+    *
+        pointer-events: none
