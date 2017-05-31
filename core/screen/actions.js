@@ -54,6 +54,7 @@ Object.keys(wrapped).forEach(key => {
 					dispatch(wrapped.clear())
 				} else if (state.status === statusTypes.COMMIT_END) {
 					dispatch({ type: types.SETPAID, paid: 0 })
+					dispatch({ type: types.SETDATE, date: 0 })
 					dispatch({ type: types.SETSTATUS, status: statusTypes.STAGE_TYPING })
 					dispatch(cart.clear())
 					dispatch(wrapped.clear())

@@ -3,9 +3,12 @@ const cart = require("../cart")
 const customer = require("./index")
 
 const thunk = require('redux-thunk').default
+const lolex = require("lolex")
 const { createStore, applyMiddleware } = require("redux")
 
 let store = createStore(customer.reducer, applyMiddleware(thunk))
+
+let clock = lolex.install(1496254300000, ["Date"])
 
 const nock = require("nock")
 beforeEach(() => {
@@ -21,6 +24,30 @@ test("add item via keyboard", () => {
 
 	store.dispatch(customer.add())
 
+	expect(store.getState()).toEqual({
+		status: customer.types.STATUS_TYPES.STAGE_ADDED,
+		screen: 123,
+		paid: 0,
+		seller: null,
+		date: 1496254300000,
+		services: {
+			print: false,
+			eet: null,
+			log: false,
+			working: false
+		},
+		cart: {
+			selection: 0,
+			items: [
+				{ name: "", price: 123, qty: 1 }
+			]
+		},
+	})
+})
+
+test("add second item without time reset", () => {
+	clock.tick("08") // 8 sekund = 1496254308000
+	
 	store.dispatch(screen.addDigit(1))
 	store.dispatch(customer.add())
 
@@ -29,6 +56,7 @@ test("add item via keyboard", () => {
 		screen: 1,
 		paid: 0,
 		seller: null,
+		date: 1496254300000,
 		services: {
 			print: false,
 			eet: null,
@@ -55,6 +83,7 @@ test("clear screen after adding", () => {
 		screen: -0.502,
 		paid: 0,
 		seller: null,
+		date: 1496254300000,
 		services: {
 			print: false,
 			eet: null,
@@ -79,6 +108,7 @@ test("checkout begin", () => {
 		screen: 124,
 		paid: 0,
 		seller: null,
+		date: 1496254300000,
 		services: {
 			print: false,
 			eet: null,
@@ -105,6 +135,7 @@ test("checkout payment", () => {
 		screen: 358,
 		paid: 0,
 		seller: null,
+		date: 1496254300000,
 		services: {
 			print: false,
 			eet: null,
@@ -129,6 +160,7 @@ test("payment finished", () => {
 		screen: -234,
 		paid: 358,
 		seller: null,
+		date: 1496254300000,
 		services: {
 			print: false,
 			eet: null,
@@ -152,6 +184,7 @@ test("new payment", () => {
 		screen: 1,
 		paid: 0,
 		seller: null,
+		date: 0,
 		services: {
 			print: false,
 			eet: null,
@@ -182,6 +215,7 @@ test("direct payment", () => {
 		screen: -17,
 		paid: 50,
 		seller: null,
+		date: 1496254308000,
 		services: {
 			print: false,
 			eet: null,
@@ -221,6 +255,7 @@ test("revert back to edit", () => {
 		screen: 15,
 		paid: 0,
 		seller: null,
+		date: 1496254308000,
 		services: {
 			print: false,
 			eet: null,
@@ -251,6 +286,7 @@ test("quantity payment", () => {
 		screen: -893,
 		paid: 1000,
 		seller: null,
+		date: 1496254308000,
 		services: {
 			print: false,
 			eet: null,
@@ -285,6 +321,7 @@ test("multiple adding", () => {
 		screen: 123,
 		paid: 0,
 		seller: null,
+		date: 1496254308000,
 		services: {
 			print: false,
 			eet: null,
@@ -321,6 +358,7 @@ test("set qty", () => {
 		screen: 123,
 		paid: 0,
 		seller: null,
+		date: 1496254308000,
 		services: {
 			print: false,
 			eet: null,
@@ -347,6 +385,7 @@ test("clears correctly", () => {
 		screen: 0,
 		paid: 0,
 		seller: null,
+		date: 0,
 		services: {
 			print: false,
 			eet: null,
@@ -368,6 +407,7 @@ test("doesnt add on screen 0", () => {
 		screen: 0,
 		paid: 0,
 		seller: null,
+		date: 0,
 		services: {
 			print: false,
 			eet: null,
@@ -403,6 +443,7 @@ test("add item with name", () => {
 		screen: 256,
 		paid: 0,
 		seller: null,
+		date: 1496254308000,
 		services: {
 			print: false,
 			eet: null,
@@ -435,6 +476,7 @@ test("checkout instead payment when 0", () => {
 		screen: 123,
 		paid: 0,
 		seller: null,
+		date: 1496254308000,
 		services: {
 			print: false,
 			eet: null,
@@ -464,6 +506,7 @@ test("checkout instead payment when added", () => {
 		screen: 246,
 		paid: 0,
 		seller: null,
+		date: 1496254308000,
 		services: {
 			print: false,
 			eet: null,
@@ -490,6 +533,7 @@ test("prevent payment when 0", () => {
 		screen: 0,
 		paid: 0,
 		seller: null,
+		date: 0,
 		services: {
 			print: false,
 			eet: null,
@@ -511,6 +555,7 @@ test("set seller", () => {
 		status: customer.types.STATUS_TYPES.STAGE_TYPING,
 		screen: 0,
 		paid: 0,
+		date: 0,
 		seller: "123456789",
 		services: {
 			print: false,

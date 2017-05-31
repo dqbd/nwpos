@@ -5,6 +5,7 @@ const seller = require("./index")
 const screen = require("../screen")
 const customer = require("../customer")
 const suggestions = require("../suggestions")
+const lolex = require("lolex")
 
 const thunk = require('redux-thunk').default
 
@@ -14,6 +15,8 @@ const mockStore = require("redux-mock-store").default([thunk])
 const { createStore, applyMiddleware } = require("redux")
 
 let store = createStore(seller.reducer, applyMiddleware(thunk))
+let clock = lolex.install(1496254302513, ["Date"])
+
 
 test("shop still working", () => {
 	store.dispatch(screen.set(123))
@@ -43,6 +46,7 @@ test("shop still working", () => {
 			status: "STAGE_TYPING",
 			paid: 0,
 			screen: 5,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -102,6 +106,7 @@ test("get sellers", () => {
 				status: "STAGE_TYPING",
 				paid: 0,
 				screen: 5,
+				date: 1496254302513,
 				seller: null,
 				cart: {
 					selection: 0,
@@ -151,6 +156,7 @@ test("add tab", () => {
 			status: "STAGE_TYPING",
 			paid: 0,
 			screen: 5,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -168,6 +174,7 @@ test("add tab", () => {
 			status: "STAGE_ADDED",
 			paid: 0,
 			screen: 456,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -192,6 +199,7 @@ test("add tab", () => {
 			status: "STAGE_ADDED",
 			paid: 0,
 			screen: 789,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -223,6 +231,7 @@ test("switch tab", () => {
 			status: "STAGE_TYPING",
 			paid: 0,
 			screen: 5,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -240,6 +249,7 @@ test("switch tab", () => {
 			status: "STAGE_ADDED",
 			paid: 0,
 			screen: 789,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -264,6 +274,7 @@ test("switch tab", () => {
 			status: "STAGE_ADDED",
 			paid: 0,
 			screen: 456,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -300,6 +311,7 @@ test("switch tabs greater than current", () => {
 			status: "STAGE_TYPING",
 			paid: 0,
 			screen: 5,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -317,6 +329,7 @@ test("switch tabs greater than current", () => {
 			status: "STAGE_ADDED",
 			paid: 0,
 			screen: 456,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -341,6 +354,7 @@ test("switch tabs greater than current", () => {
 			status: "STAGE_ADDED",
 			paid: 0,
 			screen: 789,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -372,6 +386,7 @@ test("delete tab", () => {
 			status: "STAGE_ADDED",
 			paid: 0,
 			screen: 456,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -396,6 +411,7 @@ test("delete tab", () => {
 			status: "STAGE_ADDED",
 			paid: 0,
 			screen: 789,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -436,6 +452,7 @@ test("delete active tab", () => {
 			status: "STAGE_ADDED",
 			paid: 0,
 			screen: 456,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -486,6 +503,7 @@ test("add tab append style", () => {
 			status: "STAGE_TYPING",
 			paid: 0,
 			screen: 5,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -503,6 +521,7 @@ test("add tab append style", () => {
 			status: "STAGE_ADDED",
 			paid: 0,
 			screen: 456,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -527,6 +546,7 @@ test("add tab append style", () => {
 			status: "STAGE_ADDED",
 			paid: 0,
 			screen: 789,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
@@ -586,6 +606,7 @@ test("close tabs", () => {
 			status: "STAGE_ADDED",
 			paid: 0,
 			screen: 789,
+			date: 1496254302513,
 			seller: null,
 			cart: {
 				selection: 0,
