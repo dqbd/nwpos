@@ -50,7 +50,7 @@ class Interface {
 		let items = customer.cart.items
 
 		let date = Date.parse(customer.date)
-		customer.date = Number.isNaN(date) ? new Date() : new Date(date)
+		customer.date = Number.isNaN(date) || date < 10000 ? new Date() : new Date(date)
 
 		//TODO: implement storage
 		return database.logs().logCustomer(customer)

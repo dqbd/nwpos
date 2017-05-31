@@ -6,6 +6,7 @@ const customer = require("./actionTypes")
 const statusTypes = customer.STATUS_TYPES 
 
 let initialState = {
+	date: 0,
 	status: statusTypes.STAGE_TYPING,
 	seller: null,
 	paid: 0,
@@ -35,8 +36,16 @@ const seller = (state = null, action) =>{
 	return state
 }
 
+const date = (state = 0, action) => {
+	if (action.type === customer.SETDATE) {
+		return action.date
+	}
+	return state
+}
+
 module.exports = (state = initialState, action) => {
 	return {
+		date: date(state.date, action),
 		status: status(state.status, action),
 		paid: paid(state.paid, action),
 		seller: seller(state.seller, action),

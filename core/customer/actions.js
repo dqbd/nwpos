@@ -35,7 +35,12 @@ module.exports.add = (name) => (dispatch, getState) => {
 				dispatch(cart.addQty(1, newCart.items.length - 1))
 			}
 		} else {
+			if (newCart.items.length < 1) {
+				dispatch({ type: types.SETDATE, date: Date.now() })
+			}
+
 			dispatch(cart.addItem(screenValue))
+
 			if (name !== undefined && name.trim().length > 0) {
 				dispatch(cart.renameItem(name))
 			}
@@ -149,6 +154,7 @@ module.exports.clear = () => (dispatch) => {
 	dispatch(cart.clear())
 	dispatch(services.reset())
 	dispatch(suggestions.reset())
+	dispatch({ type: types.SETDATE, date: 0 })
 	dispatch({ type: types.SETPAID, paid: 0 })
 	dispatch({ type: types.SETSTATUS, status: statusTypes.STAGE_TYPING })
 }
