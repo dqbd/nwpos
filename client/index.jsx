@@ -28,9 +28,9 @@ bindDisplayEvents(store)
 render(<Provider store={store}>
 	<HashRouter>
 		<Switch>
-			<Route exact path="/" component={Main} />
-			<Route exact path="/config" component={Config} />
-			<Route exact path="/stats" component={Dashboard} />
+			{Main.Page}
+			{Config.Page}
+			{Dashboard.Page}
 		</Switch>
 	</HashRouter>
 </Provider>, document.getElementById("root"), (callback) => {
@@ -40,11 +40,7 @@ render(<Provider store={store}>
 window.toggleNight(true)
 
 config.get().then(config => {
-	if (config.sellers.length > 0) {
-		window.showClient()
-	} else {
+	if (config.sellers.length <= 0) {
 		window.showConfig()
 	}
-}).catch(err => {
-	window.showClient()
 })

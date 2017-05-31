@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Redirect } from 'react-router'
+import { Route } from "react-router-dom"
 import { connect } from "react-redux"
 
 export class PageComponent extends Component {
@@ -30,8 +30,8 @@ export class PageComponent extends Component {
 }
 
 export const Connect = (Layout) => {
-	let obj = connect()(Layout)
-	obj.path = Layout.path 
-	obj.show = () => document.dispatchEvent(new CustomEvent("page", { detail: Layout.path }))
-	return obj
+	let Page = <Route exact path={Layout.path} component={connect()(Layout)} />
+	let path = Layout.path 
+	let show = () => document.dispatchEvent(new CustomEvent("page", { detail: Layout.path }))
+	return { Page, path, show }
 }
