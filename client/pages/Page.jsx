@@ -14,13 +14,11 @@ export class PageComponent extends Component {
 	componentWillMount() { 
 		this.init(this.props.dispatch) 
 		this.listener = this.pageListener.bind(this)
-
 		document.addEventListener("page", this.listener)
 	}
 
 	pageListener(e) {
 		if (e.detail && e.detail !== this.path) {
-			console.log("unmounting", this.constructor.name)
 			document.removeEventListener("page", this.listener)
 			this.props.history.replace(e.detail)
 		}
