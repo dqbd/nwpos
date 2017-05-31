@@ -24,9 +24,9 @@ module.exports.bindDisplayEvents = (store) => {
 	store.subscribe(watch(store.getState, "customer.cart", deepEqual)((newVal, oldVal, loc) => sendStream(newVal, loc)))
 	store.subscribe(watch(store.getState, "customer.paid")((newVal, oldVal, loc) => sendStream(newVal, loc)))
 	store.subscribe(watch(store.getState, "customer.status")((newVal, oldVal, loc) => {
-		let { COMMIT_BEGIN, COMMIT_TYPING, COMMIT_END, STAGE_TYPING } = customer.types.STATUS_TYPES
-		if ([COMMIT_BEGIN, COMMIT_END].indexOf(newVal) >= 0 || 
-			newVal === STAGE_TYPING && [COMMIT_BEGIN, COMMIT_TYPING, COMMIT_END].indexOf(oldVal) >= 0) {
+		let { COMMIT_BEGIN } = customer.types.STATUS_TYPES
+		let isEnd = (val) => val === COMMIT_END ? 1 : 0 
+		if (isEnd(oldVal) !== isEnd(newVal)) {
 			sendStream(newVal, loc)
 		}
 	}))
