@@ -1,10 +1,6 @@
 import { suggestions, customer, seller, stats } from "../../core"
 
 let showClient = function() {
-	let { pathname } = this.hashHistory.getCurrentLocation()
-	if (pathname !== "/") {
-		this.hashHistory.push("/")
-	}
 	this.store.dispatch(suggestions.listSuggestions())
 	this.store.dispatch(seller.retrieveSellers())
 	this.store.dispatch(seller.retrieveDebug())
@@ -12,10 +8,6 @@ let showClient = function() {
 }
 
 let showStats = function() {
-	let { pathname } = this.hashHistory.getCurrentLocation()
-	if (pathname !== "/stats") {
-		this.hashHistory.push("/stats")
-	}
 	this.store.dispatch(seller.retrieveSellers())
 	this.store.dispatch(seller.retrieveDebug())
 	this.store.dispatch(stats.retrieveSummary())
@@ -45,10 +37,7 @@ let toggleNight = function(ignore = false) {
 }
 
 let showConfig = function() {
-	let { pathname } = this.hashHistory.getCurrentLocation()
-	if (pathname !== "/config") {
-		this.hashHistory.push("/config")
-	}
+
 }
 
 let actions = [
@@ -58,12 +47,12 @@ let actions = [
 	{ func: "toggleNight", name: "Přepnout tmavý režim", impl: toggleNight }
 ]
 
-module.exports.bindActions = (store, hashHistory) => {
+module.exports.bindActions = (store) => {
 
 	//bind to window
 	let windowObj = {}
 	actions.forEach(a => {
-		windowObj[a.func] = a.impl.bind({ store, hashHistory })
+		windowObj[a.func] = a.impl.bind({ store })
 	})
 
 	Object.assign(window, windowObj)
