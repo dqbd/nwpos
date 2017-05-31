@@ -91,9 +91,12 @@ class Interface {
 			seller = sellers[0]
 		}
 
+		let date = Date.parse(customer.date)
+		date = Number.isNaN(date) || date < 10000 ? new Date() : new Date(date)
+
 		if (!seller.eet.enabled) return Promise.reject("EET disabled")
-		console.log("Start EET", new Date().getTime())
-		return eet.upload(seller, total, undefined, undefined, new Date().getTime())
+		console.log("Start EET", date)
+		return eet.upload(seller, total, undefined, undefined, date)
 	}
 
 	GET_SELLERS() {
