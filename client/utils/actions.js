@@ -1,18 +1,6 @@
-import { suggestions, customer, seller, stats } from "../../core"
-
-let showClient = function() {
-	this.store.dispatch(suggestions.listSuggestions())
-	this.store.dispatch(seller.retrieveSellers())
-	this.store.dispatch(seller.retrieveDebug())
-	this.store.dispatch(customer.suggest())
-}
-
-let showStats = function() {
-	this.store.dispatch(seller.retrieveSellers())
-	this.store.dispatch(seller.retrieveDebug())
-	this.store.dispatch(stats.retrieveSummary())
-	this.store.dispatch(stats.retrieve())
-}
+import Main from "../pages/Main.jsx"
+import Dashboard from "../pages/Dashboard.jsx"
+import Config from "../pages/Config.jsx"
 
 let toggleNight = function(ignore = false) {
 	let body = document.querySelector("body")
@@ -36,14 +24,10 @@ let toggleNight = function(ignore = false) {
 	window.localStorage.setItem("dark", value)
 }
 
-let showConfig = function() {
-
-}
-
 let actions = [
-	{ func: "showClient", name: "Přejít k pokladně", impl: showClient },
-	{ func: "showStats", name: "Zobrazit statistiky", impl: showStats },
-	{ func: "showConfig", name: "Konfigurace serveru", impl: showConfig },
+	{ func: "showClient", name: "Přejít k pokladně", impl: Main.show },
+	{ func: "showStats", name: "Zobrazit statistiky", impl: Dashboard.show },
+	{ func: "showConfig", name: "Konfigurace serveru", impl: Config.show },
 	{ func: "toggleNight", name: "Přepnout tmavý režim", impl: toggleNight }
 ]
 

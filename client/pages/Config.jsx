@@ -1,4 +1,6 @@
 import React, { Component } from "react"
+import { PageComponent, Connect } from "./Page.jsx"
+
 import { config } from "../../core"
 import { defaultSeller } from "../../server/config/defaultSeller"
 import { randomString, invokeFeedback } from "../utils" 
@@ -135,7 +137,9 @@ class Seller extends Component {
 	}
 }
 
-export default class Config extends Component {
+class ConfigLayout extends PageComponent {
+	static get path() { return "/config" }
+	
 	constructor(props) {
 		super(props)
 		this.state = { config: {sellers: [this.getSeller()]}, done: false }
@@ -220,3 +224,6 @@ export default class Config extends Component {
 		</div> 
 	}
 }
+
+const Config = Connect(ConfigLayout)
+export default Config
