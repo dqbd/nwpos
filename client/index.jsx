@@ -40,5 +40,9 @@ window.toggleNight(true)
 config.get().then(config => {
 	if (config.sellers.length <= 0) {
 		window.showConfig()
+	} else {
+		window.showClient()
 	}
+}).catch(err => {
+	window.showClient()
 })

@@ -1,3 +1,5 @@
+import { actions } from './actions'
+
 module.exports.hapticFeedback = (mapDispatch) => {
 	for (let key of Object.keys(mapDispatch)) {
 		mapDispatch[key] = module.exports.bindFeedback(mapDispatch[key])

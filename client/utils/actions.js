@@ -24,7 +24,7 @@ let toggleNight = function(ignore = false) {
 	window.localStorage.setItem("dark", value)
 }
 
-let actions = [
+export let actions = [
 	{ func: "showClient", name: "Přejít k pokladně", impl: Main.show },
 	{ func: "showStats", name: "Zobrazit statistiky", impl: Dashboard.show },
 	{ func: "showConfig", name: "Konfigurace serveru", impl: Config.show },
