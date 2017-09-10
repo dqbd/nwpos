@@ -147,7 +147,7 @@ class customer:
 		self.screen.blit(textSurface, textRect)
 
 	def drawInfo(self):
-		top = self.listHeight + self.statusHeight
+		top = self.listHeight
 		pygame.draw.rect(self.screen, self.eetColor, (0, top, self.width, self.eetHeight))
 
 		linefont = self.createFont(20 * self.width / 1280)
@@ -167,12 +167,12 @@ class customer:
 		pygame.draw.line(self.screen, self.lineBlack, [0, top], [self.width, top])
 
 	def drawItem(self, item, relative, selected = False):
-		center = self.statusHeight + self.itemHeight * relative + self.itemHeight * .5
-		begin = self.statusHeight + self.itemHeight * relative
-		end = self.statusHeight + self.itemHeight * (relative + 1)
+		center = self.itemHeight * relative + self.itemHeight * .5
+		begin = self.itemHeight * relative
+		end = self.itemHeight * (relative + 1)
 
 		if selected:
-			pygame.draw.rect(self.screen, self.selectedColor, (0, self.statusHeight + self.itemHeight * relative, self.width, self.itemHeight))
+			pygame.draw.rect(self.screen, self.selectedColor, (0, self.itemHeight * relative, self.width, self.itemHeight))
 
 		self.drawText(u"Zboží" if len(item["name"].strip()) == 0 else item["name"], self.width * 120 / 1280, center, "left")
 		self.drawText(str(item["index"]), self.padding * 5 / 4, center, "center")
@@ -188,15 +188,15 @@ class customer:
 		relative = relative + 1
 
 	def drawStatus(self, items, status, paid):
-		pygame.draw.rect(self.screen, self.statusColor, (0, 0, self.width, self.statusHeight))
-		pygame.draw.line(self.screen, self.lineBlue, [0, self.statusHeight], [self.width, self.statusHeight])
+		pygame.draw.rect(self.screen, self.statusColor, (0, self.height - self.statusHeight, self.width, self.height))
+		pygame.draw.line(self.screen, self.lineBlue, [0, self.height - self.statusHeight], [self.width, self.height - self.statusHeight])
 
 		sumItems = sum([item["price"] * item["qty"] for item in items]) 
 
 		mainText = "celkem: " + str(sumItems) + u" Kč"
 
 		if status == "COMMIT_END":
-			mainText = u"vráceno: " + str((sumItems - paid) * -1 ) + u" Kč"
+			mainText = u"Vráceno: " + str((sumItems - paid) * -1 ) + u" Kč"
 
 			totalfont = self.createFont(28 * self.width / 1280)
 			total = totalfont.render("celkem: "+ str(sumItems) + u" Kč", True, self.white)
@@ -209,7 +209,7 @@ class customer:
 			cashrect.right = self.width - self.padding
 			totalrect.right = self.width - self.padding
 			
-			totalrect.top = 0 + (self.statusHeight - (totalrect.height + cashrect.height + 10)) / 2
+			totalrect.top = self.listHeight + self.eetHeight + (self.statusHeight - (totalrect.height + cashrect.height + 10)) / 2
 			cashrect.top = totalrect.top + totalrect.height + 10
 
 			self.screen.blit(total, totalrect)
@@ -219,7 +219,7 @@ class customer:
 		final = finalfont.render(mainText, True, self.white)
 		finalrect = final.get_rect()
 		finalrect.left = self.padding
-		finalrect.centery = 0 + ((self.height - self.listHeight - self.eetHeight) / 2)
+		finalrect.centery = self.listHeight + self.eetHeight + (self.statusHeight / 2)
 		
 		self.screen.blit(final, finalrect)
 
