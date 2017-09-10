@@ -10,7 +10,7 @@ class Interface {
 		this.config = config
 		this.args = args
 		this.timer = timer.init(config, database)
-
+		console.log(args)
 		display.init(args.display)
 
 		this.timer.enqueue()
