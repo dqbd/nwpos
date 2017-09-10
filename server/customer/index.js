@@ -13,12 +13,15 @@ module.exports.init = (command) => {
 		params = command.split(" ").filter(a => a.trim().length > 0)
 	} 
 
+	console.log(params)
+
 	if (params.length > 0) {
 		module.exports.loop()
 	}
 }
 
 module.exports.loop = () => {
+	console.log("spawning with", params)
 	kiosk = child_process.spawn(params[0], params.slice(1))
 
 	kiosk.stdout.on("data", (data) => {
@@ -32,15 +35,30 @@ module.exports.loop = () => {
 
 	kiosk.on("exit", () => {
 		if (!stopped) {
-			module.exports.loop()
+			console.log("restarting")
+			setTimeout(() => module.exports.loop(), 3000)
 		}
 	})
-	module.exports.update()
+
+	kiosk.stdin.on("error", (err) => {
+		if (!stopped) {
+			console.log(err)
+		}
+	})
+
+	kiosk.stdin.on("end", () => console.log("ended"))
+
+	setTimeout(() => module.exports.update(), 1000)
 }
 
 module.exports.update = () => {
 	if (kiosk !== null) {
-		kiosk.stdin.write(JSON.stringify(kiosk_state) + "\n")
+		try {
+			console.log("writing state")
+			kiosk.stdin.write(JSON.stringify(kiosk_state) + "\n")
+		} catch (e) {
+			console.log("Failed to write to stdin")
+		}
 	}
 }
 
