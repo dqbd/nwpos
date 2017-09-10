@@ -24,7 +24,7 @@ let toggleNight = function(ignore = false) {
 	window.localStorage.setItem("dark", value)
 }
 
-export let actions = [
+let actions = [
 	{ func: "showClient", name: "Přejít k pokladně", impl: Main.show },
 	{ func: "showStats", name: "Zobrazit statistiky", impl: Dashboard.show },
 	{ func: "showConfig", name: "Konfigurace serveru", impl: Config.show },
@@ -44,3 +44,5 @@ module.exports.bindActions = (store) => {
 	//return payload
 	return actions.map(({func, name}) => { return { func, name } })
 }
+
+module.exports.actions = actions.map(({func, name}) => { return { func, name } })
