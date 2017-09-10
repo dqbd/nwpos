@@ -119,7 +119,7 @@ class customer:
 
 		if self.eetMode:
 			self.drawInfo()
-		
+
 		items = self.state["cart"]["items"]
 		selected = self.state["cart"]["selection"]
 
@@ -149,7 +149,7 @@ class customer:
 		self.screen.blit(textSurface, textRect)
 
 	def drawInfo(self):
-		top = self.listHeight
+		top = self.listHeight + self.statusHeight
 		pygame.draw.rect(self.screen, self.eetColor, (0, top, self.width, self.eetHeight))
 
 		linefont = self.createFont(20 * self.width / 1280)
@@ -190,8 +190,8 @@ class customer:
 		relative = relative + 1
 
 	def drawStatus(self, items, status, paid):
-		pygame.draw.rect(self.screen, self.statusColor, (0, self.height - self.statusHeight, self.width, self.height))
-		pygame.draw.line(self.screen, self.lineBlue, [0, self.height - self.statusHeight], [self.width, self.height - self.statusHeight])
+		pygame.draw.rect(self.screen, self.statusColor, (0, self.height - self.statusHeight - self.eetHeight, self.width, self.statusHeight))
+		pygame.draw.line(self.screen, self.lineBlue, [0, self.height - self.statusHeight - self.eetHeight], [self.width, self.height - self.statusHeight - self.eetHeight])
 
 		sumItems = sum([item["price"] * item["qty"] for item in items]) 
 
@@ -211,7 +211,7 @@ class customer:
 			cashrect.right = self.width - self.padding
 			totalrect.right = self.width - self.padding
 			
-			totalrect.top = self.listHeight + self.eetHeight + (self.statusHeight - (totalrect.height + cashrect.height + 10)) / 2
+			totalrect.top = self.listHeight + (self.statusHeight - (totalrect.height + cashrect.height + 10)) / 2
 			cashrect.top = totalrect.top + totalrect.height + 10
 
 			self.screen.blit(total, totalrect)
@@ -221,7 +221,7 @@ class customer:
 		final = finalfont.render(mainText, True, self.white)
 		finalrect = final.get_rect()
 		finalrect.left = self.padding
-		finalrect.centery = self.listHeight + self.eetHeight + (self.statusHeight / 2)
+		finalrect.centery = self.listHeight + (self.statusHeight / 2)
 		
 		self.screen.blit(final, finalrect)
 
