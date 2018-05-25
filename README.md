@@ -1,4 +1,4 @@
 # nwpos
-OSS EET pokladna
+OSS POS terminal with support for Czech EET. Developed as a final project for ALG2.
 
-Dokumentace apod: `docs/latex/docs.pdf`
+Documentation (czech): `docs/latex/docs.pdf`
