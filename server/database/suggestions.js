@@ -69,6 +69,18 @@ class Suggestions extends Database {
 			})	
 		}))
 	}
+
+	deleteSuggestion(query) {
+		return this.getDb().then(db => new Promise((resolve, reject) => {
+			query = query.trim().toLowerCase()
+
+			if (!query || !query.length) return resolve(false)
+			db.remove({ name: query }, (err, numOfRemoved) => {
+				if (!err) return resolve(numOfRemoved)
+				return reject(err)
+			})
+		}))
+	}
 }
 
 module.exports = Suggestions

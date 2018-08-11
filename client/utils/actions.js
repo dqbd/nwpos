@@ -1,5 +1,6 @@
 import Main from "../pages/Main.jsx"
 import Dashboard from "../pages/Dashboard.jsx"
+import Suggestions from "../pages/Suggestions.jsx"
 import Config from "../pages/Config.jsx"
 
 let toggleNight = function(ignore = false) {
@@ -28,6 +29,7 @@ let actions = [
 	{ func: "showClient", name: "Přejít k pokladně", impl: Main.show },
 	{ func: "showStats", name: "Zobrazit statistiky", impl: Dashboard.show },
 	{ func: "showConfig", name: "Konfigurace serveru", impl: Config.show },
+	{ func: "showSuggestions", name: "Zobrazit našeptávaní", impl: Suggestions.show },
 	{ func: "toggleNight", name: "Přepnout tmavý režim", impl: toggleNight }
 ]
 

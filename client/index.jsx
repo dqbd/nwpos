@@ -17,6 +17,7 @@ import { bindActions } from "./utils/actions.js"
 import Main from "./pages/Main.jsx"
 import Config from "./pages/Config.jsx"
 import Dashboard from "./pages/Dashboard.jsx"
+import Suggestions from "./pages/Suggestions.jsx"
 import Storage from "./pages/Storage.jsx"
 
 let store = createStore(reducer, applyMiddleware(ReduxThunk))
@@ -31,6 +32,7 @@ render(<Provider store={store}>
 			{Main.Page}
 			{Config.Page}
 			{Dashboard.Page}
+			{Suggestions.Page}
 		</Switch>
 	</HashRouter>
 </Provider>, document.getElementById("root"), hideLoading)

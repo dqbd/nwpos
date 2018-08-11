@@ -25,6 +25,10 @@ class Interface {
 		return database.suggestion().getGrouped()
 	}
 
+	POST_UNSUGGEST({ query }) {
+		return database.suggestion().deleteSuggestion(query)
+	}
+
 	POST_SUGGEST({price}) {
 		if (price === undefined) {
 			return Promise.reject("Invalid arguments")

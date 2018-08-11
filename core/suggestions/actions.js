@@ -33,3 +33,7 @@ module.exports.listSuggestions = () => (dispatch) => {
 		console.error(e)
 	})
 }
+
+module.exports.deleteSuggestion = (query) => (dispatch) => {
+	return get('/unsuggest', { query }).then(() => dispatch(module.exports.listSuggestions())).catch(e => console.error(e))
+}
