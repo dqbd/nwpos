@@ -69,6 +69,15 @@ class AppInterface {
     }
 
     @JavascriptInterface
+    public boolean hasPrinter() {
+
+        if (listener != null) {
+            return listener.hasPrinterAdded();
+        }
+        return false;
+    }
+
+    @JavascriptInterface
     public void printOnDevice(final byte[] buffer) {
         if (listener != null) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -81,6 +90,7 @@ class AppInterface {
     }
 
     interface Listener {
+        boolean hasPrinterAdded();
         void onNativePrint(byte[] buffer);
         void onAppLoaded(Map<String, String> actions);
     }

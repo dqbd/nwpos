@@ -54,6 +54,9 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
     private final static int MAX_ATTEMPTS = 3;
     private final static int DELAY_FACTOR = 3000;
 
+    private final static boolean FORCE_STAY = true;
+    private final static boolean FORCE_WAKE = false;
+
     public static final int INPUT_FILE_REQUEST_CODE = 1;
     public static final int BT_REQUEST_CODE = 2;
 
@@ -81,11 +84,13 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
     private BroadcastReceiver powerReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            if (FORCE_WAKE) {
+                PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 
-            //noinspection deprecation
-            wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE, "NW-WAKELOCK");
-            wakeLock.acquire();
+                //noinspection deprecation
+                wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE, "NW-WAKELOCK");
+                wakeLock.acquire();
+            }
         }
     };
 
@@ -102,7 +107,7 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
             return;
         }
 
-        if (LauncherUtils.restartToLauncher(this)) {
+        if (FORCE_STAY && LauncherUtils.restartToLauncher(this)) {
             return;
         }
 
@@ -162,7 +167,11 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
         setupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSetup();
+                isClosing = true;
+
+                Intent launcher = LauncherUtils.getOtherLauncher(MainActivity.this);
+                startActivity(launcher);
+                finish();
             }
         });
 
@@ -218,11 +227,17 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        LauncherUtils.bindFullscreenMode(this);
+        if (FORCE_STAY) {
+            LauncherUtils.bindFullscreenMode(this);
+        }
     }
 
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+        if (!FORCE_STAY) {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
@@ -275,7 +290,7 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
     protected void onPause() {
         super.onPause();
 
-        if (!isClosing) {
+        if (!isClosing && FORCE_STAY) {
             ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
             am.moveTaskToFront(getTaskId(), 0);
         } else if (mFilePathCallback == null) {
@@ -517,5 +532,10 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
         } else {
             if (webView != null) webView.loadUrl(url);
         }
+    }
+
+    @Override
+    public boolean hasPrinterAdded() {
+        return isPrinterConnected;
     }
 }

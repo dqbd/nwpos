@@ -50,19 +50,19 @@ class ExitDialog extends Dialog {
         }};
 
         listView.setAdapter(new ExitActionsAdapter(this.getContext(), actions));
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (actions.get(position).equals(TO_RELOAD)) {
-                    callback.onRediscover();
-                    dismiss();
-                    return true;
-                }
-
-                return false;
-            }
-        });
+//
+//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (actions.get(position).equals(TO_RELOAD)) {
+//                    callback.onRediscover();
+//                    dismiss();
+//                    return true;
+//                }
+//
+//                return false;
+//            }
+//        });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

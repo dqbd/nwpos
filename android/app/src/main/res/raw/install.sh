@@ -1,6 +1,6 @@
 TOKEN="0b10415689d248e8059c327ccd0eec10add5990a"
 apt-get update
-apt-get install nodejs git openssl openssl-tool -y
+apt-get install nodejs git openssl python2 openssl-tool -y
 git clone "https://$TOKEN@github.com/delold/nwpos"
 
 ls -l

@@ -26,7 +26,7 @@
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden|navigation"
             android:launchMode="singleTask"
             android:keepScreenOn="true"
-            android:screenOrientation="reverseLandscape">
+            android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
