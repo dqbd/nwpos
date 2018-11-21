@@ -27,6 +27,10 @@ module.exports.printNative = (buffer) => {
 	}
 }
 
+module.exports.hasNativePrinter = () => {
+	return (window.android && window.android.hasPrinter())
+}
+
 module.exports.hideLoading = () => {
 	if (window.android) {
 		setTimeout(() => window.android.loadFinished(JSON.stringify({ actions })), 500)

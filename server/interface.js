@@ -62,12 +62,12 @@ class Interface {
 			.then(a => database.suggestion().getGrouped())
 	}
 
-	POST_PRINT({customer}) {
+	POST_PRINT({ customer, native }) {
 		if (customer === undefined) {
 			return Promise.reject("Invalid arguments")
 		}
 
-		return printer.print(customer)
+		return printer.print(customer, native)
 	}
 
 	GET_DRAWER({pin}) {

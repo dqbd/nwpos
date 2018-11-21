@@ -57,18 +57,21 @@ class Printer {
 		})
 	}
 
-	feed() {
+	feed(native = false) {
 		this.cache.push(Buffer.from(new Array(3).fill(_.EOL).join("")))
 		this.cache.unshift(Buffer.from(_.CODEPAGE.WPC1250))
 
 		let out = Buffer.concat(this.cache)
+		this.cache.length = 0
+
+		if (native) {
+			return Promise.reject({ err: 'Native printer used', buffer: out })
+		}
 
 		return this.getStream().then(stream => {
 			stream.write(out)
 			this.closed = true
 			stream.end()
-
-			this.cache.length = 0
 		}).catch(err => {
 			return Promise.reject({ err, buffer: out })
 		})

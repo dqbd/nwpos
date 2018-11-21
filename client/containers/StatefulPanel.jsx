@@ -2,7 +2,7 @@ import { connect } from "react-redux"
 import Panel from "../components/Panel.jsx"
 
 import { customer, cart, screen, services } from "../../core"
-import { hapticFeedback, capitalize, printNative } from "../utils"
+import { hapticFeedback, capitalize, printNative, hasNativePrinter } from "../utils"
 
 const mapStateToProps = (state) => {
 
@@ -16,7 +16,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => hapticFeedback({
 	onPay: () => dispatch(customer.pay()),
 	onEdit: () => dispatch(customer.edit()),
-	onPrint: () => dispatch(customer.print(printNative)),
+	onPrint: () => dispatch(customer.print(printNative, hasNativePrinter)),
 	onQtySet: () => dispatch(customer.qty()),
 	onClear: () => dispatch(customer.clear()),
 	onDrawer: () => dispatch(services.drawer()),

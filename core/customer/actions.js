@@ -109,7 +109,7 @@ module.exports.edit = () => (dispatch) => {
  * 2) print
  * 3) log into our DB 
 **/
-module.exports.print = (nativePrint) => (dispatch, getState) => {
+module.exports.print = (nativePrint, hasNativePrinter) => (dispatch, getState) => {
 	// TODO: eet offline
 	let { newServices, newCart, newCustomer } = wrapState(getState())
 
@@ -123,7 +123,7 @@ module.exports.print = (nativePrint) => (dispatch, getState) => {
 			if (!eet) return dispatch(services.eet(total, ic)).catch(a => false)
 			return eet 
 		})
-		.then(eet => dispatch(services.printCart(getState().customer, nativePrint)))
+		.then(eet => dispatch(services.printCart(getState().customer, nativePrint, hasNativePrinter)))
 		.then(print => {
 			let { newServices } = wrapState(getState())
 

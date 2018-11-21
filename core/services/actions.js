@@ -27,8 +27,10 @@ module.exports.drawer = () => (dispatch) => {
 	})
 }
 
-module.exports.printCart = (customer, nativePrint) => (dispatch) => {
-	return get('/print', { customer })
+module.exports.printCart = (customer, nativePrint, hasNativePrinter) => (dispatch) => {
+	const native = (hasNativePrinter && hasNativePrinter() && nativePrint && true) || false
+
+	return get('/print', { customer, native })
 	.then(res => {
 		dispatch({ type: types.PRINT, print: res.ok })
 		if (res.status !== 200 && res.data && res.data.buffer && nativePrint) {
