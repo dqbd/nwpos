@@ -32,6 +32,7 @@ class customer:
 
 	state = json.loads('{"cart": { "items": [], "selection": 0 }, "paid": 0, "status": "STAGE_TYPING"}')
 
+	fontCache = {}
 	font = None
 
 	def __init__(self):
@@ -39,17 +40,17 @@ class customer:
 		self.init_display()
 		pygame.font.init()
 		pygame.mouse.set_visible(False)
-
 		if len(sys.argv[1:]) >= 2:
 			self.updateSize(int(sys.argv[1]), int(sys.argv[2]))
 		else:
 			self.updateSize(pygame.display.Info().current_w, pygame.display.Info().current_h)
 
 	def createFont(self, size):
-		font = StringIO.StringIO(self.font)
-		font.seek(0)
-
-		return pygame.font.Font(font, size)
+		if size not in self.fontCache:
+			font = StringIO.StringIO(self.font)
+			font.seek(0)
+			self.fontCache[size] = pygame.font.Font(font, size)
+		return self.fontCache[size]
 
 	def updateState(self, json = json.loads('{"cart": { "items": [], "selection": 0 }, "paid": 0, "status": "STAGE_TYPING"}')):
 		self.state = json
