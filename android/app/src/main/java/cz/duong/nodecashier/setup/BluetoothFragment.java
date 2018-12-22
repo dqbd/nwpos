@@ -56,6 +56,7 @@ public class BluetoothFragment extends Fragment {
 
     View progressBar;
     Button rescanBtn;
+    Button skipBtn;
 
     public static BluetoothFragment newInstance() {
         return new BluetoothFragment();
@@ -77,11 +78,20 @@ public class BluetoothFragment extends Fragment {
         });
         deviceList.setAdapter(adapter);
         progressBar = view.findViewById(R.id.bt_load);
-        rescanBtn = (Button) view.findViewById(R.id.manual_button);
+
+        rescanBtn = view.findViewById(R.id.manual_button);
         rescanBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 discovery();
+            }
+        });
+
+        skipBtn = view.findViewById(R.id.skip_button);
+        skipBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                printerDone(null);
             }
         });
 

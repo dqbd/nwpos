@@ -54,8 +54,9 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
     private final static int MAX_ATTEMPTS = 3;
     private final static int DELAY_FACTOR = 3000;
 
-    private final static boolean FORCE_STAY = true;
+    private final static boolean FORCE_STAY = false;
     private final static boolean FORCE_WAKE = false;
+    private final static boolean SINGLE_BACK_MENU = true;
 
     public static final int INPUT_FILE_REQUEST_CODE = 1;
     public static final int BT_REQUEST_CODE = 2;
@@ -234,56 +235,65 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
 
     @Override
     public void onBackPressed() {
-        if (!FORCE_STAY) {
+        if (!FORCE_STAY && !SINGLE_BACK_MENU) {
             super.onBackPressed();
+        }
+
+        if (SINGLE_BACK_MENU) {
+            openMenu();
         }
     }
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            ExitDialog dialog = new ExitDialog(this, new ExitDialog.ExitInterface() {
-                @Override
-                public void onJavascriptFunction(String function) {
-                    if (webView != null) webView.loadUrl("javascript:"+function+"()");
-                }
-
-                @Override
-                public void onExit() {
-                    isClosing = true;
-
-                    Intent launcher = LauncherUtils.getOtherLauncher(MainActivity.this);
-                    startActivity(launcher);
-                    finish();
-                }
-
-                @Override
-                public void onReload() {
-                    showLoading();
-                    if (webView != null) webView.reload();
-                }
-
-                @Override
-                public void onRediscover() {
-                    showSetup();
-                }
-
-                @Override
-                public Map<String, String> getActions() {
-                    return actions;
-                }
-            });
-
-            if (dialog.getWindow() == null) return super.onKeyLongPress(keyCode, event);
-
-            dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-            dialog.show();
-            dialog.getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility());
-            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-            return true;
+            if (openMenu()) return true;
         }
 
         return super.onKeyLongPress(keyCode, event);
+    }
+
+    private boolean openMenu() {
+        ExitDialog dialog = new ExitDialog(this, new ExitDialog.ExitInterface() {
+            @Override
+            public void onJavascriptFunction(String function) {
+                if (webView != null) webView.loadUrl("javascript:"+function+"()");
+            }
+
+            @Override
+            public void onExit() {
+                isClosing = true;
+
+                Intent launcher = LauncherUtils.getOtherLauncher(MainActivity.this);
+                startActivity(launcher);
+                finish();
+            }
+
+            @Override
+            public void onReload() {
+                showLoading();
+                if (webView != null) webView.reload();
+            }
+
+            @Override
+            public void onRediscover() {
+                showSetup();
+            }
+
+            @Override
+            public Map<String, String> getActions() {
+                return actions;
+            }
+        });
+
+        if (dialog.getWindow() == null) return false;
+
+        dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        dialog.show();
+        dialog.getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility());
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+
+        return true;
     }
 
     @Override
@@ -436,7 +446,7 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
                     case MESSAGE_STATE_CHANGE:
                         if (msg.arg1 == BluetoothService.STATE_CONNECTED) {
                             isPrinterConnected = true;
-                            showSnackbar("Tiskárna připojena", false);
+                            showSnackbar("Tiskárna připojena", true);
                         }
                         break;
                     case MESSAGE_CONNECTION_LOST:

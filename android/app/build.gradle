@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.termux"
         minSdkVersion 23
-        targetSdkVersion 23
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -20,12 +20,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    testCompile 'junit:junit:4.12'
-    compile 'org.jetbrains:annotations-java5:15.0'
-    compile 'org.jmdns:jmdns:3.5.1'
-    compile 'com.android.support:design:23.4.0'
+    testImplementation 'junit:junit:4.12'
+    implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation 'org.jmdns:jmdns:3.5.1'
+    implementation 'com.android.support:design:28.0.0'
+
 }

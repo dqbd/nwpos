@@ -70,7 +70,6 @@ class AppInterface {
 
     @JavascriptInterface
     public boolean hasPrinter() {
-
         if (listener != null) {
             return listener.hasPrinterAdded();
         }
