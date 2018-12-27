@@ -11,10 +11,6 @@ module.exports.working = (status) => {
 	return { type: types.STATUS, status }
 }
 
-module.exports.nativePrinter = (status) => {
-	return { type: types.NATIVE_PRINTER, status }
-}
-
 module.exports.eet = (total, ic) => (dispatch) => {
 	return get("/eet", { total, ic })
 	.then(res => {

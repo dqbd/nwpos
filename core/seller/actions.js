@@ -30,3 +30,12 @@ module.exports.retrieveDebug = () => (dispatch) => {
 			dispatch({ type: actionTypes.SETDEBUG, debug: res.data.debug })
 		})
 }
+
+module.exports.setNativePrinter = (status) => ({
+	type: actionTypes.NATIVE_PRINTER,
+	status,
+})
+
+module.exports.toggleListenOnScanner = () => ({
+	type: actionTypes.LISTEN_SCANNER,
+})

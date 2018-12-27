@@ -4,7 +4,6 @@ const initialState = {
 	print: false,
 	eet: null,
 	log: false,
-	nativePrinter: null,
 	working: false
 }
 
@@ -32,10 +31,6 @@ module.exports = (state = initialState, action) => {
 		case services.STATUS:
 			return Object.assign({}, state, {
 				working: action.status
-			})
-		case services.NATIVE_PRINTER:
-			return Object.assign({}, state, {
-				nativePrinter: action.status,
 			})
 	}
 

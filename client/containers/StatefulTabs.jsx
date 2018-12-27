@@ -8,7 +8,7 @@ const mapStateToProps = (state) => {
 	return {
 		tabs: seller.getTabs(state),
 		current: state.current,
-		nativePrinter: state.customer.services.nativePrinter,
+		nativePrinter: state.nativePrinter,
 	}
 }
 

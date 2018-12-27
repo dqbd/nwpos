@@ -620,3 +620,5 @@ test("close tabs", () => {
 		}
 	})
 })
+
+// TODO: add tests for native printer and scanner

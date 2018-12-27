@@ -1,7 +1,7 @@
-const { services } = require("../../core")
+const { seller } = require("../../core")
 
 module.exports.bindNativePrinter = (store) => {
   window.nativePrinterStatus = (status) => {
-    store.dispatch(services.nativePrinter(status))
+    store.dispatch(seller.setNativePrinter(status))
   }
 }

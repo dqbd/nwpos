@@ -11,6 +11,8 @@ const initialState = {
 	inactive: [],
 	current: 0,
 	customer: undefined,
+	nativePrinter: null,
+	listenToScanner: false,
 	suggestions: undefined,
 	stats: undefined
 }
@@ -81,11 +83,27 @@ const switcher = (state = initialState, action) => {
 	return { inactive, current, customer: currentCustomer }
 }
 
+const nativePrinter = (state = null, action) => {
+	if (action.type === seller.NATIVE_PRINTER) {
+		return action.status
+	}
+	return state
+}
+
+const listenToScanner = (state = false, action) => {
+	if (action.type === seller.LISTEN_SCANNER) {
+		return !state
+	}
+	return state
+}
+
 module.exports = (state = initialState, action) => {
 	return Object.assign({
 		sellers: sellers(state.sellers, action),
 		debug: debug(state.debug, action),
 		suggestions: suggestions.reducer(state.suggestions, action),
-		stats: stats.reducer(state.stats, action)
+		stats: stats.reducer(state.stats, action),
+		nativePrinter: nativePrinter(state.nativePrinter, action),
+		listenToScanner: listenToScanner(state.listenToScanner, action),
 	}, switcher(state, action))
 }
