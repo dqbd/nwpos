@@ -177,7 +177,7 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
         });
 
         showLoading();
-        setupPrinter();
+        startPrinter();
 
         registerReceiver(powerReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
     }
@@ -445,15 +445,17 @@ public class MainActivity extends Activity implements AppInterface.Listener, Ser
                 switch (msg.what) {
                     case MESSAGE_STATE_CHANGE:
                         if (msg.arg1 == BluetoothService.STATE_CONNECTED) {
+                            if (webView != null) webView.loadUrl("javascript:nativePrinterStatus(true)");
                             isPrinterConnected = true;
-                            showSnackbar("Tiskárna připojena", true);
+                            // showSnackbar("Tiskárna připojena", true);
                         }
                         break;
                     case MESSAGE_CONNECTION_LOST:
                     case MESSAGE_UNABLE_CONNECT:
                         if (isPrinterConnected) {
+                            if (webView != null) webView.loadUrl("javascript:nativePrinterStatus(false)");
                             isPrinterConnected = false;
-                            showSnackbar("Nelze se připojit k tiskárně", true);
+                            // showSnackbar("Nelze se připojit k tiskárně", true);
                         }
                         break;
                 }

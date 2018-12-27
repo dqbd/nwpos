@@ -54,7 +54,8 @@ test("shop still working", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}
 	})
@@ -113,7 +114,8 @@ test("get sellers", () => {
 					eet: null,
 					log: false,
 					print: false,
-					working: false
+					working: false,
+					nativePrinter: null,
 				}
 			}
 		})
@@ -162,7 +164,8 @@ test("add tab", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}, {
 			status: "STAGE_ADDED",
@@ -179,7 +182,8 @@ test("add tab", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}],
 		current: 2,
@@ -203,7 +207,8 @@ test("add tab", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}
 	})
@@ -234,7 +239,8 @@ test("switch tab", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}, {
 			status: "STAGE_ADDED",
@@ -251,7 +257,8 @@ test("switch tab", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}],
 		current: 1,
@@ -275,7 +282,8 @@ test("switch tab", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}
 	})
@@ -311,7 +319,8 @@ test("switch tabs greater than current", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}, {
 			status: "STAGE_ADDED",
@@ -328,7 +337,8 @@ test("switch tabs greater than current", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}],
 		current: 2,
@@ -352,7 +362,8 @@ test("switch tabs greater than current", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}
 	})
@@ -383,7 +394,8 @@ test("delete tab", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}],
 		current: 1,
@@ -407,7 +419,8 @@ test("delete tab", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}
 	})
@@ -447,7 +460,8 @@ test("delete active tab", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}
 	})
@@ -497,7 +511,8 @@ test("add tab append style", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}, {
 			status: "STAGE_ADDED",
@@ -514,7 +529,8 @@ test("add tab append style", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}],
 		current: 2,
@@ -538,7 +554,8 @@ test("add tab append style", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}
 	})
@@ -597,7 +614,8 @@ test("close tabs", () => {
 				eet: null,
 				log: false,
 				print: false,
-				working: false
+				working: false,
+				nativePrinter: null,
 			}
 		}
 	})

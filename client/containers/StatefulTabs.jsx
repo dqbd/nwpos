@@ -7,7 +7,8 @@ import { hapticFeedback } from "../utils"
 const mapStateToProps = (state) => {
 	return {
 		tabs: seller.getTabs(state),
-		current: state.current
+		current: state.current,
+		nativePrinter: state.customer.services.nativePrinter,
 	}
 }
 

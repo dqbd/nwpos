@@ -33,7 +33,8 @@ test("add item via keyboard", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 1,
@@ -59,7 +60,8 @@ test("clear screen after adding", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 1,
@@ -83,7 +85,8 @@ test("checkout begin", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 1,
@@ -109,7 +112,8 @@ test("checkout payment", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 1,
@@ -133,7 +137,8 @@ test("payment finished", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 1,
@@ -156,7 +161,8 @@ test("new payment", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 0,
@@ -186,7 +192,8 @@ test("direct payment", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 2,
@@ -225,7 +232,8 @@ test("revert back to edit", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 3,
@@ -255,7 +263,8 @@ test("quantity payment", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 3,
@@ -289,7 +298,8 @@ test("multiple adding", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 1,
@@ -325,7 +335,8 @@ test("set qty", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 0,
@@ -351,7 +362,8 @@ test("clears correctly", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 0,
@@ -372,7 +384,8 @@ test("doesnt add on screen 0", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 0,
@@ -407,7 +420,8 @@ test("add item with name", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 3,
@@ -439,7 +453,8 @@ test("checkout instead payment when 0", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 0,
@@ -468,7 +483,8 @@ test("checkout instead payment when added", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 0,
@@ -494,7 +510,8 @@ test("prevent payment when 0", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 0,
@@ -516,7 +533,8 @@ test("set seller", () => {
 			print: false,
 			eet: null,
 			log: false,
-			working: false
+			working: false,
+			nativePrinter: null,
 		},
 		cart: {
 			selection: 0,

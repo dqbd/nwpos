@@ -95,7 +95,7 @@
     overflow-x: auto
     overflow-y: hidden
 
-.tabs .newtab
+.tabs .newtab, .tabs .printer
     width: "calc(%s * 0.45)" % (button-size)
     min-width: "calc(%s * 0.45)" % (button-size)
     height: "calc(%s * 0.45)" % (button-size)
@@ -115,3 +115,24 @@
         
     *
         pointer-events: none
+
+.tabs .printer
+    position: relative
+
+.tabs .printer .status
+    position: absolute
+    right: "calc(%s * 0.1)" % (button-size)
+    top: "calc(%s * 0.1)" % (button-size)
+    width: "calc(%s * 0.1)" % (button-size)
+    height: "calc(%s * 0.1)" % (button-size)
+    border-radius: 100%
+
+    border: 2px solid white
+    display: none
+
+    &.inactive
+        display: block
+        background: color-darkred
+    &.active
+        display: block
+        background: color-lightgreen

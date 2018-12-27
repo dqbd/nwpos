@@ -10,8 +10,9 @@ import { render } from "react-dom"
 import { HashRouter, Switch } from "react-router-dom"
 
 import { reducer, config } from "../core"
-import { capitalize, hideLoading } from "./utils"
+import { hideLoading } from "./utils"
 import { bindDisplayEvents } from "./utils/display.js"
+import { bindNativePrinter } from './utils/nativePrinter.js'
 import { bindActions } from "./utils/actions.js"
 
 import Main from "./pages/Main.jsx"
@@ -25,6 +26,7 @@ let actions = bindActions(store)
 
 injectTapEventPlugin()
 bindDisplayEvents(store)
+bindNativePrinter(store)
 
 render(<Provider store={store}>
 	<HashRouter>
