@@ -8,24 +8,33 @@ let kiosk_state = { cart: { items: [], selection: 0 }, paid: 0, status: "STAGE_T
 
 let params = [] 
 
-module.exports.init = (command) => {
+module.exports.init = (command, eanCallback) => {
 	if (typeof command === "string") {
 		params = command.split(" ").filter(a => a.trim().length > 0)
 	} 
 
 	console.log(params)
-
 	if (params.length > 0) {
-		module.exports.loop()
+		module.exports.loop(eanCallback)
 	}
 }
 
-module.exports.loop = () => {
+module.exports.loop = (callback) => {
 	console.log("spawning with", params)
-	kiosk = child_process.spawn(params[0], params.slice(1))
+	kiosk = child_process.spawn(params[0], params.slice(1), { 
+		stdio: ['pipe', 'pipe', 'pipe']
+	})
 
 	kiosk.stdout.on("data", (data) => {
-		console.log(data.toString())
+		const stringified = data.toString()
+		if (callback && typeof callback === 'function') {
+			const number = Number(stringified)
+			if (!Number.isNaN(number)) {
+				callback(number)
+			}
+		}
+
+		console.log(stringified)
 	})
 
 	kiosk.stderr.on("data", (data) => {
@@ -36,7 +45,7 @@ module.exports.loop = () => {
 	kiosk.on("exit", () => {
 		if (!stopped) {
 			console.log("restarting")
-			setTimeout(() => module.exports.loop(), 3000)
+			setTimeout(() => module.exports.loop(callback), 3000)
 		}
 	})
 

@@ -6,12 +6,13 @@ const eet = require("./eet")
 const timer = require("./eet/timer")
 
 class Interface {
-	constructor(config, args) {
+	constructor(config, args, clients) {
 		this.config = config
 		this.args = args
 		this.timer = timer.init(config, database)
+		this.clients = clients
 		console.log(args)
-		display.init(args.display)
+		display.init(args.display, this.handleQtyLine.bind(this))
 
 		this.timer.enqueue()
 		printer.init(config, args)
@@ -19,6 +20,23 @@ class Interface {
 
 	destroy() {
 		display.clear()
+	}
+
+	handleQtyLine(ean) {
+		this.POST_GETITEM({ ean })
+			.then((ean) => {
+				console.log('ean found', ean)
+				this.clients.broadcast({
+					type: 'addItem',
+					payload: {
+						price: ean.price,
+						name: ean.name,
+					},
+				})
+			})
+			.catch((err) => {
+				console.log(err)
+			})
 	}
 
 	GET_SUGGEST() {
@@ -152,6 +170,10 @@ class Interface {
 	POST_SETITEM({ean, name, price, qty, retail_price}) {
 		return database.storage().setItem(ean, name, price, qty, retail_price)
 	}
+
+	POST_GETITEM({ ean }) {
+		return database.storage().getItem(ean)
+	}
 }
 
-module.exports = (config, args) => new Interface(config, args)
+module.exports = (config, args, clients) => new Interface(config, args, clients)

@@ -97,6 +97,15 @@ class Storage extends Database {
             })
         }))
     }
+
+    getItem(ean) {
+        return this.getDb().then(db => new Promise((resolve, reject) => {
+            db.find({ ean }, (err, items) => {
+                if (err || !items || items.length <= 0) return reject(err || 'Item not found') 
+                resolve(items[0])
+            })
+        }))
+    }
 }
 
 module.exports = Storage

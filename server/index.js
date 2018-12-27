@@ -1,6 +1,9 @@
 const config = require("./config")()
 const os = require("os")
 const minimist = require('minimist')
+const http = require('http')
+const url = require('url')
+const WebSocket = require('ws')
 
 let args = {
 	port: 80,
@@ -27,7 +30,31 @@ const multer = require("multer")
 const path = require("path")
 
 const bonjour = require('bonjour')()
-const interface = require("./interface")(config, args)
+
+const wss = new WebSocket.Server({ noServer: true })
+
+wss.on('connection', (ws) => {
+	ws.on('message', (message) => {
+		try {
+			const { type } = JSON.parse(message)
+			if (type === 'ping') {
+				ws.send(JSON.stringify({ type: 'pong', payload: null }))
+			}
+		} catch (err) {
+			console.log(err.message)
+		}
+	})
+})
+
+const interface = require("./interface")(config, args, {
+	broadcast: (data) => {
+		wss.clients.forEach((ws) => {
+			if (ws.readyState === WebSocket.OPEN) {
+				ws.send(JSON.stringify(data))
+			}
+		})
+	}
+})
 
 const app = express()
 
@@ -89,9 +116,21 @@ for(let name of Object.getOwnPropertyNames(Object.getPrototypeOf(interface))) {
 	}
 }
 
-app.listen(args.port, (err) => {
+const server = http.createServer(app)
+server.listen(args.port, (err) => {
 	if (!err) {
 		console.log("Listening on port", args.port)
+	}
+})
+
+server.on('upgrade', (request, socket, head) => {
+	const pathname = url.parse(request.url).pathname
+	if (pathname === '/socket') {
+		wss.handleUpgrade(request, socket, head, (ws) => {
+      wss.emit('connection', ws, request)
+    })
+	} else {
+		socket.destroy()
 	}
 })
 

@@ -14,6 +14,7 @@ import { hideLoading } from "./utils"
 import { bindDisplayEvents } from "./utils/display.js"
 import { bindNativePrinter } from './utils/nativePrinter.js'
 import { bindActions } from "./utils/actions.js"
+import { bindWebsocket } from "./utils/websocket.js"
 
 import Main from "./pages/Main.jsx"
 import Config from "./pages/Config.jsx"
@@ -27,6 +28,7 @@ let actions = bindActions(store)
 injectTapEventPlugin()
 bindDisplayEvents(store)
 bindNativePrinter(store)
+bindWebsocket(store)
 
 render(<Provider store={store}>
 	<HashRouter>
