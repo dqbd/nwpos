@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
-import sys, os, json, pygame, StringIO, base64
+import sys, os, json, StringIO, base64
+with open(os.devnull, 'w') as f:
+	oldstdout = sys.stdout
+	sys.stdout = f
+	import pygame
+	sys.stdout = oldstdout
+
 from threading import Thread
 from Queue import Queue, Empty
 
 def enqueue_output(stdin, queue):
 	for line in iter(stdin.readline, b''):
-   		queue.put(line)
+		queue.put(line)
 
 class customer:
 	global montserrat
@@ -243,10 +249,18 @@ t.start()
 app = customer()
 app.render()
 
+codeCache = []
+
 while True:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT: sys.exit()
 		if event.type == pygame.VIDEORESIZE: app.updateSize(event.w, event.h)
+		if event.type == pygame.KEYDOWN:
+			if event.unicode == '\t' or event.key == 13: # tab:
+				print("".join(codeCache))
+				codeCache = []
+			else:
+				codeCache.append(event.unicode)
 	try: line = q.get(timeout=.1)
 	except Empty: pass
 	else: app.updateState(json.loads(line))
