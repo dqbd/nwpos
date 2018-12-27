@@ -9,13 +9,15 @@ const mapStateToProps = (state) => {
 		tabs: seller.getTabs(state),
 		current: state.current,
 		nativePrinter: state.nativePrinter,
+		listenToScanner: state.listenToScanner,
 	}
 }
 
 const mapDispatchToProps = (dispatch) => hapticFeedback({
 	onTabSwitch: (index) => dispatch(seller.switchTab(index)),
 	onTabClose: (index) => dispatch(seller.deleteTab(index)),
-	onTabAdd: (index) => dispatch(seller.addTab()) 
+	onTabAdd: (index) => dispatch(seller.addTab()),
+	onScannerToggle: () => dispatch(seller.toggleListenOnScanner()),
 })
 
 

@@ -95,7 +95,7 @@
     overflow-x: auto
     overflow-y: hidden
 
-.tabs .newtab, .tabs .printer
+.tabs .newtab, .tabs .printer, .tabs .scanner
     width: "calc(%s * 0.45)" % (button-size)
     min-width: "calc(%s * 0.45)" % (button-size)
     height: "calc(%s * 0.45)" % (button-size)
@@ -115,6 +115,12 @@
         
     *
         pointer-events: none
+
+.tabs .scanner
+    &.inactive
+        opacity: 0.5
+    &.active
+        opacity: 1
 
 .tabs .printer
     position: relative
