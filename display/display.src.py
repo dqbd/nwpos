@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-import sys, os, json, StringIO, base64
+from __future__ import print_function
+import sys, os, json, StringIO, base64, codecs
+sys.stdout = codecs.getwriter('utf8')(sys.stdout)
+sys.stderr = codecs.getwriter('utf8')(sys.stderr)
+
 with open(os.devnull, 'w') as f:
 	oldstdout = sys.stdout
 	sys.stdout = f
@@ -84,7 +88,7 @@ class customer:
 
 			disp_no = os.getenv("DISPLAY")
 			if disp_no:
-				print "I'm running under X display = {0}".format(disp_no)
+				print("I'm running under X display = {0}".format(disp_no), file=sys.stderr)
 			# Check which frame buffer drivers are available
 			# Start with fbcon since directfb hangs with composite output
 			drivers = ['fbcon', 'directfb', 'svgalib']
@@ -97,7 +101,7 @@ class customer:
 				try:
 					pygame.display.init()
 				except pygame.error:
-					print 'Driver: {0} failed.'.format(driver)
+					print('Driver: {0} failed.'.format(driver), file=sys.stderr)
 					continue
 				found = True
 				break
@@ -256,8 +260,8 @@ while True:
 		if event.type == pygame.QUIT: sys.exit()
 		if event.type == pygame.VIDEORESIZE: app.updateSize(event.w, event.h)
 		if event.type == pygame.KEYDOWN:
-			if event.unicode == '\t' or event.key == 13: # tab:
-				print("".join(codeCache))
+			if event.unicode == u'\t' or event.key == 13: # tab:
+				print(u"".join(codeCache))
 				sys.stdout.flush()
 				codeCache = []
 			else:
