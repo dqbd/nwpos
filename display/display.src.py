@@ -258,6 +258,7 @@ while True:
 		if event.type == pygame.KEYDOWN:
 			if event.unicode == '\t' or event.key == 13: # tab:
 				print("".join(codeCache))
+				sys.stdout.flush()
 				codeCache = []
 			else:
 				codeCache.append(event.unicode)
