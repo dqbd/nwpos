@@ -4,7 +4,7 @@ import React from "react"
 import ReduxThunk from 'redux-thunk'
 import injectTapEventPlugin from "./utils/tap/injectTapEventPlugin"
 
-import { createStore, applyMiddleware } from "redux"
+import { createStore, applyMiddleware, compose } from "redux"
 import { Provider } from "react-redux"
 import { render } from "react-dom"
 import { HashRouter, Switch } from "react-router-dom"
@@ -22,7 +22,8 @@ import Dashboard from "./pages/Dashboard.jsx"
 import Suggestions from "./pages/Suggestions.jsx"
 import Storage from "./pages/Storage.jsx"
 
-let store = createStore(reducer, applyMiddleware(ReduxThunk))
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+let store = createStore(reducer, composeEnhancers(applyMiddleware(ReduxThunk)))
 let actions = bindActions(store)
 
 injectTapEventPlugin()
