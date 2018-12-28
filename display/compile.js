@@ -15,7 +15,7 @@ exec(`python ` + path.resolve(__dirname, "loadfont.py"), (err, stdout, stderr) =
 
     if (matched) {
         let newFile = file.split(matched)
-        newFile.splice(1, 0, stdout)
+        newFile.splice(2, 0, stdout)
         newFile = newFile.join(matched)
 
         console.log("Writing at", path.resolve(target, "display.py"))
