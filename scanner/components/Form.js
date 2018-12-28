@@ -61,6 +61,7 @@ class Form extends React.Component {
             { !eanDisabled && <View style={styles.horizontal}>
               <TextInput
                 style={Object.assign({}, styles.input, styles.ean)}
+                onChangeText={(val) => this.handleChange('ean', val)}
                 value={values.ean}
               /> 
               <Scanner
