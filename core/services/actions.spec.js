@@ -15,7 +15,7 @@ test("print customer", () => {
 		status: "STAGE_TYPING",
 		screen: 0, paid: 0,
 		seller: "123456789",
-		services: { print: false, eet: false, log: false, working: false },
+		services: { print: false, eet: false, log: false, working: false, eans: false },
 		cart: { selection: 0, items: [] }
 	}
 
@@ -36,7 +36,7 @@ test("print native customer", () => {
 		status: "STAGE_TYPING",
 		screen: 0, paid: 0,
 		seller: "123456789",
-		services: { print: false, eet: false, log: false, working: false },
+		services: { print: false, eet: false, log: false, working: false, eans: false },
 		cart: { selection: 0, items: [] }
 	}
 
@@ -70,7 +70,8 @@ test("log customer", () => {
 			print: false,
 			eet: false,
 			log: false,
-			working: false
+			working: false,
+			eans: false
 		},
 		cart: {
 			selection: 1,

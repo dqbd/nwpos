@@ -26,6 +26,8 @@ test("shop still working", () => {
 	store.dispatch(screen.addDigit(5))
 
 	expect(store.getState()).toEqual({
+		listenToScanner: false,
+		nativePrinter: null,
 		stats: {
 			list: [],
 			day: undefined,
@@ -47,7 +49,7 @@ test("shop still working", () => {
 			cart: {
 				selection: 0,
 				items: [
-					{ name: "", price: 123, qty: 1 }
+					{ name: "", price: 123, qty: 1, ean: undefined }
 				]
 			},
 			services: {
@@ -55,7 +57,7 @@ test("shop still working", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}
 	})
@@ -94,6 +96,8 @@ test("get sellers", () => {
 				all: {},
 				contextual: ["vejce", "moje matka"]
 			},
+			listenToScanner: false,
+			nativePrinter: null,
 			stats: {
 				list: [],
 				day: undefined,
@@ -107,7 +111,7 @@ test("get sellers", () => {
 				cart: {
 					selection: 0,
 					items: [
-						{ name: "", price: 123, qty: 1 }
+						{ name: "", price: 123, qty: 1, ean: undefined }
 					]
 				},
 				services: {
@@ -115,7 +119,7 @@ test("get sellers", () => {
 					log: false,
 					print: false,
 					working: false,
-					nativePrinter: null,
+					eans: false,
 				}
 			}
 		})
@@ -143,6 +147,8 @@ test("add tab", () => {
 	store.dispatch(customer.add())
 
 	expect(store.getState()).toEqual({
+		listenToScanner: false,
+		nativePrinter: null,
 		stats: {
 			list: [],
 			day: undefined,
@@ -157,7 +163,7 @@ test("add tab", () => {
 			cart: {
 				selection: 0,
 				items: [
-					{ name: "", price: 123, qty: 1 }
+					{ name: "", price: 123, qty: 1, ean: undefined }
 				]
 			},
 			services: {
@@ -165,7 +171,7 @@ test("add tab", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}, {
 			status: "STAGE_ADDED",
@@ -175,7 +181,7 @@ test("add tab", () => {
 			cart: {
 				selection: 0,
 				items: [
-					{ name: "", price: 456, qty: 1 }
+					{ name: "", price: 456, qty: 1, ean: undefined }
 				]
 			},
 			services: {
@@ -183,7 +189,7 @@ test("add tab", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}],
 		current: 2,
@@ -200,7 +206,7 @@ test("add tab", () => {
 			cart: {
 				selection: 0,
 				items: [
-					{ name: "", price: 789, qty: 2 }
+					{ name: "", price: 789, qty: 2, ean: undefined }
 				]
 			},
 			services: {
@@ -208,7 +214,7 @@ test("add tab", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}
 	})
@@ -218,6 +224,8 @@ test("switch tab", () => {
 	store.dispatch(seller.switchTab(1))
 
 	expect(store.getState()).toEqual({
+		listenToScanner: false,
+		nativePrinter: null,
 		stats: {
 			list: [],
 			day: undefined,
@@ -232,7 +240,7 @@ test("switch tab", () => {
 			cart: {
 				selection: 0,
 				items: [
-					{ name: "", price: 123, qty: 1 }
+					{ name: "", price: 123, qty: 1, ean: undefined }
 				]
 			},
 			services: {
@@ -240,7 +248,7 @@ test("switch tab", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}, {
 			status: "STAGE_ADDED",
@@ -250,7 +258,7 @@ test("switch tab", () => {
 			cart: {
 				selection: 0,
 				items: [
-					{ name: "", price: 789, qty: 2 }
+					{ name: "", price: 789, qty: 2, ean: undefined }
 				]
 			},
 			services: {
@@ -258,7 +266,7 @@ test("switch tab", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}],
 		current: 1,
@@ -275,7 +283,7 @@ test("switch tab", () => {
 			cart: {
 				selection: 0,
 				items: [
-					{ name: "", price: 456, qty: 1 }
+					{ name: "", price: 456, qty: 1, ean: undefined }
 				]
 			},
 			services: {
@@ -283,7 +291,7 @@ test("switch tab", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}
 	})
@@ -298,6 +306,8 @@ test("switch tabs greater than current", () => {
 	store.dispatch(seller.switchTab(2)) //invalid, should not change
 
 	expect(store.getState()).toEqual({
+		listenToScanner: false,
+		nativePrinter: null,
 		stats: {
 			list: [],
 			day: undefined,
@@ -320,7 +330,7 @@ test("switch tabs greater than current", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}, {
 			status: "STAGE_ADDED",
@@ -338,7 +348,7 @@ test("switch tabs greater than current", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}],
 		current: 2,
@@ -363,7 +373,7 @@ test("switch tabs greater than current", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}
 	})
@@ -373,6 +383,8 @@ test("delete tab", () => {
 	store.dispatch(seller.deleteTab(0))
 
 	expect(store.getState()).toEqual({
+		listenToScanner: false,
+		nativePrinter: null,
 		stats: {
 			list: [],
 			day: undefined,
@@ -395,7 +407,7 @@ test("delete tab", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}],
 		current: 1,
@@ -420,7 +432,7 @@ test("delete tab", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}
 	})
@@ -432,6 +444,8 @@ test("delete active tab", () => {
 	store.dispatch(seller.deleteTab(1)) // invalid
 
 	expect(store.getState()).toEqual({
+		listenToScanner: false,
+		nativePrinter: null,
 		stats: {
 			list: [],
 			day: undefined,
@@ -461,7 +475,7 @@ test("delete active tab", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}
 	})
@@ -490,6 +504,8 @@ test("add tab append style", () => {
 	store.dispatch(customer.add())
 
 	expect(store.getState()).toEqual({
+		listenToScanner: false,
+		nativePrinter: null,
 		stats: {
 			list: [],
 			day: undefined,
@@ -512,7 +528,7 @@ test("add tab append style", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}, {
 			status: "STAGE_ADDED",
@@ -530,7 +546,7 @@ test("add tab append style", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}],
 		current: 2,
@@ -555,7 +571,7 @@ test("add tab append style", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}
 	})
@@ -586,6 +602,8 @@ test("close tabs", () => {
 	store.dispatch(seller.closeAllTabs())
 
 	expect(store.getState()).toEqual({
+		listenToScanner: false,
+		nativePrinter: null,
 		stats: {
 			list: [],
 			day: undefined,
@@ -615,7 +633,7 @@ test("close tabs", () => {
 				log: false,
 				print: false,
 				working: false,
-				nativePrinter: null,
+				eans: false,
 			}
 		}
 	})

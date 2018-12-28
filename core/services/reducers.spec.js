@@ -13,7 +13,7 @@ test("printing state", () => {
 		eet: null,
 		log: false,
 		working: false,
-		nativePrinter: null,
+		eans: false,
 	})
 })
 
@@ -25,7 +25,7 @@ test("logging state", () => {
 		eet: null,
 		log: true,
 		working: false,
-		nativePrinter: null,
+		eans: false,
 	})
 })
 
@@ -36,7 +36,7 @@ test("working", () => {
 		eet: null,
 		log: true,
 		working: true,
-		nativePrinter: null,
+		eans: false,
 	})
 })
 
@@ -51,7 +51,7 @@ test("eet state", () => {
 		eet: eet,
 		log: true,
 		working: true,
-		nativePrinter: null,
+		eans: false,
 	})
 })
 
@@ -64,6 +64,6 @@ test("reset", () => {
 		eet: null,
 		log: false,
 		working: false,
-		nativePrinter: null,
+		eans: false,
 	})
 })
