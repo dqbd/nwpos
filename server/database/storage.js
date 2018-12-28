@@ -30,14 +30,14 @@ class Storage extends Database {
 
     updateItem(ean, name, price, qty, retail_price) {
         return this.getDb().then(db => new Promise((resolve, reject) => {
-            let doc = { ean, name, price, qty, retail_price }
+            let doc = { name, price, qty, retail_price }
             Object.keys(doc).forEach((key) => doc[key] == null && delete doc[key])
 
             if (doc.name) {
                 doc.name = doc.name.trim().toLowerCase()
             }
 
-            db.update({ ean }, doc, (err, data) => {
+            db.update({ ean }, { $set: doc }, (err, data) => {
                 if (err) return reject(err)
                 resolve(data)
             })
@@ -103,6 +103,15 @@ class Storage extends Database {
             db.find({ ean }, (err, items) => {
                 if (err || !items || items.length <= 0) return reject(err || 'Item not found') 
                 resolve(items[0])
+            })
+        }))
+    }
+
+    deleteItem(ean) {
+        return this.getDb().then(db => new Promise((resolve, reject) => {
+            db.remove({ ean }, {}, (err, numRemoved) => {
+                if (err) return reject(err)
+                return resolve(numRemoved)
             })
         }))
     }

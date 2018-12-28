@@ -168,7 +168,11 @@ class Interface {
 	}
 
 	POST_SETITEM({ean, name, price, qty, retail_price}) {
-		return database.storage().setItem(ean, name, price, qty, retail_price)
+		return database.storage().updateItem(ean, name, price, qty, retail_price)
+	}
+
+	POST_DELETEITEM({ ean }) {
+		return database.storage().deleteItem(ean)
 	}
 
 	POST_GETITEM({ ean }) {
