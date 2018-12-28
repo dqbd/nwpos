@@ -26,6 +26,13 @@ const matchQuery = (i, action, selection) => {
 	return i === action.query || !Number.isInteger(action.query) && i === selection
 }
 
+function setEan(state, action) {
+	return updateObject(state, {
+		items: updateItemArray(state.items, action.query, state.selection, (item) => {
+			return updateObject(item, { ean: action.ean })
+		})
+	})
+}
 
 function setQuantity(state, action) {
 	return updateObject(state, {
@@ -81,7 +88,7 @@ function addItem(state, action) {
 
 	return updateObject(state, {
 		selection: state.items.length,
-		items: [...state.items, { name: action.name, price: normalizePrice(action.price), qty: action.qty }]
+		items: [...state.items, { name: action.name, price: normalizePrice(action.price), qty: action.qty, ean: action.ean }]
 	})
 }
 
@@ -119,6 +126,7 @@ module.exports = (state = initialState, action) => {
 		case cart.SET_QUANTITY: return setQuantity(state, action)
 		case cart.MOVE_SELECTION: return moveSelection(state, action)
 		case cart.SET_SELECTION: return setSelection(state, action)
+		case cart.SET_EAN: return setEan(state, action)
 		case cart.CLEAR: return clear(state, action)
 	}
 

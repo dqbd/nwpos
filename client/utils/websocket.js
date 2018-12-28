@@ -1,5 +1,5 @@
 const wsUrl = `ws://${window.location.hostname}${window.location.port ? `:${window.location.port}` : ''}/socket`
-const { screen, customer } = require('../../core')
+const { screen, customer, cart } = require('../../core')
 
 module.exports.bindWebsocket = (store) => {
   const conn = new WebSocket(wsUrl)
@@ -17,9 +17,10 @@ module.exports.bindWebsocket = (store) => {
       if (type === 'addItem') {
 
         if (store.getState().listenToScanner) {
-          const { price, name } = payload
+          const { price, name, ean } = payload
           store.dispatch(screen.set(price))
           store.dispatch(customer.add(name))
+          store.dispatch(cart.setEan(ean))
         }
       }
     } catch (err) {

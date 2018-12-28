@@ -28,9 +28,8 @@ module.exports.loop = (callback) => {
 	kiosk.stdout.on("data", (data) => {
 		const stringified = data.toString()
 		if (callback && typeof callback === 'function') {
-			const number = Number(stringified)
-			if (!Number.isNaN(number)) {
-				callback(number)
+			if (stringified.trim().length > 0) {
+				callback(stringified.trim())
 			}
 		}
 

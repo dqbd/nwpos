@@ -39,6 +39,15 @@ module.exports.printCart = (customer, nativePrint, hasNativePrinter) => (dispatc
 	})
 }
 
+module.exports.subtractEans = (eans) => (dispatch) => {
+	if (Object.keys(eans).length === 0) return Promise.resolve(true)
+	return get('/qtyitems', { eans }).then(res => {
+		dispatch({ type: types.SUBTRACT_EANS, eans: res.ok })
+		if (!res.ok) return Promise.reject('Failed to subtract from storage')
+		return res.data
+	})
+}
+
 module.exports.log = (customer) => (dispatch) => {
 	let payload = {
 		returned: customer.screen,

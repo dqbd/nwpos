@@ -4,7 +4,8 @@ const initialState = {
 	print: false,
 	eet: null,
 	log: false,
-	working: false
+	working: false,
+	eans: false,
 }
 
 module.exports = (state = initialState, action) => {
@@ -22,7 +23,8 @@ module.exports = (state = initialState, action) => {
 				print: false,
 				eet: null,
 				log: false,
-				working: false
+				working: false,
+				eans: false,
 			})
 		case services.LOG:
 			return Object.assign({}, state, {
@@ -31,6 +33,10 @@ module.exports = (state = initialState, action) => {
 		case services.STATUS:
 			return Object.assign({}, state, {
 				working: action.status
+			})
+		case services.SUBTRACT_EANS:
+			return Object.assign({}, state, {
+				eans: action.eans,
 			})
 	}
 

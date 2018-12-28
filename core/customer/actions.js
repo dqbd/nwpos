@@ -77,6 +77,8 @@ module.exports.checkout = () => (dispatch, getState) => {
 /**
  * Customer has paid
  * Open drawer when ready
+ * 
+ * Subtract all necessary EANs in the storage
  */
 module.exports.pay = () => (dispatch, getState) => {
 	let { newCart, newScreen, newStatus } = wrapState(getState())
@@ -90,6 +92,8 @@ module.exports.pay = () => (dispatch, getState) => {
 		} else {
 			// open drawer
 			dispatch(services.drawer())
+			// subtract necessary EANs in the storage
+			dispatch(services.subtractEans(cart.getEansFromCart(newCart)))
 			dispatch(screen.set(cart.getTotal(newCart) - newScreen))
 			dispatch({ type: types.SETPAID, paid: newScreen })
 			dispatch({ type: types.SETSTATUS, status: statusTypes.COMMIT_END })

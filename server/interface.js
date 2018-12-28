@@ -24,13 +24,14 @@ class Interface {
 
 	handleQtyLine(ean) {
 		this.POST_GETITEM({ ean })
-			.then((ean) => {
-				console.log('ean found', ean)
+			.then((item) => {
+				console.log('ean found', item)
 				this.clients.broadcast({
 					type: 'addItem',
 					payload: {
-						price: ean.price,
-						name: ean.name,
+						price: item.price,
+						name: item.name,
+						ean: item.ean,
 					},
 				})
 			})
@@ -159,7 +160,7 @@ class Interface {
 		return database.storage().generateEan()
 	}
 
-	POST_QTYITEM({eans}) {
+	POST_QTYITEMS({eans}) {
 		return database.storage().qtyItem(eans)
 	}
 

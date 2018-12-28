@@ -1,7 +1,7 @@
 const actionTypes = require("./actionTypes")
 
-module.exports.addItem = (price, name = "", qty = 1) => {
-	return { type: actionTypes.ADD_ITEM, price, name, qty }
+module.exports.addItem = (price, name = "", qty = 1, ean = undefined) => {
+	return { type: actionTypes.ADD_ITEM, price, name, qty, ean }
 }
 
 module.exports.renameItem = (name, query) => {
@@ -30,6 +30,10 @@ module.exports.addQty = (increment = 1, query = undefined) => {
 
 module.exports.setQty = (qty, query) => {
 	return { type: actionTypes.SET_QUANTITY, query, qty }
+}
+
+module.exports.setEan = (ean, query) => {
+	return { type: actionTypes.SET_EAN, query, ean }
 }
 
 module.exports.setSelection = (index) => {

@@ -44,14 +44,17 @@ class Storage extends Database {
         }))
     }
 
-    qtyItem(eans, inc = -1) {
-        if (!eans || eans.length <= 0) return Promise.reject("No eans")
-        return this.getDb().then(db => new Promise((resolve, reject) => {
-            db.update({qty: {$gt: 1}, ean: { $in: eans }}, { $inc: { qty: inc } }, (err, res) => {
-                if (err) return reject(err)
-                resolve(res)
+    qtyItem(eans) {
+        if (!eans || Object.keys(eans).length <= 0) return Promise.reject("No eans")
+        return this.getDb().then(db => Promise.all(Object.entries(eans).map(([ean, qty]) => {
+            console.log('Decrementing', ean, 'with qty of', qty)
+            return new Promise((resolve, reject) => {
+                db.update({qty: {$gt: 1}, ean}, { $inc: { qty: -1 * qty } }, (err, res) => {
+                    if (err) return reject(err)
+                    resolve(res)
+                })
             })
-        }))
+        })))
     }
 
     generateEan() {
