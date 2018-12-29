@@ -84,13 +84,13 @@ class Form extends React.Component {
             <TextInput style={styles.input} onChangeText={(val) => this.handleChange('name', val)} value={values.name} name="name" />
           </View>
           <View style={styles.horizontal}>
-            <View style={Object.assign({}, styles.formContainer, styles.qty)}>
-              <Text style={styles.label}>Počet kusů</Text>
-              <TextInput style={styles.input} onChangeText={(val) => this.handleChange('qty', val)} value={values.qty} name="qty" keyboardType="numeric" />
-            </View>
             <View style={Object.assign({}, styles.formContainer, styles.price)}>
               <Text style={styles.label}>Cena</Text>
               <TextInput style={styles.input} onChangeText={(val) => this.handleChange('price', val)} value={values.price} name="price" keyboardType="numeric" />
+            </View>
+            <View style={Object.assign({}, styles.formContainer, styles.qty)}>
+              <Text style={styles.label}>Ks</Text>
+              <TextInput style={styles.input} onChangeText={(val) => this.handleChange('qty', val)} value={values.qty} name="qty" keyboardType="numeric" />
             </View>
           </View>
           <View style={styles.formContainer}>
@@ -104,7 +104,7 @@ class Form extends React.Component {
               disabled={submitting || !valid}
             />
           </View>
-          <View style={styles.submit}>
+          <View style={styles.close}>
             <Button
               title="Zavřít"
               onPress={onClose}
@@ -174,15 +174,16 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   submit: {
-    paddingBottom: 10,
+    paddingBottom: 5,
   },
+
   price: {
     flexGrow: 3,
-    marginLeft: 5,
+    marginRight: 5,
   },
   qty: {
     flexGrow: 1,
-    marginRight: 5,
+    marginLeft: 5,
   },
   scan: {
     padding: 8,

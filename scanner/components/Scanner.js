@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   View,
+  Text,
   Modal,
   StyleSheet,
   Platform,
@@ -39,7 +40,7 @@ export default class Scanner extends React.Component {
         <Modal animationType="slide" visible={modalOpen} presentationStyle="formSheet" onRequestClose={this.handleClose}>
           <View style={{ flex: 1 }}>
             <BarCodeScanner
-              style={StyleSheet.absoluteFill}
+              style={{ flex: 1}}
               type={BarCodeScanner.Constants.Type.back}
               onBarCodeRead={({ data }) => {
                 if (onBarcodeRead) onBarcodeRead(data)
@@ -54,6 +55,12 @@ export default class Scanner extends React.Component {
                   color="#FFF"
                   size={26}
                 />
+              </TouchableOpacity>
+            </View>
+
+            <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+              <TouchableOpacity style={{ padding: 15, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.4)' }} onPress={this.handleClose}>
+                <Text style={{ color: '#fff' }}>Zavřít</Text>
               </TouchableOpacity>
             </View>
           </View>

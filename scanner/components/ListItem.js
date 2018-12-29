@@ -5,20 +5,32 @@ import {
   View,
   Button,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native'
 
 export default class ListItem extends React.Component {
   state = {
     expanded: false,
+    deleting: false,
   }
 
   handleToggle = () => {
     this.setState({ expanded: !this.state.expanded })
   }
 
+  handleRemove = async () => {
+    const { onRemove, item: { ean } } = this.props
+    this.setState({ deleting: true })
+    try {
+      await onRemove(ean)
+    } catch (err) {
+      this.setState({ deleting: false })
+    }
+  }
+
   render() {
-    const { item, onRemove, onEdit } = this.props
-    const { expanded } = this.state
+    const { item, onEdit } = this.props
+    const { expanded, deleting } = this.state
 
     const { ean, name, price, qty, retail_price, retail_qty } = item
 
@@ -30,14 +42,18 @@ export default class ListItem extends React.Component {
         </TouchableOpacity>
         { expanded && <View style={styles.content}>
           <Text>{`Kód: ${ean}`}</Text>
-          <Text>{`Zakoupeno: ${retail_qty} ks za ${retail_price} Kč`}</Text>
+          <Text>{`Cena zakoupení: ${retail_price} Kč`}</Text>
+          <Text>{`Původní počet kusů: ${retail_qty} ks`}</Text>
 
           <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'flex-end' }}>
+            { deleting && <ActivityIndicator size="small" /> }
+            <View style={{ flexGrow: 1 }} />
             <View style={{ marginLeft: 10 }}>
               <Button
-                onPress={() => onRemove(ean)}
+                onPress={this.handleRemove}
                 color="#EF6C00"
                 title="Smazat"
+                disabled={deleting}
               />
             </View>
             <View style={{ marginLeft: 10 }}>
@@ -65,28 +81,29 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5,
     backgroundColor: '#fff',
-    borderRadius: 3,
-    borderBottomWidth: 2,
-    borderBottomColor: '#ccc',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
   header: {
     flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
     padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#efefef',
   },
   content: {
     padding: 10,
     backgroundColor: '#fbfbfb',
-    borderBottomLeftRadius: 3,
-    borderBottomRightRadius: 3,
+    borderTopWidth: 1,
+    borderTopColor: '#efefef',
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
   },
   name: {
     fontSize: 18,
     flexGrow: 1,
   },
   price: {
-    fontSize: 18,
+    fontSize: 14,
   }
 })

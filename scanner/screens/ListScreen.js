@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   TextInput,
   Platform,
-  ScrollView,
+  AsyncStorage,
+  Button,
 } from 'react-native'
 import Form from '../components/Form'
 import NativeModal from 'react-native-modal'
@@ -16,15 +17,24 @@ import { withNavigation, NavigationEvents } from 'react-navigation'
 
 import ListItem from '../components/ListItem'
 import Scanner from '../components/Scanner'
-
-const URL = 'http://192.168.1.122'
+import UrlChangeButton from '../components/UrlChangeButton'
 
 class ListScreen extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => ({
     title: 'Seznam zboží',
-  }
+    headerStyle: {
+      backgroundColor: 'transparent',
+    },
+    headerRight: (
+      <UrlChangeButton
+        onUrlChange={navigation.getParam('resetUrl')}
+        getInitialUrl={navigation.getParam('getUrl')}
+      />
+    )
+  })
 
   state = {
+    url: null,
     refreshing: true,
     editing: false,
     adding: false,
@@ -32,13 +42,17 @@ class ListScreen extends React.Component {
     items: [],
   }
 
-  handleFormClose = () => {
-    this.setState({ editingValues: {}, editing: false, adding: false })
+  async componentDidMount() {
+    const url = (await AsyncStorage.getItem('@nwpos:url')) || 'http://192.168.1.122'
+    console.log(url)
+    this.setState({ url }, this.fetchData)
+    this.props.navigation.setParams({ resetUrl: this.resetUrl, getUrl: () => this.state.url })
   }
   
   fetchData = async (bootstrap = false) => {
+    if (!this.state.url) return
     if (!bootstrap) this.setState({ refreshing: true })
-    const { items } = await fetch(`${URL}/items`).then(a => a.json())
+    const { items } = await fetch(`${this.state.url}/items`).then(a => a.json())
     this.setState({ items, refreshing: false })
   }
 
@@ -46,7 +60,7 @@ class ListScreen extends React.Component {
     const { editing, adding } = this.state
     if (!editing && !adding) return
     
-    await fetch(`${URL}${editing ? '/setitem' : '/additem'}`, {
+    await fetch(`${this.state.url}${editing ? '/setitem' : '/additem'}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -64,7 +78,7 @@ class ListScreen extends React.Component {
   }
 
   handleItemRemove = async (ean) => {
-    await fetch(`${URL}/deleteitem`, {
+    await fetch(`${this.state.url}/deleteitem`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -75,21 +89,22 @@ class ListScreen extends React.Component {
     return this.fetchData()
   }
 
+  handleFormClose = () => {
+    this.setState({ editingValues: {}, editing: false, adding: false })
+  }
+
   handleEanGenerate = async () => {
-    const { ean } = await fetch(`${URL}/ean`).then(a => a.json())
+    const { ean } = await fetch(`${this.state.url}/ean`).then(a => a.json())
     return ean
   }
 
-  handleItemEdit = (values) => {
-    this.setState({ editingValues: values, editing: true })
-  }
+  handleItemEdit = (values) => this.setState({ editingValues: values, editing: true })
 
-  handleToggle = (ean) => {
-    this.setState({ expanded: Object.assign({}, this.state.expanded, { [ean]: !this.state.expanded[ean] })})
-  }
+  handleBarCodeScanned = (data) => this.setState({ modalOpen: false, searchValue: `${data}` })
 
-  handleBarCodeScanned = (data) => {
-    this.setState({ modalOpen: false, searchValue: `${data}` })
+  resetUrl = async (url) => {
+    await AsyncStorage.setItem('@nwpos:url', url)
+    this.setState({ url }, this.fetchData)
   }
 
   render() {
@@ -104,39 +119,44 @@ class ListScreen extends React.Component {
         <NavigationEvents
           onDidFocus={this.fetchData}
         />
-        <ScrollView>
-          <View style={styles.horizontal}>
-            <TextInput
-              style={styles.search}
-              value={searchValue}
-              placeholder="Najít zboží"
-              placeholderTextColor="#ccc"
-              onChangeText={searchValue => this.setState({ searchValue })}
-            />
+        <FlatList
+          data={[false, ...filteredItems]}
+          onRefresh={this.fetchData}
+          refreshing={refreshing}
+          style={{ flexGrow: 1 }}
+          keyExtractor={({ ean }) => `${ean}`}
+          renderItem={({ item }) => {
 
-            <Scanner
-              style={styles.scanbtn}
-              onBarcodeRead={this.handleBarCodeScanned}
-            />
+            if (item === false) {
+              return (
+                <View style={styles.horizontal}>
+                  <TextInput
+                    style={styles.search}
+                    value={searchValue}
+                    placeholder="Najít zboží"
+                    placeholderTextColor="#ccc"
+                    onChangeText={searchValue => this.setState({ searchValue })}
+                  />
 
-            <TouchableOpacity style={styles.addbtn} onPress={() => this.setState({ adding: true })}>
-              <Icon.Ionicons
-                name={Platform.OS === 'ios' ? 'ios-add-circle-outline' : 'md-add-circle-outline'}
-                color="#000"
-                size={26}
-              />
-            </TouchableOpacity>
-          </View>
+                  <Scanner
+                    style={styles.scanbtn}
+                    onBarcodeRead={this.handleBarCodeScanned}
+                  />
 
-          <FlatList
-            data={filteredItems}
-            onRefresh={this.fetchData}
-            refreshing={refreshing}
-            style={{ flexGrow: 0 }}
-            keyExtractor={({ ean }) => `${ean}`}
-            renderItem={({ item }) => <ListItem item={item} onRemove={this.handleItemRemove} onEdit={this.handleItemEdit} />}
-          />
-        </ScrollView>
+                  <TouchableOpacity style={styles.addbtn} onPress={() => this.setState({ adding: true })}>
+                    <Icon.Ionicons
+                      name={Platform.OS === 'ios' ? 'ios-add-circle-outline' : 'md-add-circle-outline'}
+                      color="#000"
+                      size={26}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )
+            }
+            
+            return <ListItem item={item} onRemove={this.handleItemRemove} onEdit={this.handleItemEdit} />
+          }}
+        />
         <NativeModal
           avoidKeyboard 
           isVisible={editing || adding}
@@ -144,7 +164,7 @@ class ListScreen extends React.Component {
           onBackdropPress={this.handleFormClose}
           hardwareAccelerated
         >
-          <View style={{ backgroundColor: '#fff', padding: 15, paddingTop: 18, paddingBottom: 10 }}>
+          <View style={styles.modal}>
             <Form
               eanDisabled={editing}
               submitTitle={editing ? 'Upravit' : 'Přidat'}
@@ -164,6 +184,13 @@ class ListScreen extends React.Component {
 export default withNavigation(ListScreen)
 
 const styles = StyleSheet.create({
+  modal: {
+    backgroundColor: '#fff',
+    padding: 15,
+    paddingTop: 18,
+    paddingBottom: 10,
+    borderRadius: 8,
+  },
   horizontal: {
     flexDirection: 'row',
     margin: 10,
@@ -196,6 +223,7 @@ const styles = StyleSheet.create({
   addbtn: {
     backgroundColor: '#fff',
     marginLeft: 10,
+    flexShrink: 0,
     paddingLeft: 18,
     paddingRight: 18,
     borderWidth: 1,
@@ -205,8 +233,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   container: {
-    paddingTop: 5,
-    paddingBottom: 5,
+    flex: 1,
   },
   item: {
     margin: 10,
