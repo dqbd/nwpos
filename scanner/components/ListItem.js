@@ -5,8 +5,10 @@ import {
   View,
   Button,
   TouchableOpacity,
+  Platform,
   ActivityIndicator,
 } from 'react-native'
+import { Icon } from 'expo'
 
 export default class ListItem extends React.Component {
   state = {
@@ -39,9 +41,19 @@ export default class ListItem extends React.Component {
         <TouchableOpacity style={styles.header} onPress={() => this.handleToggle(ean)}>
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.price}>{`${price} Kč / ${qty} ks` }</Text>
+          <Icon.Ionicons
+            style={{ marginLeft: 10, transform: [{ rotate: expanded ? '180deg' : '0deg' }] }}
+            name={Platform.OS === 'ios' ? 'ios-arrow-dropdown' : 'md-arrow-dropdown'}
+            color="#000"
+            size={26}
+          />
         </TouchableOpacity>
         { expanded && <View style={styles.content}>
+          
           <Text>{`Kód: ${ean}`}</Text>
+          <Text>{`Aktuální cena: ${price} Kč`}</Text>
+          <Text>{`Počet kusů ve skladu: ${qty} ks`}</Text>
+          <Text />
           <Text>{`Cena zakoupení: ${retail_price} Kč`}</Text>
           <Text>{`Původní počet kusů: ${retail_qty} ks`}</Text>
 
@@ -89,6 +101,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     padding: 10,
   },
   content: {
