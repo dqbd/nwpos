@@ -29,7 +29,7 @@ module.exports.add = (name) => (dispatch, getState) => {
 		dispatch({ type: types.SETSTATUS, status: statusTypes.STAGE_ADDED })
 
 		if (newStatus === statusTypes.STAGE_ADDED && lastItem !== undefined && lastItem.price === screenValue) {
-			if (name !== lastItem.name && name !== undefined && name.trim().length > -1) {
+			if (name !== lastItem.name && name !== undefined) {
 				dispatch(cart.renameItem(name))
 			} else { 
 				dispatch(cart.addQty(1, newCart.items.length - 1))
@@ -41,7 +41,6 @@ module.exports.add = (name) => (dispatch, getState) => {
 			}
 		}
 	}
-
 }
 
 // TODO: decide if use to purely just add items or rename
@@ -167,4 +166,30 @@ module.exports.suggest = () => (dispatch, getState) => {
 
 module.exports.seller = (ic) => {
 	return { type: types.SETSELLER, ic }
+}
+
+
+module.exports.addEan = ({ ean, name, price }) => (dispatch, getState) => {
+	// when adding item after commit
+	if (getState().status === statusTypes.COMMIT_END) {
+		dispatch(module.exports.clear())
+	}
+
+	let { newCart, newStatus } = wrapState(getState())
+
+	// TODO: consider, whether we should search the entire cart for ean (might be confusing with basic adding)
+	let lastItem = newCart.items.slice(-1)[0]
+	const isLastItemSame = !!lastItem && lastItem.price === price && lastItem.name === name && lastItem.ean === ean
+	
+	if (isLastItemSame) {
+		dispatch(cart.addQty(1, newCart.items.length - 1))
+	} else {
+		dispatch(cart.addItem(price, name, 1, ean))
+	}
+	
+	const isInEditing = [statusTypes.STAGE_TYPING, statusTypes.STAGE_ADDED].indexOf(newStatus) >= 0
+	if (isInEditing) {
+		dispatch(screen.set(price))
+		dispatch({ type: types.SETSTATUS, status: statusTypes.STAGE_ADDED })
+	}
 }

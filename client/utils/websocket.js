@@ -18,9 +18,7 @@ module.exports.bindWebsocket = (store) => {
 
         if (store.getState().listenToScanner) {
           const { price, name, ean } = payload
-          store.dispatch(screen.set(price))
-          store.dispatch(customer.add(name))
-          store.dispatch(cart.setEan(ean))
+          store.dispatch(customer.addEan({ price, name, ean }))
         }
       }
     } catch (err) {

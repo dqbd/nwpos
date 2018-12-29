@@ -12,6 +12,8 @@ beforeEach(() => {
 	nock("http://localhost")
 		.get("/drawer")
 		.reply(200, "{}")
+		.post("/qtyitems")
+		.reply(200, "{}")
 })
 
 test("add item via keyboard", () => {
@@ -540,5 +542,143 @@ test("set seller", () => {
 			selection: 0,
 			items: []
 		}
+	})
+})
+
+test("add item via ean", () => {
+	const store = createStore(customer.reducer, applyMiddleware(thunk))
+	store.dispatch(customer.addEan({ ean: '12345', name: 'Tričko', price: 100 }))
+
+	// user types something, but still last item
+	store.dispatch(screen.addDigit(1))
+	store.dispatch(customer.addEan({ ean: '12345', name: 'Tričko', price: 100 }))
+
+	// not the last item, add new item
+	store.dispatch(screen.addDigit(5))
+	store.dispatch(customer.add())
+	store.dispatch(customer.addEan({ ean: '12345', name: 'Tričko', price: 100 }))
+	
+	expect(store.getState()).toEqual({
+		status: customer.types.STATUS_TYPES.STAGE_ADDED,
+		screen: 100,
+		paid: 0,
+		seller: null,
+		services: {
+			print: false,
+			eet: null,
+			log: false,
+			working: false,
+			eans: false,
+		},
+		cart: {
+			selection: 2,
+			items: [
+				{ name: "Tričko", price: 100, qty: 2, ean: '12345' },
+				{ name: '', price: 5, qty: 1 },
+				{ name: "Tričko", price: 100, qty: 1, ean: '12345' },
+			],
+		}
+	})
+})
+
+
+describe('ean add during checkout', () => {
+	const store = createStore(customer.reducer, applyMiddleware(thunk))
+
+	test("ean add during checkout", () => {
+		store.dispatch(customer.addEan({ ean: '12345', name: 'Tričko', price: 100 }))
+		store.dispatch(customer.checkout())
+		
+		store.dispatch(customer.addEan({ ean: '6789', name: 'Kalhoty', price: 200 }))
+	
+		expect(store.getState()).toEqual({
+			status: customer.types.STATUS_TYPES.COMMIT_BEGIN,
+			screen: 100,
+			paid: 0,
+			seller: null,
+			services: {
+				print: false,
+				eet: null,
+				log: false,
+				working: false,
+				eans: false,
+			},
+			cart: {
+				selection: 1,
+				items: [
+					{ name: "Tričko", price: 100, qty: 1, ean: '12345' },
+					{ name: "Kalhoty", price: 200, qty: 1, ean: '6789' },
+				],
+			}
+		})
+	})
+
+	test('ean add during typing', () => {
+		// check if typing is correct
+		store.dispatch(screen.addDigit(1))
+		store.dispatch(screen.addDigit(0))
+		store.dispatch(screen.addDigit(0))
+		store.dispatch(screen.addDigit(0))
+	
+		store.dispatch(customer.addEan({ ean: '6789', name: 'Kalhoty', price: 200 }))
+	
+		expect(store.getState().status).toEqual(customer.types.STATUS_TYPES.COMMIT_TYPING)
+		expect(store.getState().screen).toEqual(1000)
+		expect(store.getState().cart).toEqual({
+			selection: 1,
+			items: [
+				{ name: "Tričko", price: 100, qty: 1, ean: '12345' },
+				{ name: "Kalhoty", price: 200, qty: 2, ean: '6789' },
+			],
+		})
+	})
+
+	test('ean add after payment', () => {
+		store.dispatch(customer.pay())
+
+		expect(store.getState()).toEqual({
+			status: customer.types.STATUS_TYPES.COMMIT_END,
+			screen: -500,
+			paid: 1000,
+			seller: null,
+			services: {
+				print: false,
+				eet: null,
+				log: false,
+				working: false,
+				eans: false,
+			},
+			cart: {
+				selection: 1,
+				items: [
+					{ name: "Tričko", price: 100, qty: 1, ean: '12345' },
+					{ name: "Kalhoty", price: 200, qty: 2, ean: '6789' },
+				],
+			}
+		})
+
+		
+		store.dispatch(customer.addEan({ ean: '6789', name: 'Kalhoty', price: 200 }))
+		store.dispatch(screen.addDigit(1))
+
+		expect(store.getState()).toEqual({
+			status: customer.types.STATUS_TYPES.STAGE_TYPING,
+			screen: 1,
+			paid: 0,
+			seller: null,
+			services: {
+				print: false,
+				eet: null,
+				log: false,
+				working: false,
+				eans: false,
+			},
+			cart: {
+				selection: 0,
+				items: [
+					{ name: "Kalhoty", price: 200, qty: 1, ean: '6789' },
+				],
+			}
+		})
 	})
 })

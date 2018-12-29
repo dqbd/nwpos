@@ -12,9 +12,9 @@ test("add items", () => {
 	expect(store.getState()).toEqual({
 		selection: 2,
 		items: [
-			{ name: "Zelenina", price: 123.12, qty: 3 },
-			{ name: "Rohlík", price: -10.55, qty: 1 },
-			{ name: "", price: 56, qty: 1 }
+			{ name: "Zelenina", price: 123.12, qty: 3, ean: undefined },
+			{ name: "Rohlík", price: -10.55, qty: 1, ean: undefined },
+			{ name: "", price: 56, qty: 1, ean: undefined }
 		]
 	})
 })
@@ -26,9 +26,9 @@ test("rename items", () => {
 	expect(store.getState()).toEqual({
 		selection: 2,
 		items: [
-			{ name: "Zelenina", price: 123.12, qty: 3 },
-			{ name: "Houska", price: -10.55, qty: 1 },
-			{ name: "Rajče", price: 56, qty: 1 }
+			{ name: "Zelenina", price: 123.12, qty: 3, ean: undefined },
+			{ name: "Houska", price: -10.55, qty: 1, ean: undefined },
+			{ name: "Rajče", price: 56, qty: 1, ean: undefined }
 		]
 	})
 })
@@ -56,9 +56,9 @@ test("move & set selection", () => {
 	expect(store.getState()).toEqual({
 		selection: 1,
 		items: [
-			{ name: "Semena", price: 123.12, qty: 3 },
-			{ name: "Vejce", price: -10.55, qty: 1 },
-			{ name: "Hrášky", price: 56, qty: 1 }
+			{ name: "Semena", price: 123.12, qty: 3, ean: undefined },
+			{ name: "Vejce", price: -10.55, qty: 1, ean: undefined },
+			{ name: "Hrášky", price: 56, qty: 1, ean: undefined }
 		]
 	})
 })
@@ -73,9 +73,9 @@ test("add & set qty", () => {
 	expect(store.getState()).toEqual({
 		selection: 2,
 		items: [
-			{ name: "Semena", price: 123.12, qty: 3 },
-			{ name: "Vejce", price: -10.55, qty: 32 },
-			{ name: "Hrášky", price: 56, qty: -12 }
+			{ name: "Semena", price: 123.12, qty: 3, ean: undefined },
+			{ name: "Vejce", price: -10.55, qty: 32, ean: undefined },
+			{ name: "Hrášky", price: 56, qty: -12, ean: undefined }
 		]
 	})
 })
@@ -87,7 +87,7 @@ test("remove item", () => {
 	expect(store.getState()).toEqual({
 		selection: 0,
 		items: [
-			{ name: "Vejce", price: -10.55, qty: 32 }
+			{ name: "Vejce", price: -10.55, qty: 32, ean: undefined }
 		]
 	})
 })
@@ -116,8 +116,8 @@ test("add letter", () => {
 	expect(store.getState()).toEqual({
 		selection: 0,
 		items: [
-			{ name: "Ad", price: 15, qty: 1 },
-			{ name: "B", price: 350, qty: 1 }
+			{ name: "Ad", price: 15, qty: 1, ean: undefined },
+			{ name: "B", price: 350, qty: 1, ean: undefined }
 		]
 	})
 
@@ -139,9 +139,44 @@ test("remove letter", () => {
 	expect(store.getState()).toEqual({
 		selection: 1,
 		items: [
-			{ name: "Ab", price: 15, qty: 1 },
-			{ name: "", price: 350, qty: 1 }
+			{ name: "Ab", price: 15, qty: 1, ean: undefined },
+			{ name: "", price: 350, qty: 1, ean: undefined }
 		]
 	})
+})
 
+test('set eans', () => {
+	const store = createStore(cart.reducer)
+	store.dispatch(cart.addItem(15))
+	store.dispatch(cart.renameItem('ABC'))
+	store.dispatch(cart.setEan('1234ABC'))
+
+	store.dispatch(cart.addItem(16))
+	store.dispatch(cart.addItem(17, 'DEF', 3, 'CDE'))
+
+	expect(store.getState()).toEqual({
+		selection: 2,
+		items: [
+			{ name: 'ABC', price: 15, qty: 1, ean: '1234ABC' },
+			{ name: '', price: 16, qty: 1, ean: undefined },
+			{ name: 'DEF', price: 17, qty: 3, ean: 'CDE' },
+		]
+	})
+})
+
+test('get eans', () => {
+	const store = createStore(cart.reducer)
+	expect(cart.getEansFromCart(store.getState())).toEqual({})
+
+	store.dispatch(cart.addItem(15))
+	store.dispatch(cart.renameItem('ABC'))
+	store.dispatch(cart.setEan('1234ABC'))
+
+	store.dispatch(cart.addItem(16, 'GGG', 100, '1234ABC'))
+	store.dispatch(cart.addItem(17, 'DEF', 3, 'CDE'))
+
+	expect(cart.getEansFromCart(store.getState())).toEqual({
+		'1234ABC': 101,
+		'CDE': 3,
+	})
 })
