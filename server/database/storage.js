@@ -44,12 +44,13 @@ class Storage extends Database {
         }))
     }
 
-    qtyItem(eans) {
+    // TODO: we're better off passing non-existent items through
+    qtyItem(eans, onlyAvailable = false) {
         if (!eans || Object.keys(eans).length <= 0) return Promise.reject("No eans")
         return this.getDb().then(db => Promise.all(Object.entries(eans).map(([ean, qty]) => {
             console.log('Decrementing', ean, 'with qty of', qty)
             return new Promise((resolve, reject) => {
-                db.update({qty: {$gt: 1}, ean}, { $inc: { qty: -1 * qty } }, (err, res) => {
+                db.update(Object.assign({ ean }, onlyAvailable && { qty: {$gt: 1} }), { $inc: { qty: -1 * qty } }, (err, res) => {
                     if (err) return reject(err)
                     resolve(res)
                 })
@@ -101,9 +102,10 @@ class Storage extends Database {
         }))
     }
 
-    getItem(ean) {
+    // TODO: we're better off passing non-existent items through
+    getItem(ean, onlyAvailable = false) {
         return this.getDb().then(db => new Promise((resolve, reject) => {
-            db.find({ ean }, (err, items) => {
+            db.find(Object.assign({ ean }, onlyAvailable && { qty: { $gt: 0 } }), (err, items) => {
                 if (err || !items || items.length <= 0) return reject(err || 'Item not found') 
                 resolve(items[0])
             })
