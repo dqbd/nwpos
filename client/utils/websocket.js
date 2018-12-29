@@ -1,5 +1,6 @@
 const wsUrl = `ws://${window.location.hostname}${window.location.port ? `:${window.location.port}` : ''}/socket`
-const { screen, customer, cart } = require('../../core')
+const { seller, customer } = require('../../core')
+const watch = require('redux-watch')
 
 module.exports.bindWebsocket = (store) => {
   const conn = new WebSocket(wsUrl)
@@ -9,6 +10,13 @@ module.exports.bindWebsocket = (store) => {
       payload: null,
     }))
   }, 60 * 1000)
+
+  const initValue = !!JSON.parse(window.localStorage.getItem('scanner'))
+  store.dispatch(seller.setListenToScanner(initValue))
+
+  store.subscribe(watch(store.getState, 'listenToScanner')((newVal) => {
+    window.localStorage.setItem('scanner', `${newVal}`)
+  }))
 
   conn.onmessage = ({ data }) => {
     try {

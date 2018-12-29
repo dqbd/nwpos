@@ -17,7 +17,7 @@ const mapDispatchToProps = (dispatch) => hapticFeedback({
 	onTabSwitch: (index) => dispatch(seller.switchTab(index)),
 	onTabClose: (index) => dispatch(seller.deleteTab(index)),
 	onTabAdd: (index) => dispatch(seller.addTab()),
-	onScannerToggle: () => dispatch(seller.toggleListenOnScanner()),
+	onScannerSet: (status) => dispatch(seller.setListenToScanner(status)),
 })
 
 

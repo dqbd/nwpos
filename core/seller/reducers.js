@@ -92,7 +92,7 @@ const nativePrinter = (state = null, action) => {
 
 const listenToScanner = (state = false, action) => {
 	if (action.type === seller.LISTEN_SCANNER) {
-		return !state
+		return action.listenToScanner
 	}
 	return state
 }

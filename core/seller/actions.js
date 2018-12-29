@@ -36,6 +36,7 @@ module.exports.setNativePrinter = (status) => ({
 	status,
 })
 
-module.exports.toggleListenOnScanner = () => ({
+module.exports.setListenToScanner = (listenToScanner) => ({
 	type: actionTypes.LISTEN_SCANNER,
+	listenToScanner
 })
