@@ -11,7 +11,7 @@
 	background: rgba(0,0,0,0.01)
 	box-shadow: inset 0px 1px 0px rgba(0,0,0,0.1)
 	
-	.drawer
+	.drawer, .scan
 		font-size: 0.5em
 		color: #ffffff
 		position: relative
@@ -48,6 +48,13 @@
 			
 		svg path
 			fill: #ffffff
+
+	.scan
+		a
+			background: color-grayer
+		a.tapped
+			background: darken(color-grayer, 10%)
+	
 
 .names
 	display: flex

@@ -40,6 +40,22 @@ class Interface {
 			})
 	}
 
+	handleLiveSocket({ type, payload }) {
+		if (type === 'scanEan') {
+			const ean = payload
+			return this.POST_GETITEM({ ean }).then(item => ({
+				type: 'addItem',
+				payload: {
+					price: item.price,
+					name: item.name,
+					ean: item.ean,
+				},
+			})).catch(err => console.log(err))
+		}
+
+		return Promise.reject('Invalid type')
+	}
+
 	GET_SUGGEST() {
 		return database.suggestion().getGrouped()
 	}

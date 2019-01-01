@@ -2,14 +2,15 @@ const wsUrl = `ws://${window.location.hostname}${window.location.port ? `:${wind
 const { seller, customer } = require('../../core')
 const watch = require('redux-watch')
 
+let conn = null
+
+module.exports.send = (type, payload) => {
+  if (conn) conn.send(JSON.stringify({ type, payload }))
+}
+
 module.exports.bindWebsocket = (store) => {
-  const conn = new WebSocket(wsUrl)
-  let pinger = setInterval(() => {
-    conn.send(JSON.stringify({
-      type: 'ping',
-      payload: null,
-    }))
-  }, 60 * 1000)
+  conn = new WebSocket(wsUrl)
+  let pinger = setInterval(() => module.exports.send('ping'), 60 * 1000)
 
   const initValue = !!JSON.parse(window.localStorage.getItem('scanner'))
   store.dispatch(seller.setListenToScanner(initValue))

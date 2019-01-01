@@ -14,7 +14,7 @@ import { hideLoading } from "./utils"
 import { bindDisplayEvents } from "./utils/display.js"
 import { bindNativePrinter } from './utils/nativePrinter.js'
 import { bindActions } from "./utils/actions.js"
-import { bindWebsocket } from "./utils/websocket.js"
+import { bindWebsocket, send } from "./utils/websocket.js"
 
 import Main from "./pages/Main.jsx"
 import Config from "./pages/Config.jsx"
@@ -23,7 +23,7 @@ import Suggestions from "./pages/Suggestions.jsx"
 import Storage from "./pages/Storage.jsx"
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-let store = createStore(reducer, composeEnhancers(applyMiddleware(ReduxThunk)))
+let store = createStore(reducer, composeEnhancers(applyMiddleware(ReduxThunk.withExtraArgument({ send }))))
 let actions = bindActions(store)
 
 injectTapEventPlugin()

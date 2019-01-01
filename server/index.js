@@ -33,19 +33,6 @@ const bonjour = require('bonjour')()
 
 const wss = new WebSocket.Server({ noServer: true })
 
-wss.on('connection', (ws) => {
-	ws.on('message', (message) => {
-		try {
-			const { type } = JSON.parse(message)
-			if (type === 'ping') {
-				ws.send(JSON.stringify({ type: 'pong', payload: null }))
-			}
-		} catch (err) {
-			console.log(err.message)
-		}
-	})
-})
-
 const interface = require("./interface")(config, args, {
 	broadcast: (data) => {
 		wss.clients.forEach((ws) => {
@@ -54,6 +41,26 @@ const interface = require("./interface")(config, args, {
 			}
 		})
 	}
+})
+
+wss.on('connection', (ws) => {
+	ws.on('message', (message) => {
+		try {
+			const { type, payload } = JSON.parse(message)
+			if (type === 'ping') {
+				ws.send(JSON.stringify({ type: 'pong', payload: null }))
+			} else {
+				Promise.resolve(interface.handleLiveSocket({ type, payload }))
+					.then((data) => {
+						if (data && ws.readyState === WebSocket.OPEN) {
+							ws.send(JSON.stringify(data))
+						}
+					}, (err) => console.log(err))
+			}
+		} catch (err) {
+			console.log(err.message)
+		}
+	})
 })
 
 const app = express()
