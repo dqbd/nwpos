@@ -24,9 +24,8 @@ module.exports.bindWebsocket = (store) => {
       const { type, payload } = JSON.parse(data)
       console.log(type, payload)
       if (type === 'addItem') {
-
-        if (store.getState().listenToScanner) {
-          const { price, name, ean } = payload
+        const { price, name, ean, global } = payload
+        if (!global || store.getState().listenToScanner) {
           store.dispatch(customer.addEan({ price, name, ean }))
         }
       }

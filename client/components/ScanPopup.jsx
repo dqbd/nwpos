@@ -1,12 +1,12 @@
 import React from "react"
 import { findDOMNode } from "react-dom"
-import { capitalize, czechAlphabet, invokeFeedback } from "../utils"
+import { invokeFeedback } from "../utils"
 
 class ScanPopup extends React.Component {
 
 	constructor(props) {
 		super(props)
-		this.state = { input: undefined }
+		this.state = { input: '' }
 	}
 
 	componentDidMount() {
@@ -33,7 +33,6 @@ class ScanPopup extends React.Component {
 	}
 
 	render() {
-		console.log(this.state.input)
 		return (
 			<form className="rename popup" onTouchTap={(e) => e.stopPropagation()} onSubmit={this.onFormSubmit.bind(this)}>
 				<div className="inside">
@@ -41,7 +40,7 @@ class ScanPopup extends React.Component {
 						<div className="heading">
 							<span>Zadat čárový kód</span>
 							<div className="input">
-								<input ref="input" className="edit" placeholder="Čárový kód" value={this.state.input} onChange={this.onInputChange.bind(this)}></input>
+								<input ref="input" className="edit" type="text" placeholder="Čárový kód" value={this.state.input} onChange={this.onInputChange.bind(this)}></input>
 							</div>
 						</div>
 						<div className="buttons">

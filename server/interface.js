@@ -32,6 +32,7 @@ class Interface {
 						price: item.price,
 						name: item.name,
 						ean: item.ean,
+						global: true,
 					},
 				})
 			})
