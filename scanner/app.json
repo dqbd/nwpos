@@ -17,7 +17,7 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 2000
     },
     "assetBundlePatterns": [
       "**/*"
@@ -29,6 +29,6 @@
     "android": {
       "package": "cz.duong.nwpos.scanner"
     },
-    "description": ""
+    "description": "Scanner for nwpos"
   }
 }

@@ -43,8 +43,7 @@ class ListScreen extends React.Component {
   }
 
   async componentDidMount() {
-    const url = (await AsyncStorage.getItem('@nwpos:url')) || 'http://192.168.1.122'
-    console.log(url)
+    const url = (await AsyncStorage.getItem('@nwpos:url')) || 'http://192.168.1.103:8080'
     this.setState({ url }, this.fetchData)
     this.props.navigation.setParams({ resetUrl: this.resetUrl, getUrl: () => this.state.url })
   }
