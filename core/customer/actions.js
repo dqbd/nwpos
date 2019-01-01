@@ -193,3 +193,16 @@ module.exports.addEan = ({ ean, name, price }) => (dispatch, getState) => {
 		dispatch({ type: types.SETSTATUS, status: statusTypes.STAGE_ADDED })
 	}
 }
+
+module.exports.discount = () => (dispatch, getState) => {
+	let { newStatus, newScreen } = wrapState(getState())
+
+	if (newStatus === statusTypes.STAGE_ADDED) {
+		dispatch(cart.invertQty())
+	} else if (newScreen !== 0) {
+		dispatch(screen.toggleNegative())
+		dispatch(module.exports.add())
+		dispatch(cart.renameItem("Sleva"))
+		dispatch(screen.toggleNegative())
+	}
+}

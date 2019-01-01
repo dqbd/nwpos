@@ -50,6 +50,14 @@ function addQuantity(state, action) {
 	})
 }
 
+function invertQuantity(state, action) {
+	return updateObject(state, {
+		items: updateItemArray(state.items, action.query, state.selection, (item) => {
+			return updateObject(item, { qty: item.qty * -1 })
+		})
+	})
+}
+
 function renameItem(state, action) {
 	return updateObject(state, {
 		items: updateItemArray(state.items, action.query, state.selection, (item) => {
@@ -126,6 +134,7 @@ module.exports = (state = initialState, action) => {
 		case cart.SET_QUANTITY: return setQuantity(state, action)
 		case cart.MOVE_SELECTION: return moveSelection(state, action)
 		case cart.SET_SELECTION: return setSelection(state, action)
+		case cart.INVERT_QUANTITY: return invertQuantity(state, action)
 		case cart.SET_EAN: return setEan(state, action)
 		case cart.CLEAR: return clear(state, action)
 	}

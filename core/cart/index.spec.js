@@ -180,3 +180,32 @@ test('get eans', () => {
 		'CDE': 3,
 	})
 })
+
+describe('invert qty', () => {
+	const store = createStore(cart.reducer)
+	
+	test('empty cart', () => {
+		store.dispatch(cart.invertQty())
+		expect(store.getState()).toEqual({
+			selection: 0,
+			items: []
+		})
+	})
+
+	test('has items', () => {
+		store.dispatch(cart.addItem(100, 'item', 15, '1235'))
+		store.dispatch(cart.addItem(200, 'item 2', -10))
+
+		store.dispatch(cart.invertQty(0))
+		store.dispatch(cart.invertQty())
+
+		expect(store.getState()).toEqual({
+			selection: 1,
+			items: [
+				{ name: 'item', price: 100, qty: -15, ean: '1235' },
+				{ name: 'item 2', price: 200, qty: 10, ean: undefined },
+			]
+		})
+	})
+
+})

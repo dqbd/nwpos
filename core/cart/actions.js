@@ -28,6 +28,10 @@ module.exports.addQty = (increment = 1, query = undefined) => {
 	return { type: actionTypes.ADD_QUANTITY, query, increment }
 }
 
+module.exports.invertQty = (query) => {
+	return { type: actionTypes.INVERT_QUANTITY, query }
+}
+
 module.exports.setQty = (qty, query) => {
 	return { type: actionTypes.SET_QUANTITY, query, qty }
 }

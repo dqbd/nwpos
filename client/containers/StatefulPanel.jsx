@@ -21,12 +21,7 @@ const mapDispatchToProps = (dispatch) => hapticFeedback({
 	onClear: () => dispatch(customer.clear()),
 	onDrawer: () => dispatch(services.drawer()),
 	onScan: (ean) => dispatch(services.scanEan(ean)),
-	onDiscount: () => {
-		dispatch(screen.toggleNegative())
-		dispatch(customer.add())
-		dispatch(cart.renameItem("Sleva"))
-		dispatch(screen.toggleNegative())
-	}
+	onDiscount: () => dispatch(customer.discount())
 })
 
 const StatefulPanel = connect(mapStateToProps, mapDispatchToProps)(Panel)
