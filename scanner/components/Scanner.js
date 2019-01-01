@@ -7,7 +7,7 @@ import {
   Platform,
   TouchableOpacity,
 } from 'react-native'
-import { Icon, BarCodeScanner, Permissions } from 'expo'
+import { Icon, BarCodeScanner, Permissions, Audio } from 'expo'
 
 export default class Scanner extends React.Component {
   state = {
@@ -21,10 +21,15 @@ export default class Scanner extends React.Component {
     }
   }
 
-  handleClose = () => {
+  handleClose = async (success = false) => {
+    if (success) {
+      await Audio.Sound.createAsync(require('../assets/beep.mp3'), { shouldPlay: true })
+    }
+
     this.setState({ modalOpen: false })
   }
 
+  
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA)
     this.setState({ hasCameraPermission: status === 'granted' })
@@ -42,9 +47,19 @@ export default class Scanner extends React.Component {
             <BarCodeScanner
               style={{ flex: 1}}
               type={BarCodeScanner.Constants.Type.back}
+              barCodeTypes={[
+                BarCodeScanner.Constants.BarCodeType.code39,
+                BarCodeScanner.Constants.BarCodeType.code128,
+                BarCodeScanner.Constants.BarCodeType.code93,
+                BarCodeScanner.Constants.BarCodeType.codabar,
+                BarCodeScanner.Constants.BarCodeType.upc_a,
+                BarCodeScanner.Constants.BarCodeType.upc_e,
+                BarCodeScanner.Constants.BarCodeType.ean13,
+                BarCodeScanner.Constants.BarCodeType.ean8
+              ]}
               onBarCodeRead={({ data }) => {
                 if (onBarcodeRead) onBarcodeRead(data)
-                this.handleClose()
+                this.handleClose(true)
               }}
             />
 
