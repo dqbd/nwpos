@@ -4,10 +4,8 @@ import { Icon } from 'expo'
 import { withNavigation } from 'react-navigation'
 import Scanner from './Scanner'
 
-class Form extends React.Component {
-  getInitialValues = () => Object.assign({
-    retail_price: '0',
-  }, this.props.initialValues)
+class Form extends React.PureComponent {
+  getInitialValues = () => Object.assign({}, this.props.initialValues)
 
   state = {
     submitting: false,
@@ -27,7 +25,14 @@ class Form extends React.Component {
     if (!this.isSubmitValid()) return
     
     this.setState({ submitting: true }, async () => {
-      await this.props.onSubmit({ values: this.state.values })
+
+      const values = Object.assign({}, this.state.values, { 
+        qty: (this.state.values.qty && Number.parseFloat(this.state.values.qty, 10)) || 0,
+        price: (this.state.values.price && Number.parseFloat(this.state.values.price, 10)) || 0,
+        retail_price: (this.state.values.retail_price && Number.parseFloat(this.state.values.retail_price, 10)) || 0
+      })
+
+      await this.props.onSubmit({ values })
       this.setState({ submitting: false, values: this.getInitialValues() })
       if (this.props.onSubmitDone) {
         this.props.onSubmitDone()
@@ -44,7 +49,8 @@ class Form extends React.Component {
     const { values } = this.state
     return (
       !!values.ean && !!values.name &&
-      !isNaN(values.price) && !isNaN(values.qty) && !isNaN(values.retail_price)
+      !isNaN(values.price) && !isNaN(values.qty) &&
+      (!values.retail_price || !isNaN(values.retail_price))
     )
   }
 
@@ -69,13 +75,13 @@ class Form extends React.Component {
                 disabled={eanDisabled}
                 onBarcodeRead={(ean) => this.handleChange('ean', ean)}
               />
-              <TouchableOpacity style={styles.scan} disabled={eanDisabled} onPress={this.handleBarCodeRandom}>
+              {/* <TouchableOpacity style={styles.scan} disabled={eanDisabled} onPress={this.handleBarCodeRandom}>
                 <Icon.Ionicons
                   name={Platform.OS === 'ios' ? 'ios-refresh' : 'md-refresh'}
                   color="#000"
                   size={26}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View> }
           </View>
 

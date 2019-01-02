@@ -22,7 +22,7 @@ export default class Scanner extends React.Component {
   }
 
   handleClose = async (success = false) => {
-    if (success) {
+    if (success === true) {
       await Audio.Sound.createAsync(require('../assets/beep.mp3'), { shouldPlay: true })
     }
 

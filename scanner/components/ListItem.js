@@ -10,7 +10,12 @@ import {
 } from 'react-native'
 import { Icon } from 'expo'
 
-export default class ListItem extends React.Component {
+const capitalize = (input) => {
+	return input.charAt(0).toUpperCase() + input.slice(1)
+}
+
+
+export default class ListItem extends React.PureComponent {
   state = {
     expanded: false,
     deleting: false,
@@ -31,15 +36,15 @@ export default class ListItem extends React.Component {
   }
 
   render() {
-    const { item, onEdit } = this.props
+    const { item, onEdit, searching } = this.props
     const { expanded, deleting } = this.state
 
     const { ean, name, price, qty, retail_price, retail_qty } = item
 
     return (
-      <View style={styles.item}>
+      <View style={Object.assign({}, styles.item, (searching && styles.searching) || {})}>
         <TouchableOpacity style={styles.header} onPress={() => this.handleToggle(ean)}>
-          <Text style={styles.name}>{name}</Text>
+          <Text style={styles.name}>{capitalize(name)}</Text>
           <Text style={styles.price}>{`${price} Kč / ${qty} ks` }</Text>
           <Icon.Ionicons
             style={{ marginLeft: 10, transform: [{ rotate: expanded ? '180deg' : '0deg' }] }}
@@ -97,11 +102,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
   },
+  searching: {
+    borderColor: '#2196F3',
+    borderWidth: 2,
+  },
   header: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     padding: 10,
   },
   content: {
@@ -113,8 +122,9 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
   },
   name: {
+    flex: 1,
+    flexWrap: 'wrap',
     fontSize: 18,
-    flexGrow: 1,
   },
   price: {
     fontSize: 14,

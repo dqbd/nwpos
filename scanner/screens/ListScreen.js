@@ -109,9 +109,12 @@ class ListScreen extends React.Component {
   render() {
     const { items, refreshing, editing, adding, editingValues, searchValue } = this.state
 
-    const filteredItems = !searchValue ? items : items.filter(({ ean, name }) => {
-      return `${ean}`.toLowerCase().includes(searchValue.toLowerCase()) || `${name}`.toLowerCase().includes(searchValue.toLowerCase())
+    let filteredItems = !searchValue ? items : items.filter(({ ean, name }) => {
+
+      return `${ean}`.toLowerCase().includes(searchValue.toLowerCase()) || `${name}`.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(searchValue.toLowerCase())
     })
+
+    filteredItems = filteredItems.sort(({ name: aName }, { name: bName }) => aName.localeCompare(bName))
 
     return (
       <View style={styles.container}>
@@ -137,6 +140,14 @@ class ListScreen extends React.Component {
                     onChangeText={searchValue => this.setState({ searchValue })}
                   />
 
+                  { (searchValue && <TouchableOpacity style={styles.close} onPress={() => this.setState({ searchValue: '' })}>
+                    <Icon.Ionicons
+                      name={Platform.OS === 'ios' ? 'ios-close' : 'md-close'}
+                      color="#000"
+                      size={26}
+                    />
+                  </TouchableOpacity>) || null }
+
                   <Scanner
                     style={styles.scanbtn}
                     onBarcodeRead={this.handleBarCodeScanned}
@@ -153,7 +164,7 @@ class ListScreen extends React.Component {
               )
             }
             
-            return <ListItem item={item} onRemove={this.handleItemRemove} onEdit={this.handleItemEdit} />
+            return <ListItem item={item} onRemove={this.handleItemRemove} searching={!!searchValue} onEdit={this.handleItemEdit} />
           }}
         />
         <NativeModal
@@ -204,8 +215,19 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 100,
     borderBottomLeftRadius: 100,
     borderWidth: 1,
+    borderRightWidth: 0,
     borderColor: '#ccc',
     flexGrow: 1,
+  },
+  close: {
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: 20,
+    paddingRight: 20,
+    borderWidth: 1,
+    borderRightWidth: 0,
+    borderColor: '#ccc',
   },
   scanbtn: {
     backgroundColor: '#fff',
@@ -217,7 +239,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderTopRightRadius: 100,
     borderBottomRightRadius: 100,
-    borderLeftWidth: 0
   },
   addbtn: {
     backgroundColor: '#fff',
