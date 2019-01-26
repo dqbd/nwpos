@@ -1,0 +1,53 @@
+.toasts
+  position: fixed
+  top: 1em
+  right: 1em
+  z-index: 9999
+
+  .toast
+    padding: .8em .8em .8em 1.2em
+    display: flex
+    border-radius: 5px
+
+    margin-bottom: .5em
+    align-items: center
+    
+    color: white
+    noselect()
+
+    & > *
+      pointer-events: none
+
+    box-shadow: 
+      inset -1px 0px 0px rgba(0,0,0,0.1),
+      inset 1px 0px 0px rgba(0,0,0,0.1),
+      inset 0px 1px 0px rgba(0,0,0,0.1),
+      inset 0px -1px 0px rgba(0,0,0,0.1),
+      0px 1px 5px rgba(0,0,0,0.1)
+  
+    .message
+      flex-grow: 1
+
+    .close
+      flex-shrink: 0
+      width: 1.5em
+      display: flex
+      align-items: center
+      justify-content: center
+
+      margin-left: 1em
+
+      svg
+        width: 100%
+      
+      svg *
+        fill: currentColor
+
+    &.success
+      background: color-green
+
+    &.error
+      background: color-red
+
+    &.info
+      background: color-blue

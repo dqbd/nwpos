@@ -14,6 +14,7 @@ const initialState = {
 	nativePrinter: null,
 	listenToScanner: false,
 	suggestions: undefined,
+	toasts: [],
 	stats: undefined
 }
 
@@ -97,6 +98,25 @@ const listenToScanner = (state = false, action) => {
 	return state
 }
 
+
+const toasts = (state = [], action) => {
+	switch(action.type) {
+		case seller.ADD_TOAST: {
+			return [...state, action.toast]
+		}
+		case seller.REMOVE_TOAST: {
+			return [
+				...state.slice(0, action.index),
+				...state.slice(action.index + 1),
+			]
+		}
+		case seller.CLEAR_TOASTS: {
+			return []
+		}
+	}
+	return state
+}
+
 module.exports = (state = initialState, action) => {
 	return Object.assign({
 		sellers: sellers(state.sellers, action),
@@ -105,5 +125,6 @@ module.exports = (state = initialState, action) => {
 		stats: stats.reducer(state.stats, action),
 		nativePrinter: nativePrinter(state.nativePrinter, action),
 		listenToScanner: listenToScanner(state.listenToScanner, action),
+		toasts: toasts(state.toasts, action),
 	}, switcher(state, action))
 }

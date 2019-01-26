@@ -31,6 +31,20 @@ module.exports.retrieveDebug = () => (dispatch) => {
 		})
 }
 
+module.exports.addToast = (toast) => ({
+	type: actionTypes.ADD_TOAST,
+	toast,
+})
+
+module.exports.removeToast = (index) => ({
+	type: actionTypes.REMOVE_TOAST,
+	index,
+})
+
+module.exports.clearToasts = () => ({
+	type: actionTypes.CLEAR_TOASTS,
+})
+
 module.exports.setNativePrinter = (status) => ({
 	type: actionTypes.NATIVE_PRINTER,
 	status,
