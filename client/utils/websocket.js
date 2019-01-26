@@ -20,6 +20,7 @@ module.exports.bindWebsocket = (store) => {
   }))
 
   conn.onmessage = ({ data }) => {
+    store.dispatch(seller.socketConnected(true))
     try {
       const { type, payload } = JSON.parse(data)
       console.log(type, payload)
@@ -28,6 +29,8 @@ module.exports.bindWebsocket = (store) => {
         if (!global || store.getState().listenToScanner) {
           store.dispatch(customer.addEan({ price, name, ean }))
         }
+      } else if (type === 'scanError') {
+        store.dispatch(seller.addToast({ type: 'error', message: 'Čárový kód nenalezen' }))
       }
     } catch (err) {
       console.error(err)
@@ -36,6 +39,7 @@ module.exports.bindWebsocket = (store) => {
 
   conn.onclose = () => {
     console.log('conn closed, reconnecting')
+    store.dispatch(seller.socketConnected(false))
     clearInterval(pinger)
     setTimeout(() => module.exports.bindWebsocket(store), 1000)
   }

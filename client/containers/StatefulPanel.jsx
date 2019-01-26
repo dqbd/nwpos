@@ -20,7 +20,6 @@ const mapDispatchToProps = (dispatch) => hapticFeedback({
 	onQtySet: () => dispatch(customer.qty()),
 	onClear: () => dispatch(customer.clear()),
 	onDrawer: () => dispatch(services.drawer()),
-	onScan: (ean) => dispatch(services.scanEan(ean)),
 	onDiscount: () => dispatch(customer.discount())
 })
 

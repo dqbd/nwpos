@@ -10,6 +10,7 @@ const mapStateToProps = (state) => {
 		current: state.current,
 		nativePrinter: state.nativePrinter,
 		listenToScanner: state.listenToScanner,
+		socketConnected: state.socketConnected,
 	}
 }
 

@@ -44,6 +44,7 @@ const interface = require("./interface")(config, args, {
 })
 
 wss.on('connection', (ws) => {
+	ws.send(JSON.stringify({ type: 'pong', payload: null }))
 	ws.on('message', (message) => {
 		try {
 			const { type, payload } = JSON.parse(message)

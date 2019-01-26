@@ -38,6 +38,10 @@ class Interface {
 			})
 			.catch((err) => {
 				console.log(err)
+				this.clients.broadcast({
+					type: 'scanError',
+					payload: err,
+				})
 			})
 	}
 
@@ -51,7 +55,12 @@ class Interface {
 					name: item.name,
 					ean: item.ean,
 				},
-			})).catch(err => console.log(err))
+			})).catch(err => {
+				return Promise.resolve({
+					type: 'scanError',
+					payload: err,
+				})
+			})
 		}
 
 		return Promise.reject('Invalid type')
@@ -179,6 +188,10 @@ class Interface {
 
 	POST_QTYITEMS({eans}) {
 		return database.storage().qtyItem(eans)
+	}
+
+	POST_FINDITEMS({ query }) {
+		return database.storage().findItems(query)
 	}
 
 	POST_ADDITEM({ean, name, price, qty, retail_price}) {

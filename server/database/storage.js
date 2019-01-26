@@ -120,6 +120,28 @@ class Storage extends Database {
             })
         }))
     }
+
+    findItems(query) {
+        const searchValues = (query || '').trim().toLowerCase().split(" ")
+        if (!query || searchValues.length === 0) return Promise.resolve({ items: [] })
+        
+        return this.getDb().then(db => new Promise((resolve, reject) => {
+            db.find({}, (err, items) => {
+                if (err) return reject(err)
+                resolve({
+                    items: items.filter(({ name, ean }) =>
+                        searchValues.every((searchValue) => {
+                            return `${ean}`.toLowerCase().includes(searchValue) ||
+                                `${name}`.normalize('NFD')
+                                    .replace(/[\u0300-\u036f]/g, "")
+                                    .toLowerCase()
+                                    .includes(searchValue)
+                        })
+                    ),
+                })
+            })
+        }))
+    }
 }
 
 module.exports = Storage

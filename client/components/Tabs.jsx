@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import { findDOMNode } from "react-dom"
 import SellerColor from "./SellerColor.jsx"
+import StatefulToasts from "../containers/StatefulToasts.jsx"
 
 class Tab extends Component {
     render() {
@@ -33,7 +34,7 @@ export default class Tabs extends Component {
 	}
 
     render() {
-        let {tabs, current, onTabSwitch, onTabClose, onTabAdd, nativePrinter, listenToScanner, onScannerSet} = this.props
+        let {tabs, current, onTabSwitch, onTabClose, onTabAdd, nativePrinter, listenToScanner, socketConnected, onScannerSet} = this.props
         if (!tabs || tabs.length <= 0) return null
 
         return <div className="tabs">
@@ -63,6 +64,12 @@ export default class Tabs extends Component {
                     <path d='M2,6H4V18H2V6M5,6H6V18H5V6M7,6H10V18H7V6M11,6H12V18H11V6M14,6H16V18H14V6M17,6H20V18H17V6M21,6H22V18H21V6Z' />
                 </svg>
             </a> }
+            { !socketConnected && <a className="scanner inactive">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3.27,1.44L2,2.72L4.05,4.77C2.75,5.37 1.5,6.11 0.38,7C4.2,11.8 8.14,16.67 12,21.5L15.91,16.63L19.23,19.95L20.5,18.68C14.87,13.04 3.27,1.44 3.27,1.44M12,3C10.6,3 9.21,3.17 7.86,3.5L9.56,5.19C10.37,5.07 11.18,5 12,5C15.07,5 18.09,5.86 20.71,7.45L16.76,12.38L18.18,13.8C20.08,11.43 22,9 23.65,7C20.32,4.41 16.22,3 12,3M5.57,6.29L14.5,15.21L12,18.3L3.27,7.44C4,7 4.78,6.61 5.57,6.29Z" />
+                </svg>
+            </a> }
+            <StatefulToasts />
         </div>
     }
 }

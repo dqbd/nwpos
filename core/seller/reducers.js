@@ -14,6 +14,8 @@ const initialState = {
 	nativePrinter: null,
 	listenToScanner: false,
 	suggestions: undefined,
+	socketConnected: false,
+	eanSearches: [],
 	toasts: [],
 	stats: undefined
 }
@@ -98,6 +100,15 @@ const listenToScanner = (state = false, action) => {
 	return state
 }
 
+const eanSearches = (state = [], action) => {
+	if (action.type === seller.SET_EAN_SEARCHES) {
+		return action.items
+	} else if (action.type === seller.CLEAR_EAN_SEARCHES) {
+		return []
+	}
+
+	return state
+}
 
 const toasts = (state = [], action) => {
 	switch(action.type) {
@@ -117,6 +128,13 @@ const toasts = (state = [], action) => {
 	return state
 }
 
+const socketConnected = (state = false, action) => {
+	if (action.type === seller.SOCKET_CONNECTED) {
+		return action.socketConnected
+	}
+	return state
+}
+
 module.exports = (state = initialState, action) => {
 	return Object.assign({
 		sellers: sellers(state.sellers, action),
@@ -125,6 +143,8 @@ module.exports = (state = initialState, action) => {
 		stats: stats.reducer(state.stats, action),
 		nativePrinter: nativePrinter(state.nativePrinter, action),
 		listenToScanner: listenToScanner(state.listenToScanner, action),
+		eanSearches: eanSearches(state.eanSearches, action),
 		toasts: toasts(state.toasts, action),
+		socketConnected: socketConnected(state.socketConnected, action),
 	}, switcher(state, action))
 }

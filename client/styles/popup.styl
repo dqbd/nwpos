@@ -174,14 +174,27 @@
 
 			height: (button-size * 0.5) - 5px 
 
+			.detail
+				opacity: 0.8
+				font-size: 0.5em
+
 			&.tapped
 				background: rgba(0,0,0,0.05)
 
-			
-
 			@media (max-width: query--small)
 				height: (button-size--small * 0.6) - 5px 
+
+		.selected a
+			border: 1px solid color-blue
 		
+		.item.vertical a
+			padding: .3em .5em
+			height: auto
+
+			flex-direction: column
+			justify-content: center
+			align-items: flex-start
+	
 		.groupname
 			noselect()
 			margin-right: .5em

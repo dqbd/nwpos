@@ -78,12 +78,3 @@ module.exports.log = (customer) => (dispatch) => {
 		dispatch({ type: types.LOG, log: false })
 	})
 }
-
-module.exports.scanEan = (ean) => (_, __, ws) => {
-	console.log(ws)
-	if (ws.send) ws.send('scanEan', ean)
-	return ({
-		type: types.SCAN,
-		status: true,
-	})
-}

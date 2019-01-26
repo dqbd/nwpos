@@ -35,6 +35,7 @@ test("shop still working", () => {
 		},
 		debug: false,
 		inactive: [],
+		eanSearches: [],
 		current: 0,
 		sellers: [],
 		suggestions: {
@@ -91,6 +92,7 @@ test("get sellers", () => {
 			],
 			debug: false,
 			inactive: [],
+			eanSearches: [],
 			current: 0,
 			suggestions: {
 				all: {},
@@ -194,6 +196,7 @@ test("add tab", () => {
 		}],
 		current: 2,
 		sellers: [],
+		eanSearches: [],
 		suggestions: {
 			all: {},
 			contextual: ["vejce", "moje matka"]
@@ -271,6 +274,7 @@ test("switch tab", () => {
 		}],
 		current: 1,
 		sellers: [],
+		eanSearches: [],
 		suggestions: {
 			all: {},
 			contextual: ["vejce", "moje matka"]
@@ -353,6 +357,7 @@ test("switch tabs greater than current", () => {
 		}],
 		current: 2,
 		sellers: [],
+		eanSearches: [],
 		suggestions: {
 			all: {},
 			contextual: ["vejce", "moje matka"]
@@ -412,6 +417,7 @@ test("delete tab", () => {
 		}],
 		current: 1,
 		sellers: [],
+		eanSearches: [],
 		suggestions: {
 			all: {},
 			contextual: ["vejce", "moje matka"]
@@ -453,6 +459,7 @@ test("delete active tab", () => {
 		},
 		debug: false,
 		inactive: [],
+		eanSearches: [],
 		current: 0,
 		sellers: [],
 		suggestions: {
@@ -551,6 +558,7 @@ test("add tab append style", () => {
 		}],
 		current: 2,
 		sellers: [],
+		eanSearches: [],
 		suggestions: {
 			all: {},
 			contextual: ["vejce", "moje matka"]
@@ -611,6 +619,7 @@ test("close tabs", () => {
 		},
 		debug: false,
 		inactive: [],
+		eanSearches: [],
 		current: 0,
 		sellers: [],
 		suggestions: {

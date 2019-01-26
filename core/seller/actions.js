@@ -31,6 +31,22 @@ module.exports.retrieveDebug = () => (dispatch) => {
 		})
 }
 
+module.exports.socketConnected = (socketConnected) => ({
+	type: actionTypes.SOCKET_CONNECTED,
+	socketConnected
+})
+
+module.exports.retrieveEanSearches = (query) => (dispatch) => {
+	return get('/finditems', { query })
+		.then((res) => {
+			dispatch({ type: actionTypes.SET_EAN_SEARCHES, items: res.data.items })
+		})
+}
+
+module.exports.clearEanSearches = () => ({
+	type: actionTypes.CLEAR_EAN_SEARCHES,
+})
+
 module.exports.addToast = (toast) => ({
 	type: actionTypes.ADD_TOAST,
 	toast,
