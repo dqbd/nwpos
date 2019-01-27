@@ -27,8 +27,10 @@ class CartItem extends Component {
 		return (<li onTouchTap={() => onSelect(index)} className={selected ? "item selected" : "item"}>
 				{this.state.showEditName ? <RenamePopup price={price} current={name} onEdit={(e) => this.onFormRename(e)} onClose={() => this.onFormClose()} /> : null}
 				<span className="digit inline-btn" onTouchTap={() => onDelete(index)}></span>
-				<span className="name" onTouchTap={() => this.onFormOpen()}>
-					{name}
+				<span className="item-detail">
+					<span className="name" onTouchTap={() => this.onFormOpen()}>
+						{name}
+					</span>
 					{ean && (
 						<span className="ean">
 							<svg viewBox='0 0 24 24'>
@@ -36,13 +38,11 @@ class CartItem extends Component {
 							</svg>
 						</span>
 					)}
+					<span className="price">{price}</span>
 				</span>
-				<span className="price">{price}</span>
-				<span className="qty">
-					<span className="inline-btn" onTouchTap={() => onAddQty(-1, index)}>&#8722;</span>
-					<span className="value">{qty}</span>
-					<span className="inline-btn" onTouchTap={() => onAddQty(1, index)}>&#43;</span>
-				</span>
+				<span className="inline-btn" onTouchTap={() => onAddQty(-1, index)}>&#8722;</span>
+				<span className="qty">{qty}</span>
+				<span className="inline-btn" onTouchTap={() => onAddQty(1, index)}>&#43;</span>
 				<span className="total">{price * qty}</span>
 			</li>
 		)

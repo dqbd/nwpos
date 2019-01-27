@@ -179,12 +179,14 @@ module.exports.addEan = ({ ean, name, price }) => (dispatch, getState) => {
 
 	// TODO: consider, whether we should search the entire cart for ean (might be confusing with basic adding)
 	let lastItem = newCart.items.slice(-1)[0]
-	const isLastItemSame = !!lastItem && lastItem.price === price && lastItem.name === name && lastItem.ean === ean
+	const newName = `${capitalize(name)} ${ean}`
+
+	const isLastItemSame = !!lastItem && lastItem.price === price && lastItem.name === newName && lastItem.ean === ean
 	
 	if (isLastItemSame) {
 		dispatch(cart.addQty(1, newCart.items.length - 1))
 	} else {
-		dispatch(cart.addItem(price, name, 1, ean))
+		dispatch(cart.addItem(price, newName, 1, ean))
 	}
 	
 	const isInEditing = [statusTypes.STAGE_TYPING, statusTypes.STAGE_ADDED].indexOf(newStatus) >= 0

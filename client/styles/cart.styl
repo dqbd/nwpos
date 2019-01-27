@@ -2,13 +2,14 @@
 	counter-reset: cart
 	overflow-y: auto
 	flex-grow: 1
-		
-.cart .item
+
+.cart > .item
 	counter-increment: cart
-	display: flex
 	
-	padding: 0px 15px 0 0
-	height: 80px
+	display: grid
+	grid-template-columns: 80px 3fr 80px 80px 80px 1fr
+
+	min-height: 80px
 	align-items: center
 	
 	border-bottom: 1px solid rgba(0,0,0,0.1)
@@ -19,14 +20,18 @@
 	> *
 		flex-grow: 1
 		
-	.name
-		noselect()
-		flex-basis: 35%
-		height: 100%
-		padding-left: 3%
+	.item-detail
 		display: flex
 		align-items: center
+		padding: .8em
+
+	.name
+		noselect()
+		display: flex
 		cursor: pointer
+		flex-grow: 1
+		flex-wrap: wrap
+		word-break: break-all
 		
 		&:empty:before
 			content: "Název"
@@ -38,12 +43,12 @@
 		noselect()
 		cursor: pointer
 		
-		flex-basis: 60px
-		height: 80px
 		display: flex
 		justify-content: center
 		align-items: center
 		font-size: 1.3em
+
+		padding-left: .4em
 	
 		svg
 			width: 1.2em
@@ -54,15 +59,13 @@
 
 	.price
 		text-align: right
-		flex-basis: 10%
-		padding-right: 3%
+
+		padding-left: .8em
 		
 	.qty
-		flex-basis: 15%
 		text-align: right
-		display: flex
-		
-		align-items: center
+		align-self: center
+		justify-self: center
 		
 		.inline-btn
 			&:active, &.tapped
@@ -82,10 +85,9 @@
 	.inline-btn
 		noselect()
 		cursor: pointer
+		justify-self: stretch
+		align-self: stretch
 		
-		min-width: 80px
-		flex-basis: 80px
-		height: 80px
 		display: flex
 		justify-content: center
 		align-items: center
@@ -96,19 +98,12 @@
 		
 		
 	.total
-		flex-basis: 20%
-		padding-right: 2%
+		padding-right: 1em
 		text-align: right
 		font-weight: 500
 	
-	
 	.digit
-		flex-basis: 80px
-		max-width: 80px
-		height: 80px
-		
 		text-align: center
-		
 		font-size: 0.8em
 		
 		&:before
