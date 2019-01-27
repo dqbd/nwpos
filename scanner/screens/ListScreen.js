@@ -175,18 +175,28 @@ class ListScreen extends React.Component {
   render() {
     const { items, refreshing, editing, adding, editingValues, searchValue } = this.state
 
-    const searchValues = (searchValue || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(" ")
+    const trimmedSearch = (searchValue || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    const searchValues = trimmedSearch.split(" ")
+    let filteredItems = !trimmedSearch ?
+      items.sort(({ name: aName }, { name: bName }) => aName.localeCompare(bName)) :
+      items
+        .reduce((acc, item) => {
+            const ean = `${item.ean}`.toLowerCase()
+            const name = `${item.name}`.normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
 
-    let filteredItems = (!searchValues || searchValues.length <= 0) ?
-      items :
-      items.filter(({ ean, name }) =>
-        searchValues.every((searchValue) =>
-          `${ean}`.includes(searchValue) ||
-          `${name}`.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(searchValue)
-        )
-      )
+            const [eanRank, hasName] = searchValues.reduce(([x, has], searchValue) => {
+                const eanRank = Math.max(x, ean.includes(searchValue) ? searchValue.length / (ean.length || 1) : 0)
+                const hasName = has || name.includes(searchValue)
+                return [eanRank, hasName]
+            }, [0, false])
 
-    filteredItems = filteredItems.sort(({ name: aName }, { name: bName }) => aName.localeCompare(bName))
+            if (hasName || eanRank > 0) acc.push([eanRank, item])
+            return acc
+        }, [])
+        .sort(([aVal], [bVal]) => bVal - aVal)
+        .map(([_, item]) => item)
 
     return (
       <View style={styles.container}>

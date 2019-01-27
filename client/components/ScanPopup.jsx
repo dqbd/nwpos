@@ -27,7 +27,7 @@ class ScanPopup extends React.Component {
 		this.setState({ input: event.target.value }, () => {
 			this.throttle = setTimeout(() => {
 				this.props.getSearches(this.state.input.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))
-			}, 500)
+			}, 300)
 		})
 	}
 	
