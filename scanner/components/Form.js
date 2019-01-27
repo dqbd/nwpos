@@ -27,9 +27,10 @@ class Form extends React.PureComponent {
     this.setState({ submitting: true }, async () => {
 
       const values = Object.assign({}, this.state.values, { 
-        qty: (this.state.values.qty && Number.parseFloat(this.state.values.qty, 10)) || 0,
+        qty: (this.state.values.qty && Number.parseInt(this.state.values.qty, 10)) || 0,
         price: (this.state.values.price && Number.parseFloat(this.state.values.price, 10)) || 0,
-        retail_price: (this.state.values.retail_price && Number.parseFloat(this.state.values.retail_price, 10)) || 0
+        retail_price: (this.state.values.retail_price && Number.parseFloat(this.state.values.retail_price, 10)) || 0,
+        retail_qty: (this.state.values.retail_qty && Number.parseInt(this.state.values.retail_qty, 10)) || 0
       })
 
       await this.props.onSubmit({ values })
@@ -50,7 +51,8 @@ class Form extends React.PureComponent {
     return (
       !!values.ean && !!values.name &&
       !isNaN(values.price) && !isNaN(values.qty) &&
-      (!values.retail_price || !isNaN(values.retail_price))
+      (!values.retail_price || !isNaN(values.retail_price)) &&
+      (!values.retail_qty || !isNaN(values.retail_qty))
     )
   }
 
@@ -99,9 +101,15 @@ class Form extends React.PureComponent {
               <TextInput style={styles.input} onChangeText={(val) => this.handleChange('qty', val)} value={values.qty} name="qty" keyboardType="numeric" />
             </View>
           </View>
-          <View style={styles.formContainer}>
-            <Text style={styles.label}>Cena zakoupení</Text>
-            <TextInput style={styles.input} onChangeText={(val) => this.handleChange('retail_price', val)} value={values.retail_price} name="retail_price" keyboardType="numeric" />
+          <View style={styles.horizontal}>
+            <View style={Object.assign({}, styles.formContainer, styles.price)}>
+              <Text style={styles.label}>Původní cena</Text>
+              <TextInput style={styles.input} onChangeText={(val) => this.handleChange('retail_price', val)} value={values.retail_price} name="retail_price" keyboardType="numeric" />
+            </View>
+            <View style={Object.assign({}, styles.formContainer, styles.qty)}>
+              <Text style={styles.label}>Původ. Ks</Text>
+              <TextInput style={styles.input} onChangeText={(val) => this.handleChange('retail_qty', val)} value={values.retail_qty} name="retail_qty" keyboardType="numeric" />
+            </View>
           </View>
           <View style={styles.submit}>
             <Button
@@ -156,15 +164,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: '#fff',
     top: -9,
-    left: 5,
+    left: 3,
     paddingLeft: 5,
     paddingRight: 5,
     color: '#888',
   },
   formContainer: {
     marginBottom: 15,
-    padding: 10,
-    paddingTop: 8,
+    padding: 8,
+    paddingTop: 6,
     borderWidth: 1,
     borderColor: '#ccc',
     backgroundColor: '#fff',

@@ -44,7 +44,10 @@ export default class ListItem extends React.PureComponent {
     return (
       <View style={Object.assign({}, styles.item, (searching && styles.searching) || {})}>
         <TouchableOpacity style={styles.header} onPress={() => this.handleToggle(ean)}>
-          <Text style={styles.name}>{capitalize(name)}</Text>
+          <View style={styles.name}>
+            <Text style={styles.namePart}>{capitalize(name)}</Text>
+            <Text style={styles.eanPart}>{ean}</Text>
+          </View>
           <Text style={styles.price}>{`${price} Kč / ${qty} ks` }</Text>
           <Icon.Ionicons
             style={{ marginLeft: 10, transform: [{ rotate: expanded ? '180deg' : '0deg' }] }}
@@ -56,6 +59,7 @@ export default class ListItem extends React.PureComponent {
         { expanded && <View style={styles.content}>
           
           <Text>{`Kód: ${ean}`}</Text>
+          <Text>{`Jméno: ${name}`}</Text>
           <Text>{`Aktuální cena: ${price} Kč`}</Text>
           <Text>{`Počet kusů ve skladu: ${qty} ks`}</Text>
           <Text />
@@ -75,13 +79,14 @@ export default class ListItem extends React.PureComponent {
             </View>
             <View style={{ marginLeft: 10 }}>
               <Button
+                title="Upravit"
                 onPress={() => onEdit({
                   ean, name,
                   price: `${price}`,
                   qty: `${qty}`,
                   retail_price: `${retail_price}`,
+                  retail_qty: `${retail_qty}`,
                 })}
-                title="Upravit"
               />
             </View>
           </View>
@@ -123,8 +128,16 @@ const styles = StyleSheet.create({
   },
   name: {
     flex: 1,
+    fontSize: 18,
+    flexWrap: 'wrap',
+  },
+  namePart: {
     flexWrap: 'wrap',
     fontSize: 18,
+  },
+  eanPart: {
+    flexWrap: 'wrap',
+    fontSize: 12,
   },
   price: {
     fontSize: 14,

@@ -67,9 +67,10 @@ class ListScreen extends React.Component {
       body: JSON.stringify({
         ean: values.ean,
         name: values.name,
-        price: Number(values.price),
-        qty: Number(values.qty),
-        retail_price: Number(values.retail_price),
+        price: values.price && Number(values.price),
+        qty: values.qty && Number(values.qty),
+        retail_price: values.retail_price && Number(values.retail_price),
+        retail_qty: values.retail_qty && Number(values.retail_qty),
       })
     })
 
@@ -109,10 +110,16 @@ class ListScreen extends React.Component {
   render() {
     const { items, refreshing, editing, adding, editingValues, searchValue } = this.state
 
-    let filteredItems = !searchValue ? items : items.filter(({ ean, name }) => {
+    const searchValues = (searchValue || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(" ")
 
-      return `${ean}`.toLowerCase().includes(searchValue.toLowerCase()) || `${name}`.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(searchValue.toLowerCase())
-    })
+    let filteredItems = (!searchValues || searchValues.length <= 0) ?
+      items :
+      items.filter(({ ean, name }) =>
+        searchValues.every((searchValue) =>
+          `${ean}`.includes(searchValue) ||
+          `${name}`.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(searchValue)
+        )
+      )
 
     filteredItems = filteredItems.sort(({ name: aName }, { name: bName }) => aName.localeCompare(bName))
 
@@ -122,10 +129,12 @@ class ListScreen extends React.Component {
           onDidFocus={this.fetchData}
         />
         <FlatList
+          keyboardShouldPersistTaps="always"
           data={[false, ...filteredItems]}
           onRefresh={this.fetchData}
           refreshing={refreshing}
           style={{ flexGrow: 1 }}
+          stickyHeaderIndices={[0]}
           keyExtractor={({ ean }) => `${ean}`}
           renderItem={({ item }) => {
 
@@ -204,6 +213,11 @@ const styles = StyleSheet.create({
   horizontal: {
     flexDirection: 'row',
     margin: 10,
+    marginTop: 0,
+    marginBottom: 0,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: 'rgb(234, 233, 239)'
   },
   cameraView: {
     flex: 1,
