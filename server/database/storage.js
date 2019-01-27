@@ -122,22 +122,32 @@ class Storage extends Database {
     }
 
     findItems(query) {
-        const searchValues = (query || '').trim().toLowerCase().split(" ")
-        if (!query || searchValues.length === 0) return Promise.resolve({ items: [] })
+        const trimmedSearch = (query || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+        const searchValues = trimmedSearch.split(" ")
+        if (!trimmedSearch) return Promise.resolve({ items: [] })
         
         return this.getDb().then(db => new Promise((resolve, reject) => {
             db.find({}, (err, items) => {
                 if (err) return reject(err)
                 resolve({
-                    items: items.filter(({ name, ean }) =>
-                        searchValues.every((searchValue) => {
-                            return `${ean}`.toLowerCase().includes(searchValue) ||
-                                `${name}`.normalize('NFD')
-                                    .replace(/[\u0300-\u036f]/g, "")
-                                    .toLowerCase()
-                                    .includes(searchValue)
-                        })
-                    ),
+                    items: items
+                        .reduce((acc, item) => {
+                            const ean = `${item.ean}`.toLowerCase()
+                            const name = `${item.name}`.normalize('NFD')
+                                .replace(/[\u0300-\u036f]/g, "")
+                                .toLowerCase()
+
+                            const [eanRank, hasName] = searchValues.reduce(([x, has], searchValue) => {
+                                const eanRank = Math.max(x, ean.includes(searchValue) ? searchValue.length / (ean.length || 1) : 0)
+                                const hasName = has || name.includes(searchValue)
+                                return [eanRank, hasName]
+                            }, [0, false])
+
+                            if (hasName || eanRank > 0) acc.push([eanRank, item])
+                            return acc
+                        }, [])
+                        .sort(([aVal], [bVal]) => bVal - aVal)
+                        .map(([_, item]) => item),
                 })
             })
         }))
