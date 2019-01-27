@@ -187,7 +187,11 @@ class customer:
 		if selected:
 			pygame.draw.rect(self.screen, self.selectedColor, (0, self.itemHeight * relative, self.width, self.itemHeight))
 
-		self.drawText(u"Zboží" if len(item["name"].strip()) == 0 else item["name"], self.width * 120 / 1280, center, "left")
+		trimmedName = item["name"].strip()
+		trimmedName = u"Zboží" if len(trimmedName) == 0 else trimmedName
+		trimmedName = trimmedName if len(trimmedName) < 27 else trimmedName[:27] + u"..."
+
+		self.drawText(trimmedName, self.width * 120 / 1280, center, "left")
 		self.drawText(str(item["index"]), self.padding * 5 / 4, center, "center")
 		self.drawText(str(item["price"]) + u" Kč", self.width * 800 / 1280, center, "right")
 		self.drawText(str(item["qty"]) + u" ks", self.width * 1000 / 1280, center, "right")
