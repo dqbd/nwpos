@@ -36,5 +36,9 @@
       "./customer/app.py",
       "./dist/**"
     ]
+  },
+  "nodemonConfig": {
+    "ignore": ["server/data/"],
+    "watch": ["server/"]
   }
 }

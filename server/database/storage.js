@@ -10,16 +10,16 @@ class Storage extends Database {
         }))
     }
 
-    addItem(ean, name, price, qty, retail_price) {
+    addItem(ean, name, price, qty, retail_price, retail_qty) {
         return this.getDb().then(db => new Promise((resolve, reject) => {
-            let doc = { ean, name, price, qty, retail_price }
+            let doc = { ean, name, price, qty, retail_price, retail_qty }
             Object.keys(doc).forEach((key) => doc[key] == null && delete doc[key])
 
             doc = Object.assign({ ean: 0, name: "", price: 0, qty: 1, retail_price: 0, retail_qty: 0 }, doc)
             
             doc.name = doc.name.trim().toLowerCase()
-            doc.retail_price = doc.price
-            doc.retail_qty = doc.qty
+            doc.retail_price = doc.retail_price || doc.price
+            doc.retail_qty = doc.retail_qty || doc.qty
 
             db.insert(doc, (err, data) => {
                 if (err) return reject(err)
@@ -28,9 +28,9 @@ class Storage extends Database {
         }))
     }
 
-    updateItem(ean, name, price, qty, retail_price) {
+    updateItem(ean, name, price, qty, retail_price, retail_qty) {
         return this.getDb().then(db => new Promise((resolve, reject) => {
-            let doc = { name, price, qty, retail_price }
+            let doc = { name, price, qty, retail_price, retail_qty }
             Object.keys(doc).forEach((key) => doc[key] == null && delete doc[key])
 
             if (doc.name) {
@@ -45,12 +45,12 @@ class Storage extends Database {
     }
 
     // TODO: we're better off passing non-existent items through
-    qtyItem(eans, onlyAvailable = false) {
+    qtyItem(eans) {
         if (!eans || Object.keys(eans).length <= 0) return Promise.reject("No eans")
         return this.getDb().then(db => Promise.all(Object.entries(eans).map(([ean, qty]) => {
             console.log('Decrementing', ean, 'with qty of', qty)
             return new Promise((resolve, reject) => {
-                db.update(Object.assign({ ean }, onlyAvailable && { qty: {$gt: 1} }), { $inc: { qty: -1 * qty } }, (err, res) => {
+                db.update(Object.assign({ ean }), { $inc: { qty: -1 * qty } }, (err, res) => {
                     if (err) return reject(err)
                     resolve(res)
                 })

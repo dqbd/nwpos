@@ -194,12 +194,12 @@ class Interface {
 		return database.storage().findItems(query)
 	}
 
-	POST_ADDITEM({ean, name, price, qty, retail_price}) {
-		return database.storage().addItem(ean, name, price, qty, retail_price)
+	POST_ADDITEM({ean, name, price, qty, retail_price, retail_qty}) {
+		return database.storage().addItem(ean, name, price, qty, retail_price, retail_qty)
 	}
 
-	POST_SETITEM({ean, name, price, qty, retail_price}) {
-		return database.storage().updateItem(ean, name, price, qty, retail_price)
+	POST_SETITEM({ean, name, price, qty, retail_price, retail_qty}) {
+		return database.storage().updateItem(ean, name, price, qty, retail_price, retail_qty)
 	}
 
 	POST_DELETEITEM({ ean }) {
