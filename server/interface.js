@@ -13,8 +13,10 @@ class Interface {
 		this.clients = clients
 		console.log(args)
 		display.init(args.display, this.handleQtyLine.bind(this))
-
+ 
 		this.timer.enqueue()
+		this.lastUpdated = Date.now()
+
 		printer.init(config, args)
 	}
 
@@ -22,10 +24,18 @@ class Interface {
 		display.clear()
 	}
 
+	handleUpdateStorage() {
+		this.lastUpdated = Date.now()
+		this.clients.broadcast({
+			type: 'lastUpdated',
+			payload: this.lastUpdated
+		})
+	}
+
 	handleQtyLine(ean) {
 		this.POST_GETITEM({ ean })
 			.then((item) => {
-				console.log('ean found', item)
+				console.log(`[EAN] ${Date.now()}:`, `Found EAN for ${ean}`, item)
 				this.clients.broadcast({
 					type: 'addItem',
 					payload: {
@@ -38,6 +48,7 @@ class Interface {
 			})
 			.catch((err) => {
 				console.log(err)
+				console.log(`[EAN] ${Date.now()}: ${ean} not found`)
 				this.clients.broadcast({
 					type: 'scanError',
 					payload: err,
@@ -61,6 +72,8 @@ class Interface {
 					payload: err,
 				})
 			})
+		} else if (type === 'lastUpdated') {
+			return Promise.resolve({ type: 'lastUpdated', payload: this.lastUpdated })
 		}
 
 		return Promise.reject('Invalid type')
@@ -185,25 +198,38 @@ class Interface {
 	GET_EAN() {
 		return database.storage().generateEan()
 	}
-
-	POST_QTYITEMS({eans}) {
-		return database.storage().qtyItem(eans)
-	}
-
+	
 	POST_FINDITEMS({ query }) {
 		return database.storage().findItems(query)
 	}
 
+	POST_QTYITEMS({eans}) {
+		console.log(`[EAN] ${Date.now()}: Received eans`, eans)
+		return database.storage().qtyItem(eans).then((res) => {
+			this.handleUpdateStorage()
+			return res
+		})
+	}
+
 	POST_ADDITEM({ean, name, price, qty, retail_price, retail_qty}) {
-		return database.storage().addItem(ean, name, price, qty, retail_price, retail_qty)
+		return database.storage().addItem(ean, name, price, qty, retail_price, retail_qty).then((res) => {
+			this.handleUpdateStorage()
+			return res
+		})
 	}
 
 	POST_SETITEM({ean, name, price, qty, retail_price, retail_qty}) {
-		return database.storage().updateItem(ean, name, price, qty, retail_price, retail_qty)
+		return database.storage().updateItem(ean, name, price, qty, retail_price, retail_qty).then((res) => {
+			this.handleUpdateStorage()
+			return res
+		})
 	}
 
 	POST_DELETEITEM({ ean }) {
-		return database.storage().deleteItem(ean)
+		return database.storage().deleteItem(ean).then((res) => {
+			this.handleUpdateStorage()
+			return res
+		})
 	}
 
 	POST_GETITEM({ ean }) {

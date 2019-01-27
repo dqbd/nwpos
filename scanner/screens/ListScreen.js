@@ -38,6 +38,7 @@ class ListScreen extends React.Component {
     refreshing: true,
     editing: false,
     adding: false,
+    lastUpdated: Date.now(),
     editingValues: {},
     items: [],
   }
@@ -46,11 +47,72 @@ class ListScreen extends React.Component {
     const url = (await AsyncStorage.getItem('@nwpos:url')) || 'http://192.168.1.103:8080'
     this.setState({ url }, this.fetchData)
     this.props.navigation.setParams({ resetUrl: this.resetUrl, getUrl: () => this.state.url })
+
+    this.bindWebsocket()
   }
-  
+
+    
+  bindWebsocket = async () => {
+    const { url } = this.state
+    this.conn = new WebSocket(`${url.replace('http://', 'ws://')}/socket`)
+
+    this.pinger = setInterval(() => {
+      try {
+        this.conn.send(JSON.stringify({ type: 'lastUpdated' }))
+      } catch (err) {
+        console.log(err)
+      }
+    }, 10 * 1000)
+
+    this.conn.onmessage = ({ data }) => {
+      try {
+        const { type, payload } = JSON.parse(data)
+        console.log(type, payload)
+        
+        if (type === 'lastUpdated') {
+          const { lastUpdated } = this.state
+          const serverUpdated = payload
+          if (lastUpdated + 1000 <= serverUpdated) {
+            this.fetchData()
+          } else {
+            this.setState({ lastUpdated: serverUpdated })
+          }
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    this.conn.onclose = () => {
+      console.log('conn closed, reconnecting')
+      clearInterval(this.pinger)
+      clearTimeout(this.timeout)
+      this.timeout = setTimeout(() => this.bindWebsocket(), 1000)
+    }
+
+    this.conn.onerror = (err) => {
+      console.log('conn error', err.message)
+      this.conn.close()
+    }
+  }
+
+  closeWebsocket = () => {
+    try {
+      if (this.conn) this.conn.close()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  componentWillUnmount() {
+    this.closeWebsocket()
+    clearTimeout(this.timeout)
+    clearInterval(this.pinger)
+  }
+
   fetchData = async (bootstrap = false) => {
     if (!this.state.url) return
-    if (!bootstrap) this.setState({ refreshing: true })
+    if (!bootstrap) this.setState({ refreshing: true, lastUpdated: Date.now() })
     const { items } = await fetch(`${this.state.url}/items`).then(a => a.json())
     this.setState({ items, refreshing: false })
   }
@@ -104,7 +166,10 @@ class ListScreen extends React.Component {
 
   resetUrl = async (url) => {
     await AsyncStorage.setItem('@nwpos:url', url)
-    this.setState({ url }, this.fetchData)
+    this.setState({ url }, () => {
+      this.fetchData()
+      this.closeWebsocket()
+    })
   }
 
   render() {
