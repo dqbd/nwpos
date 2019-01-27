@@ -3,11 +3,9 @@ module.exports.getTotal = (state) => {
 } 
 
 module.exports.getEansFromCart = (state) => {
-	return state.items.filter(({ ean }) => ean).reduce((acc, { qty, ean }) => {
-		if (!(ean in acc)) {
-			acc[ean] = 0
-		}
-		acc[ean] += qty
-		return acc
+	return state.items.filter(({ ean }) => !!ean).reduce((acc, { qty, ean }) => {
+		return Object.assign({}, acc, {
+			[ean]: (acc[ean] || 0) + qty
+		})
 	}, {})
 }

@@ -162,6 +162,11 @@ test('set eans', () => {
 			{ name: 'DEF', price: 17, qty: 3, ean: 'CDE' },
 		]
 	})
+
+	expect(cart.getEansFromCart(store.getState())).toEqual({
+		"1234ABC": 1,
+		"CDE": 3,
+	})
 })
 
 test('get eans', () => {
@@ -206,6 +211,9 @@ describe('invert qty', () => {
 				{ name: 'item 2', price: 200, qty: 10, ean: undefined },
 			]
 		})
-	})
 
+		expect(cart.getEansFromCart(store.getState())).toEqual({
+			"1235": -15,
+		})
+	})
 })

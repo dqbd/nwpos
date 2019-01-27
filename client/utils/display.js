@@ -21,11 +21,16 @@ function sendStream(newVal, loc) {
 }
 
 module.exports.bindDisplayEvents = (store) => {
+	// reset state when loading app
+	sendStream(store.getState().customer.cart, 'customer.cart')
+	sendStream(store.getState().customer.paid, 'customer.paid')
+	sendStream(store.getState().customer.status, 'customer.status')
+
 	store.subscribe(watch(store.getState, "customer.cart", deepEqual)((newVal, oldVal, loc) => sendStream(newVal, loc)))
 	store.subscribe(watch(store.getState, "customer.paid")((newVal, oldVal, loc) => sendStream(newVal, loc)))
 	store.subscribe(watch(store.getState, "customer.status")((newVal, oldVal, loc) => {
 		let { COMMIT_END } = customer.types.STATUS_TYPES
-		let isEnd = (val) => val === COMMIT_END ? 1 : 0 
+		let isEnd = (val) => val === COMMIT_END
 		if (isEnd(oldVal) !== isEnd(newVal)) {
 			sendStream(newVal, loc)
 		}

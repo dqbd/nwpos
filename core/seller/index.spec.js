@@ -34,8 +34,10 @@ test("shop still working", () => {
 			summary: []
 		},
 		debug: false,
+		socketConnected: false,
 		inactive: [],
 		eanSearches: [],
+		toasts: [],
 		current: 0,
 		sellers: [],
 		suggestions: {
@@ -91,8 +93,10 @@ test("get sellers", () => {
 				{name: "two", ic: "987654321"}
 			],
 			debug: false,
+			socketConnected: false,
 			inactive: [],
 			eanSearches: [],
+			toasts: [],
 			current: 0,
 			suggestions: {
 				all: {},
@@ -157,6 +161,7 @@ test("add tab", () => {
 			summary: []
 		},
 		debug: false,
+		socketConnected: false,
 		inactive: [{
 			status: "STAGE_TYPING",
 			paid: 0,
@@ -197,6 +202,7 @@ test("add tab", () => {
 		current: 2,
 		sellers: [],
 		eanSearches: [],
+		toasts: [],
 		suggestions: {
 			all: {},
 			contextual: ["vejce", "moje matka"]
@@ -235,6 +241,7 @@ test("switch tab", () => {
 			summary: []
 		},
 		debug: false,
+		socketConnected: false,
 		inactive: [{
 			status: "STAGE_TYPING",
 			paid: 0,
@@ -275,6 +282,7 @@ test("switch tab", () => {
 		current: 1,
 		sellers: [],
 		eanSearches: [],
+		toasts: [],
 		suggestions: {
 			all: {},
 			contextual: ["vejce", "moje matka"]
@@ -318,6 +326,7 @@ test("switch tabs greater than current", () => {
 			summary: []
 		},
 		debug: false,
+		socketConnected: false,
 		inactive: [{
 			status: "STAGE_TYPING",
 			paid: 0,
@@ -358,6 +367,7 @@ test("switch tabs greater than current", () => {
 		current: 2,
 		sellers: [],
 		eanSearches: [],
+		toasts: [],
 		suggestions: {
 			all: {},
 			contextual: ["vejce", "moje matka"]
@@ -396,6 +406,7 @@ test("delete tab", () => {
 			summary: []
 		},
 		debug: false,
+		socketConnected: false,
 		inactive: [{
 			status: "STAGE_ADDED",
 			paid: 0,
@@ -418,6 +429,7 @@ test("delete tab", () => {
 		current: 1,
 		sellers: [],
 		eanSearches: [],
+		toasts: [],
 		suggestions: {
 			all: {},
 			contextual: ["vejce", "moje matka"]
@@ -458,8 +470,10 @@ test("delete active tab", () => {
 			summary: []
 		},
 		debug: false,
+		socketConnected: false,
 		inactive: [],
 		eanSearches: [],
+		toasts: [],
 		current: 0,
 		sellers: [],
 		suggestions: {
@@ -519,6 +533,7 @@ test("add tab append style", () => {
 			summary: []
 		},
 		debug: false,
+		socketConnected: false,
 		inactive: [{
 			status: "STAGE_TYPING",
 			paid: 0,
@@ -559,6 +574,7 @@ test("add tab append style", () => {
 		current: 2,
 		sellers: [],
 		eanSearches: [],
+		toasts: [],
 		suggestions: {
 			all: {},
 			contextual: ["vejce", "moje matka"]
@@ -618,8 +634,10 @@ test("close tabs", () => {
 			summary: []
 		},
 		debug: false,
+		socketConnected: false,
 		inactive: [],
 		eanSearches: [],
+		toasts: [],
 		current: 0,
 		sellers: [],
 		suggestions: {

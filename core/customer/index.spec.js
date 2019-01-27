@@ -573,9 +573,9 @@ test("add item via ean", () => {
 		cart: {
 			selection: 2,
 			items: [
-				{ name: "Tričko", price: 100, qty: 2, ean: '12345' },
+				{ name: "Tričko 12345", price: 100, qty: 2, ean: '12345' },
 				{ name: '', price: 5, qty: 1 },
-				{ name: "Tričko", price: 100, qty: 1, ean: '12345' },
+				{ name: "Tričko 12345", price: 100, qty: 1, ean: '12345' },
 			],
 		}
 	})
@@ -606,8 +606,8 @@ describe('ean add during checkout', () => {
 			cart: {
 				selection: 1,
 				items: [
-					{ name: "Tričko", price: 100, qty: 1, ean: '12345' },
-					{ name: "Kalhoty", price: 200, qty: 1, ean: '6789' },
+					{ name: "Tričko 12345", price: 100, qty: 1, ean: '12345' },
+					{ name: "Kalhoty 6789", price: 200, qty: 1, ean: '6789' },
 				],
 			}
 		})
@@ -627,8 +627,8 @@ describe('ean add during checkout', () => {
 		expect(store.getState().cart).toEqual({
 			selection: 1,
 			items: [
-				{ name: "Tričko", price: 100, qty: 1, ean: '12345' },
-				{ name: "Kalhoty", price: 200, qty: 2, ean: '6789' },
+				{ name: "Tričko 12345", price: 100, qty: 1, ean: '12345' },
+				{ name: "Kalhoty 6789", price: 200, qty: 2, ean: '6789' },
 			],
 		})
 	})
@@ -651,8 +651,8 @@ describe('ean add during checkout', () => {
 			cart: {
 				selection: 1,
 				items: [
-					{ name: "Tričko", price: 100, qty: 1, ean: '12345' },
-					{ name: "Kalhoty", price: 200, qty: 2, ean: '6789' },
+					{ name: "Tričko 12345", price: 100, qty: 1, ean: '12345' },
+					{ name: "Kalhoty 6789", price: 200, qty: 2, ean: '6789' },
 				],
 			}
 		})
@@ -676,7 +676,7 @@ describe('ean add during checkout', () => {
 			cart: {
 				selection: 0,
 				items: [
-					{ name: "Kalhoty", price: 200, qty: 1, ean: '6789' },
+					{ name: "Kalhoty 6789", price: 200, qty: 1, ean: '6789' },
 				],
 			}
 		})
