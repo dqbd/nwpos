@@ -138,7 +138,7 @@ class customer:
 		for item in items[leftLimit : rightLimit]:
 			item["index"] = relative + 1 + leftLimit
 			self.drawItem(item, relative, int(self.state["cart"]["selection"])+1 is item["index"])
- 			relative = relative + 1
+			relative = relative + 1
 
 		self.drawStatus(items, self.state["status"], self.state["paid"])
 
@@ -208,21 +208,21 @@ class customer:
 
 		sumItems = sum([item["price"] * item["qty"] for item in items]) 
 
-		mainText = "celkem: " + str(sumItems) + u" Kč"
+		mainText = "Celkem: " + str(sumItems) + u" Kč"
 
 		if status == "COMMIT_END":
 			mainText = u"Vráceno: " + str((sumItems - paid) * -1 ) + u" Kč"
 
 			totalfont = self.createFont(28 * self.width / 1280)
-			total = totalfont.render("celkem: "+ str(sumItems) + u" Kč", True, self.white)
+			total = totalfont.render("Celkem: "+ str(sumItems) + u" Kč", True, self.white)
 			totalrect = total.get_rect()
 
 			cashfont = self.createFont(28 * self.width / 1280)
-			cash = cashfont.render("hotovost: " + str(paid) + u" Kč", True, self.white)
+			cash = cashfont.render("Hotovost: " + str(paid) + u" Kč", True, self.white)
 			cashrect = cash.get_rect()
 
-			cashrect.right = self.width - self.padding
-			totalrect.right = self.width - self.padding
+			cashrect.left = self.padding
+			totalrect.left = self.padding
 			
 			totalrect.top = self.listHeight + (self.statusHeight - (totalrect.height + cashrect.height + 10)) / 2
 			cashrect.top = totalrect.top + totalrect.height + 10
@@ -233,7 +233,7 @@ class customer:
 		finalfont = self.createFont(64 * self.width / 1280)
 		final = finalfont.render(mainText, True, self.white)
 		finalrect = final.get_rect()
-		finalrect.left = self.padding
+		finalrect.right = self.width - self.padding
 		finalrect.centery = self.listHeight + (self.statusHeight / 2)
 		
 		self.screen.blit(final, finalrect)
